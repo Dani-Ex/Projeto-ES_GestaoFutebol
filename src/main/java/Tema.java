@@ -15,6 +15,8 @@ public class Tema {
 
     public static final Color COR_LINHA = new Color(226, 232, 240);
 
+    public static final Color COR_SELECAO_NEUTRA = new Color(226, 232, 240);
+
     // =========================
     // CORES DO MENU LATERAL
     // =========================
