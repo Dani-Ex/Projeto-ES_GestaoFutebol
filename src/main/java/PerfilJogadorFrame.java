@@ -456,12 +456,14 @@ public class PerfilJogadorFrame extends JFrame {
     }
 
     private void editarJogador() {
-        JOptionPane.showMessageDialog(
-                this,
-                "Aqui podes abrir o teu formulário de edição do jogador.",
-                "Editar Jogador",
-                JOptionPane.INFORMATION_MESSAGE
-        );
+        new EditarJogadorFrame(jogador, () -> {
+            if (onEstadoAlterado != null) {
+                onEstadoAlterado.run();
+            }
+
+            dispose();
+            new PerfilJogadorFrame(jogador, onEstadoAlterado);
+        });
     }
 
     private String obterIniciais(String nome) {
