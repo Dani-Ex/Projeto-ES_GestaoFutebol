@@ -1,3 +1,4 @@
+import Design.PlaceholderTextField;
 import Design.RoundedPanel;
 import Design.Tema;
 
@@ -118,22 +119,18 @@ public class EquipasFrame extends JFrame {
         linha.setOpaque(false);
         linha.setMaximumSize(new Dimension(Integer.MAX_VALUE, 45));
 
-        JTextField pesquisa = new JTextField();
+        PlaceholderTextField pesquisa = new PlaceholderTextField("Pesquisar equipa...");
         pesquisa.setPreferredSize(new Dimension(230, 38));
         pesquisa.setFont(Tema.FONTE_TEXTO_PEQUENO);
         pesquisa.setForeground(Tema.COR_TEXTO_PRINCIPAL);
         pesquisa.setBorder(BorderFactory.createEmptyBorder(0, 15, 0, 15));
+        pesquisa.setOpaque(false);
 
         RoundedPanel campo = new RoundedPanel(12, Tema.COR_INPUT);
         campo.setLayout(new BorderLayout());
         campo.setPreferredSize(new Dimension(230, 38));
         campo.setBorder(BorderFactory.createLineBorder(Tema.COR_LINHA));
         campo.add(pesquisa, BorderLayout.CENTER);
-
-        pesquisa.setOpaque(false);
-
-        pesquisa.setText("");
-        pesquisa.putClientProperty("JTextField.placeholderText", "Pesquisar equipa...");
 
         linha.add(campo);
 
