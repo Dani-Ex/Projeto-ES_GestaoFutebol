@@ -27,6 +27,7 @@ public class MenuLateral extends JPanel {
         JButton btnEstadios = criarBotaoMenu("Estádios");
         JButton btnBilhetes = criarBotaoMenu("Bilhetes");
         JButton btnEstatisticas = criarBotaoMenu("Estatísticas");
+        JButton btnRegras = criarBotaoMenu("Regras");
 
         btnDashboard.addActionListener(e -> {
             frame.dispose();
@@ -48,6 +49,11 @@ public class MenuLateral extends JPanel {
             new EstadisticasFrame();
         });
 
+        btnRegras.addActionListener(e -> {
+            frame.dispose();
+            new RegrasFrame();
+        });
+
         add(titulo);
         add(Box.createVerticalStrut(Tema.ESPACAMENTO_GRANDE));
         add(btnDashboard);
@@ -61,6 +67,8 @@ public class MenuLateral extends JPanel {
         add(btnBilhetes);
         add(Box.createVerticalStrut(Tema.ESPACAMENTO_PEQUENO));
         add(btnEstatisticas);
+        add(Box.createVerticalStrut(Tema.ESPACAMENTO_PEQUENO));
+        add(btnRegras);
     }
 
     private JButton criarBotaoMenu(String texto) {
