@@ -10,7 +10,7 @@ public class MenuLateral extends JPanel {
         setLayout(new BorderLayout());
         setOpaque(false);
 
-        JButton btnMenu = new JButton("☰");
+        JButton btnMenu = new JButton("=");
         btnMenu.setFont(new Font("Segoe UI", Font.BOLD, 22));
         btnMenu.setFocusPainted(false);
         btnMenu.setBorderPainted(false);
