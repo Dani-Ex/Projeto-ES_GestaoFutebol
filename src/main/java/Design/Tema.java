@@ -1,3 +1,5 @@
+package Design;
+
 import java.awt.*;
 
 public class Tema {
