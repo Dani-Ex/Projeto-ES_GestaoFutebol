@@ -13,6 +13,10 @@ public class DashboardFrame extends JFrame {
         main.setBackground(new Color(245, 247, 250));
         add(main);
 
+        // Menu lateral com botão ☰
+        MenuLateral menuLateral = new MenuLateral(this);
+        main.add(menuLateral, BorderLayout.WEST);
+
         // Conteúdo principal
         JPanel content = new JPanel(new BorderLayout());
         content.setOpaque(false);
