@@ -7,8 +7,11 @@ import java.util.function.Consumer;
 
 public class PaginaGrupos extends JPanel {
 
+    private final String nomeCampeonato;
     private final Runnable alternarMenu;
     private final Consumer<String> mostrarPagina;
+
+
 
     private final Color BG = new Color(245, 247, 251);
     private final Color TEXT = new Color(30, 41, 59);
@@ -25,7 +28,12 @@ public class PaginaGrupos extends JPanel {
 
     private JLabel tituloCampeonato;
 
-    public PaginaGrupos(Runnable alternarMenu, Consumer<String> mostrarPagina) {
+    public PaginaGrupos(
+            String nomeCampeonato,
+            Runnable alternarMenu,
+            Consumer<String> mostrarPagina
+    ) {
+        this.nomeCampeonato = nomeCampeonato;
         this.alternarMenu = alternarMenu;
         this.mostrarPagina = mostrarPagina;
 
@@ -35,7 +43,6 @@ public class PaginaGrupos extends JPanel {
 
         construirInterface();
     }
-
     private void construirInterface() {
         JPanel barraSuperior = new JPanel(new BorderLayout());
         barraSuperior.setOpaque(false);

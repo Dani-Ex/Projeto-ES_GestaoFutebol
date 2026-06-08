@@ -14,20 +14,20 @@ public class MenuLateral extends JPanel {
                 Tema.PADDING_MENU.right
         ));
 
-        JLabel titulo = new JLabel("Campeonato");
+        JLabel titulo = new JLabel("Menu");
         titulo.setForeground(Tema.COR_TEXTO_CLARO);
         titulo.setFont(Tema.FONTE_MENU_TITULO);
         titulo.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        JButton btnDashboard = criarBotaoMenu("Dashboard");
+        JButton btnCampeonato = criarBotaoMenu("Campeonato");
         JButton btnEquipas = criarBotaoMenu("Equipas");
         JButton btnJogadores = criarBotaoMenu("Jogadores");
         JButton btnEstadios = criarBotaoMenu("Estádios");
         JButton btnBilhetes = criarBotaoMenu("Bilhetes");
 
-        btnDashboard.addActionListener(e -> {
+        btnCampeonato.addActionListener(e -> {
             frame.dispose();
-            new DashboardFrame();
+            new CampeonatosFrame();
         });
 
         btnEquipas.addActionListener(e -> {
@@ -35,16 +35,36 @@ public class MenuLateral extends JPanel {
             new EquipasFrame();
         });
 
+        btnJogadores.addActionListener(e -> JOptionPane.showMessageDialog(
+                this,
+                "Página de jogadores ainda não implementada."
+        ));
+
+        btnEstadios.addActionListener(e -> JOptionPane.showMessageDialog(
+                this,
+                "Página de estádios ainda não implementada."
+        ));
+
+        btnBilhetes.addActionListener(e -> JOptionPane.showMessageDialog(
+                this,
+                "Página de bilhetes ainda não implementada."
+        ));
+
         add(titulo);
         add(Box.createVerticalStrut(Tema.ESPACAMENTO_GRANDE));
-        add(btnDashboard);
+
+        add(btnCampeonato);
         add(Box.createVerticalStrut(Tema.ESPACAMENTO_PEQUENO));
+
         add(btnEquipas);
         add(Box.createVerticalStrut(Tema.ESPACAMENTO_PEQUENO));
+
         add(btnJogadores);
         add(Box.createVerticalStrut(Tema.ESPACAMENTO_PEQUENO));
+
         add(btnEstadios);
         add(Box.createVerticalStrut(Tema.ESPACAMENTO_PEQUENO));
+
         add(btnBilhetes);
     }
 
@@ -62,6 +82,7 @@ public class MenuLateral extends JPanel {
         btn.setFont(Tema.FONTE_MENU);
 
         btn.setBorder(BorderFactory.createEmptyBorder(10, 15, 10, 15));
+        btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
         return btn;
     }

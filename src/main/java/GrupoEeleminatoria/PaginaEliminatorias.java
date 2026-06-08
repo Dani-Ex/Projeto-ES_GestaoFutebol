@@ -7,10 +7,16 @@ import java.util.function.Consumer;
 
 public class PaginaEliminatorias extends JPanel {
 
+    private final String nomeCampeonato;
     private final Runnable alternarMenu;
     private final Consumer<String> mostrarPagina;
 
-    public PaginaEliminatorias(Runnable alternarMenu, Consumer<String> mostrarPagina) {
+    public PaginaEliminatorias(
+            String nomeCampeonato,
+            Runnable alternarMenu,
+            Consumer<String> mostrarPagina
+    ) {
+        this.nomeCampeonato = nomeCampeonato;
         this.alternarMenu = alternarMenu;
         this.mostrarPagina = mostrarPagina;
 
@@ -34,8 +40,8 @@ public class PaginaEliminatorias extends JPanel {
         botaoMenu.setCursor(new Cursor(Cursor.HAND_CURSOR));
         botaoMenu.addActionListener(e -> alternarMenu.run());
 
-        JLabel titulo = new JLabel("Fase Eliminatória", SwingConstants.CENTER);
-        titulo.setFont(new Font("Segoe UI", Font.BOLD, 30));
+        JLabel titulo = new JLabel("Fase Eliminatória - " + nomeCampeonato, SwingConstants.CENTER);
+        titulo.setFont(new Font("Segoe UI", Font.BOLD, 28));
         titulo.setForeground(Color.WHITE);
 
         JButton botaoVoltar = criarBotaoAzul("Ver Grupos");
