@@ -35,7 +35,7 @@ public class MenuLateral extends JPanel {
             new EquipasFrame();
         });
 
-        btnEquipas.addActionListener(e -> {
+        btnJogadores.addActionListener(e -> {
             frame.dispose();
             new JogadoresFrame();
         });
