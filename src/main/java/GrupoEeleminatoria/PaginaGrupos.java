@@ -116,8 +116,6 @@ public class PaginaGrupos extends JPanel {
         JButton botaoEditar = criarBotaoAzul("Editar");
         botaoEditar.addActionListener(e -> editarNomeCampeonato());
 
-        JButton botaoNovo = criarBotaoAzul("Novo");
-        botaoNovo.addActionListener(e -> criarNovoCampeonato());
 
         JButton botaoGerarGrupos = criarBotaoAzul("Gerar Grupos");
         botaoGerarGrupos.addActionListener(e -> JOptionPane.showMessageDialog(
@@ -128,7 +126,6 @@ public class PaginaGrupos extends JPanel {
         ));
 
         botoesDireita.add(botaoEditar);
-        botoesDireita.add(botaoNovo);
         botoesDireita.add(botaoGerarGrupos);
 
         barraAcoes.add(separadores, BorderLayout.WEST);
