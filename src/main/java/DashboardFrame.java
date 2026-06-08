@@ -1,6 +1,8 @@
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.JTableHeader;
 
 public class DashboardFrame extends JFrame {
 
@@ -231,8 +233,20 @@ public class DashboardFrame extends JFrame {
         JTable tabela = new JTable(model);
         configurarTabela(tabela);
 
+        tabela.getColumnModel().getColumn(0).setPreferredWidth(35);   // #
+        tabela.getColumnModel().getColumn(1).setPreferredWidth(160);  // Equipa
+        tabela.getColumnModel().getColumn(2).setPreferredWidth(40);   // PD
+        tabela.getColumnModel().getColumn(3).setPreferredWidth(35);   // V
+        tabela.getColumnModel().getColumn(4).setPreferredWidth(35);   // E
+        tabela.getColumnModel().getColumn(5).setPreferredWidth(35);   // D
+        tabela.getColumnModel().getColumn(6).setPreferredWidth(40);   // DG
+        tabela.getColumnModel().getColumn(7).setPreferredWidth(40);   // Pts
+
         JScrollPane scroll = new JScrollPane(tabela);
         scroll.setBorder(null);
+        scroll.setViewportBorder(null);
+        scroll.getViewport().setBackground(Tema.COR_CARD);
+        scroll.setBackground(Tema.COR_CARD);
 
         card.add(titulo, BorderLayout.NORTH);
         card.add(scroll, BorderLayout.CENTER);
@@ -316,14 +330,58 @@ public class DashboardFrame extends JFrame {
 
     private void configurarTabela(JTable tabela) {
         tabela.setFont(Tema.FONTE_TEXTO_PEQUENO);
-        tabela.setRowHeight(28);
+        tabela.setRowHeight(34);
+
         tabela.setForeground(Tema.COR_TEXTO_PRINCIPAL);
-        tabela.setGridColor(Tema.COR_LINHA);
+        tabela.setBackground(Tema.COR_CARD);
+
+        // Linhas clean
+        tabela.setShowGrid(false);
+        tabela.setShowHorizontalLines(true);
+        tabela.setShowVerticalLines(false);
+        tabela.setGridColor(new Color(241, 245, 249));
+
+        tabela.setIntercellSpacing(new Dimension(0, 1));
+        tabela.setBorder(null);
+
         tabela.setSelectionBackground(new Color(219, 234, 254));
         tabela.setSelectionForeground(Tema.COR_TEXTO_PRINCIPAL);
 
-        tabela.getTableHeader().setFont(Tema.FONTE_TEXTO_PEQUENO);
-        tabela.getTableHeader().setForeground(Tema.COR_TEXTO_SECUNDARIO);
-        tabela.getTableHeader().setBackground(Tema.COR_CARD);
+        // Header
+        JTableHeader header = tabela.getTableHeader();
+        header.setFont(Tema.FONTE_TEXTO_PEQUENO);
+        header.setForeground(Tema.COR_TEXTO_SECUNDARIO);
+        header.setBackground(Tema.COR_CARD);
+        header.setBorder(null);
+        header.setReorderingAllowed(false);
+        header.setResizingAllowed(false);
+
+        // Alinhamento vertical/horizontal das células
+        DefaultTableCellRenderer centro = new DefaultTableCellRenderer();
+        centro.setHorizontalAlignment(SwingConstants.CENTER);
+        centro.setVerticalAlignment(SwingConstants.CENTER);
+        centro.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+
+        DefaultTableCellRenderer esquerda = new DefaultTableCellRenderer();
+        esquerda.setHorizontalAlignment(SwingConstants.LEFT);
+        esquerda.setVerticalAlignment(SwingConstants.CENTER);
+        esquerda.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
+
+        // Por defeito, mete tudo centrado
+        for (int i = 0; i < tabela.getColumnCount(); i++) {
+            tabela.getColumnModel().getColumn(i).setCellRenderer(centro);
+        }
+
+        // Se existir coluna "Equipa", deixa-a alinhada à esquerda
+        for (int i = 0; i < tabela.getColumnCount(); i++) {
+            String nomeColuna = tabela.getColumnName(i);
+
+            if (nomeColuna.equalsIgnoreCase("Equipa")
+                    || nomeColuna.equalsIgnoreCase("Jogo")
+                    || nomeColuna.equalsIgnoreCase("Estádio")) {
+
+                tabela.getColumnModel().getColumn(i).setCellRenderer(esquerda);
+            }
+        }
     }
 }
