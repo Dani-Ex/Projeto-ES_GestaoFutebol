@@ -66,7 +66,7 @@ public class DashboardFrame extends JFrame {
         tituloBox.add(Box.createVerticalStrut(4));
         tituloBox.add(subtitulo);
 
-        JButton btnMenu = new JButton("☰");
+        JButton btnMenu = new JButton("=");
         btnMenu.setFont(Tema.FONTE_BOTAO_MENU);
         btnMenu.setFocusPainted(false);
         btnMenu.setBorderPainted(false);
