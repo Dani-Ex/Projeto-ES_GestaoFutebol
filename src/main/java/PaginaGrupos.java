@@ -1,13 +1,17 @@
-package GrupoEeleminatoria;
-
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.util.function.Consumer;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
 public class PaginaGrupos extends JPanel {
 
-    private final String nomeCampeonato;
+    private final Campeonato campeonato;
     private final Runnable alternarMenu;
     private final Consumer<String> mostrarPagina;
 
@@ -29,11 +33,11 @@ public class PaginaGrupos extends JPanel {
     private JLabel tituloCampeonato;
 
     public PaginaGrupos(
-            String nomeCampeonato,
+            Campeonato campeonato,
             Runnable alternarMenu,
             Consumer<String> mostrarPagina
     ) {
-        this.nomeCampeonato = nomeCampeonato;
+        this.campeonato = campeonato;
         this.alternarMenu = alternarMenu;
         this.mostrarPagina = mostrarPagina;
 
@@ -64,7 +68,7 @@ public class PaginaGrupos extends JPanel {
         centro.setLayout(new BoxLayout(centro, BoxLayout.Y_AXIS));
         centro.setBorder(new EmptyBorder(10, 150, 20, 150));
 
-        tituloCampeonato = new JLabel("Mundial FIFA 2026");
+        tituloCampeonato = new JLabel(campeonato.getNome());
         tituloCampeonato.setFont(new Font("Segoe UI", Font.BOLD, 28));
         tituloCampeonato.setForeground(TEXT);
         tituloCampeonato.setAlignmentX(Component.LEFT_ALIGNMENT);

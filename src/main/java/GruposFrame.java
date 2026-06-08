@@ -1,12 +1,10 @@
-import GrupoEeleminatoria.PaginaGrupos;
-
 import javax.swing.*;
 import java.awt.*;
 
 public class GruposFrame extends JFrame {
 
-    public GruposFrame(String nomeCampeonato) {
-        setTitle("Campeonato - " + nomeCampeonato);
+    public GruposFrame(Campeonato campeonato) {
+        setTitle("Campeonato - " + campeonato.getNome());
         setSize(1250, 780);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -16,7 +14,7 @@ public class GruposFrame extends JFrame {
         menuLateral.setVisible(false);
 
         PaginaGrupos paginaGrupos = new PaginaGrupos(
-                nomeCampeonato,
+                campeonato,
                 () -> {
                     menuLateral.setVisible(!menuLateral.isVisible());
                     revalidate();
@@ -25,7 +23,7 @@ public class GruposFrame extends JFrame {
                 pagina -> {
                     if (pagina.equals("eliminatorias")) {
                         dispose();
-                        new EliminatoriasFrame(nomeCampeonato);
+                        new EliminatoriasFrame(campeonato);
                     }
                 }
         );

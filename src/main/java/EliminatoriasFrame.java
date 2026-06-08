@@ -1,12 +1,10 @@
-import GrupoEeleminatoria.PaginaEliminatorias;
-
 import javax.swing.*;
 import java.awt.*;
 
 public class EliminatoriasFrame extends JFrame {
 
-    public EliminatoriasFrame(String nomeCampeonato) {
-        setTitle("Eliminatórias - " + nomeCampeonato);
+    public EliminatoriasFrame(Campeonato campeonato) {
+        setTitle("Eliminatórias - " + campeonato.getNome());
         setSize(1250, 780);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -16,7 +14,7 @@ public class EliminatoriasFrame extends JFrame {
         menuLateral.setVisible(false);
 
         PaginaEliminatorias paginaEliminatorias = new PaginaEliminatorias(
-                nomeCampeonato,
+                campeonato,
                 () -> {
                     menuLateral.setVisible(!menuLateral.isVisible());
                     revalidate();
@@ -25,7 +23,7 @@ public class EliminatoriasFrame extends JFrame {
                 pagina -> {
                     if (pagina.equals("grupos")) {
                         dispose();
-                        new GruposFrame(nomeCampeonato);
+                        new GruposFrame(campeonato);
                     }
                 }
         );

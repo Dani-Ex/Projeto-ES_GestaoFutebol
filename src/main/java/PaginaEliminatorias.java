@@ -1,5 +1,3 @@
-package GrupoEeleminatoria;
-
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -7,16 +5,16 @@ import java.util.function.Consumer;
 
 public class PaginaEliminatorias extends JPanel {
 
-    private final String nomeCampeonato;
+    private final Campeonato campeonato;
     private final Runnable alternarMenu;
     private final Consumer<String> mostrarPagina;
 
     public PaginaEliminatorias(
-            String nomeCampeonato,
+            Campeonato campeonato,
             Runnable alternarMenu,
             Consumer<String> mostrarPagina
     ) {
-        this.nomeCampeonato = nomeCampeonato;
+        this.campeonato = campeonato;
         this.alternarMenu = alternarMenu;
         this.mostrarPagina = mostrarPagina;
 
@@ -40,7 +38,7 @@ public class PaginaEliminatorias extends JPanel {
         botaoMenu.setCursor(new Cursor(Cursor.HAND_CURSOR));
         botaoMenu.addActionListener(e -> alternarMenu.run());
 
-        JLabel titulo = new JLabel("Fase Eliminatória - " + nomeCampeonato, SwingConstants.CENTER);
+        JLabel titulo = new JLabel("Fase Eliminatória - " + campeonato.getNome(), SwingConstants.CENTER);
         titulo.setFont(new Font("Segoe UI", Font.BOLD, 28));
         titulo.setForeground(Color.WHITE);
 

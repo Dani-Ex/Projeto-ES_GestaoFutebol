@@ -83,7 +83,10 @@ public class CampeonatosFrame extends JFrame {
         textos.add(subtitulo);
 
         JButton btnNovo = criarBotaoAzul("+ Novo Campeonato");
-        btnNovo.addActionListener(e -> criarNovoCampeonato());
+        btnNovo.addActionListener(e -> {
+            dispose();
+            new NovoCampeonatoFrame();
+        });
 
         cabecalho.add(textos, BorderLayout.WEST);
         cabecalho.add(btnNovo, BorderLayout.EAST);
@@ -145,12 +148,17 @@ public class CampeonatosFrame extends JFrame {
             }
         };
 
-        modelo.addRow(new Object[]{"Liga Primavera", "10 Mai", "30 Jun", "24", "4", "Grupos", "A decorrer"});
-        modelo.addRow(new Object[]{"Taça Regional", "01 Abr", "20 Mai", "16", "4", "Mata-mata", "A decorrer"});
-        modelo.addRow(new Object[]{"Super Liga", "12 Mar", "12 Jul", "20", "2", "Grupos", "Planeado"});
-        modelo.addRow(new Object[]{"Champion League", "05 Jan", "25 Fev", "12", "2", "Final", "Finalizado"});
-        modelo.addRow(new Object[]{"Torneio Litoral", "15 Fev", "30 Mar", "8", "2", "Semi-final", "Finalizado"});
-        modelo.addRow(new Object[]{"Mundial FIFA 2026", "01 Jul", "22 Jul", "16", "4", "Grupos", "Planeado"});
+        for (Campeonato campeonato : CampeonatoRepositorio.listar()) {
+            modelo.addRow(new Object[]{
+                    campeonato.getNome(),
+                    "01 Jul",
+                    "22 Jul",
+                    "24",
+                    "4",
+                    campeonato.isGruposGerados() ? "Grupos gerados" : "Por gerar",
+                    campeonato.isFaseGruposTerminada() ? "Fase grupos terminada" : "Planeado"
+            });
+        }
 
         tabelaCampeonatos = new JTable(modelo);
         tabelaCampeonatos.setRowHeight(34);
@@ -169,9 +177,12 @@ public class CampeonatosFrame extends JFrame {
 
                 if (linha >= 0) {
                     String nomeCampeonato = tabelaCampeonatos.getValueAt(linha, 0).toString();
+                    Campeonato campeonato = CampeonatoRepositorio.procurarPorNome(nomeCampeonato);
 
-                    dispose();
-                    new GruposFrame(nomeCampeonato);
+                    if (campeonato != null) {
+                        dispose();
+                        new GruposFrame(campeonato);
+                    }
                 }
             }
         });
@@ -251,33 +262,6 @@ public class CampeonatosFrame extends JFrame {
         botao.setBorder(new EmptyBorder(11, 20, 11, 20));
 
         return botao;
-    }
-
-    private void criarNovoCampeonato() {
-        JTextField campoNome = new JTextField();
-
-        JPanel painel = new JPanel(new BorderLayout(0, 8));
-        painel.add(new JLabel("Nome do campeonato:"), BorderLayout.NORTH);
-        painel.add(campoNome, BorderLayout.CENTER);
-
-        int resultado = JOptionPane.showConfirmDialog(
-                this,
-                painel,
-                "Novo Campeonato",
-                JOptionPane.OK_CANCEL_OPTION,
-                JOptionPane.PLAIN_MESSAGE
-        );
-
-        if (resultado == JOptionPane.OK_OPTION) {
-            String nome = campoNome.getText().trim();
-
-            if (!nome.isEmpty()) {
-                JOptionPane.showMessageDialog(
-                        this,
-                        "Campeonato criado: " + nome
-                );
-            }
-        }
     }
 
     static class PainelArredondado extends JPanel {
