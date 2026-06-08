@@ -1,11 +1,17 @@
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.JTableHeader;
 
 public class DashboardFrame extends JFrame {
 
     private MenuLateral menuLateral;
     private boolean menuAberto = false;
+
+    private java.util.List<JTable> tabelasDashboard = new java.util.ArrayList<>();
 
     public DashboardFrame() {
         setTitle("Dashboard do Campeonato");
@@ -23,6 +29,8 @@ public class DashboardFrame extends JFrame {
         ));
         add(main);
 
+        limparSelecaoAoClicar(main);
+
         menuLateral = new MenuLateral(this);
         menuLateral.setVisible(false);
         main.add(menuLateral, BorderLayout.WEST);
@@ -30,6 +38,8 @@ public class DashboardFrame extends JFrame {
         JPanel content = new JPanel();
         content.setOpaque(false);
         content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
+
+        limparSelecaoAoClicar(content);
 
         content.add(criarTopo(main));
         content.add(Box.createVerticalStrut(Tema.ESPACAMENTO_MEDIO));
@@ -66,7 +76,7 @@ public class DashboardFrame extends JFrame {
         tituloBox.add(Box.createVerticalStrut(4));
         tituloBox.add(subtitulo);
 
-        JButton btnMenu = new JButton("☰");
+        JButton btnMenu = new JButton("=");
         btnMenu.setFont(Tema.FONTE_BOTAO_MENU);
         btnMenu.setFocusPainted(false);
         btnMenu.setBorderPainted(false);
@@ -222,17 +232,30 @@ public class DashboardFrame extends JFrame {
 
         String[] colunas = {"#", "Equipa", "PD", "V", "E", "D", "DG", "Pts"};
 
-        DefaultTableModel model = new DefaultTableModel(colunas, 0);
+        DefaultTableModel model = criarModeloNaoEditavel(colunas);
         model.addRow(new Object[]{"1", "México", "0", "0", "0", "0", "0", "0"});
         model.addRow(new Object[]{"2", "África do Sul", "0", "0", "0", "0", "0", "0"});
         model.addRow(new Object[]{"3", "Coreia do Sul CP", "0", "0", "0", "0", "0", "0"});
         model.addRow(new Object[]{"4", "República Checa", "0", "0", "0", "0", "0", "0"});
 
         JTable tabela = new JTable(model);
-        configurarTabela(tabela);
+        configurarTabelaGrupo(tabela);
+        tabelasDashboard.add(tabela);
+
+        tabela.getColumnModel().getColumn(0).setPreferredWidth(35);   // #
+        tabela.getColumnModel().getColumn(1).setPreferredWidth(160);  // Equipa
+        tabela.getColumnModel().getColumn(2).setPreferredWidth(40);   // PD
+        tabela.getColumnModel().getColumn(3).setPreferredWidth(35);   // V
+        tabela.getColumnModel().getColumn(4).setPreferredWidth(35);   // E
+        tabela.getColumnModel().getColumn(5).setPreferredWidth(35);   // D
+        tabela.getColumnModel().getColumn(6).setPreferredWidth(40);   // DG
+        tabela.getColumnModel().getColumn(7).setPreferredWidth(40);   // Pts
 
         JScrollPane scroll = new JScrollPane(tabela);
         scroll.setBorder(null);
+        scroll.setViewportBorder(null);
+        scroll.getViewport().setBackground(Tema.COR_CARD);
+        scroll.setBackground(Tema.COR_CARD);
 
         card.add(titulo, BorderLayout.NORTH);
         card.add(scroll, BorderLayout.CENTER);
@@ -256,7 +279,7 @@ public class DashboardFrame extends JFrame {
 
         String[] colunas = {"Data", "Jogo", "Estádio"};
 
-        DefaultTableModel model = new DefaultTableModel(colunas, 0);
+        DefaultTableModel model = criarModeloNaoEditavel(colunas);
         model.addRow(new Object[]{"25 Mai", "FC Porto vs SL Benfica", "Dragão"});
         model.addRow(new Object[]{"26 Mai", "Sporting CP vs SC Braga", "Alvalade"});
         model.addRow(new Object[]{"27 Mai", "Vitória SC vs Boavista", "D. Afonso"});
@@ -264,6 +287,7 @@ public class DashboardFrame extends JFrame {
 
         JTable tabela = new JTable(model);
         configurarTabela(tabela);
+        tabelasDashboard.add(tabela);
 
         JScrollPane scroll = new JScrollPane(tabela);
         scroll.setBorder(null);
@@ -278,7 +302,7 @@ public class DashboardFrame extends JFrame {
 
         String[] colunas = {"Data", "Jogo", "Estádio", "Resultado"};
 
-        DefaultTableModel model = new DefaultTableModel(colunas, 0);
+        DefaultTableModel model = criarModeloNaoEditavel(colunas);
         model.addRow(new Object[]{"19 Mai", "FC Porto vs SC Braga", "Dragão", "2-1"});
         model.addRow(new Object[]{"18 Mai", "SL Benfica vs Vitória SC", "Luz", "3-0"});
         model.addRow(new Object[]{"17 Mai", "Sporting CP vs Boavista", "Alvalade", "1-1"});
@@ -286,6 +310,7 @@ public class DashboardFrame extends JFrame {
 
         JTable tabela = new JTable(model);
         configurarTabela(tabela);
+        tabelasDashboard.add(tabela);
 
         JScrollPane scroll = new JScrollPane(tabela);
         scroll.setBorder(null);
@@ -316,14 +341,160 @@ public class DashboardFrame extends JFrame {
 
     private void configurarTabela(JTable tabela) {
         tabela.setFont(Tema.FONTE_TEXTO_PEQUENO);
-        tabela.setRowHeight(28);
+        tabela.setRowHeight(34);
+
         tabela.setForeground(Tema.COR_TEXTO_PRINCIPAL);
-        tabela.setGridColor(Tema.COR_LINHA);
-        tabela.setSelectionBackground(new Color(219, 234, 254));
+        tabela.setBackground(Tema.COR_CARD);
+
+        // Linhas clean
+        tabela.setShowGrid(false);
+        tabela.setShowHorizontalLines(true);
+        tabela.setShowVerticalLines(false);
+        tabela.setGridColor(new Color(241, 245, 249));
+
+        tabela.setIntercellSpacing(new Dimension(0, 1));
+        tabela.setBorder(null);
+
+        tabela.setSelectionBackground(Tema.COR_SELECAO_NEUTRA);
         tabela.setSelectionForeground(Tema.COR_TEXTO_PRINCIPAL);
 
-        tabela.getTableHeader().setFont(Tema.FONTE_TEXTO_PEQUENO);
-        tabela.getTableHeader().setForeground(Tema.COR_TEXTO_SECUNDARIO);
-        tabela.getTableHeader().setBackground(Tema.COR_CARD);
+        // Header
+        JTableHeader header = tabela.getTableHeader();
+        header.setFont(Tema.FONTE_TEXTO_PEQUENO);
+        header.setForeground(Tema.COR_TEXTO_SECUNDARIO);
+        header.setBackground(Tema.COR_CARD);
+        header.setBorder(null);
+        header.setReorderingAllowed(false);
+        header.setResizingAllowed(false);
+
+        // Alinhamento vertical/horizontal das células
+        DefaultTableCellRenderer centro = new DefaultTableCellRenderer();
+        centro.setHorizontalAlignment(SwingConstants.CENTER);
+        centro.setVerticalAlignment(SwingConstants.CENTER);
+        centro.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+
+        DefaultTableCellRenderer esquerda = new DefaultTableCellRenderer();
+        esquerda.setHorizontalAlignment(SwingConstants.LEFT);
+        esquerda.setVerticalAlignment(SwingConstants.CENTER);
+        esquerda.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 0));
+
+        // Por defeito, mete tudo centrado
+        for (int i = 0; i < tabela.getColumnCount(); i++) {
+            tabela.getColumnModel().getColumn(i).setCellRenderer(centro);
+        }
+
+        // Se existir coluna "Equipa", deixa-a alinhada à esquerda
+        for (int i = 0; i < tabela.getColumnCount(); i++) {
+            String nomeColuna = tabela.getColumnName(i);
+
+            if (nomeColuna.equalsIgnoreCase("Equipa")
+                    || nomeColuna.equalsIgnoreCase("Jogo")
+                    || nomeColuna.equalsIgnoreCase("Estádio")) {
+
+                tabela.getColumnModel().getColumn(i).setCellRenderer(esquerda);
+            }
+        }
+    }
+
+    private void configurarTabelaGrupo(JTable tabela) {
+        tabela.setFont(Tema.FONTE_TEXTO_PEQUENO);
+        tabela.setRowHeight(34);
+
+        tabela.setForeground(Tema.COR_TEXTO_PRINCIPAL);
+        tabela.setBackground(Tema.COR_CARD);
+
+        // Visual clean
+        tabela.setShowGrid(false);
+        tabela.setShowHorizontalLines(true);
+        tabela.setShowVerticalLines(false);
+        tabela.setGridColor(new Color(241, 245, 249));
+        tabela.setIntercellSpacing(new Dimension(0, 1));
+        tabela.setBorder(null);
+
+        tabela.setSelectionBackground(Tema.COR_SELECAO_NEUTRA);
+        tabela.setSelectionForeground(Tema.COR_TEXTO_PRINCIPAL);
+
+        // Header
+        JTableHeader header = tabela.getTableHeader();
+        header.setFont(Tema.FONTE_TEXTO_PEQUENO);
+        header.setForeground(Tema.COR_TEXTO_SECUNDARIO);
+        header.setBackground(Tema.COR_CARD);
+        header.setBorder(null);
+        header.setReorderingAllowed(false);
+        header.setResizingAllowed(false);
+
+        DefaultTableCellRenderer renderer = new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(
+                    JTable table,
+                    Object value,
+                    boolean isSelected,
+                    boolean hasFocus,
+                    int row,
+                    int column
+            ) {
+                Component c = super.getTableCellRendererComponent(
+                        table,
+                        value,
+                        isSelected,
+                        hasFocus,
+                        row,
+                        column
+                );
+
+                setFont(Tema.FONTE_TEXTO_PEQUENO);
+                setVerticalAlignment(SwingConstants.CENTER);
+                setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 8));
+
+                // Alinhamento por coluna
+                String nomeColuna = table.getColumnName(column);
+
+                if (nomeColuna.equalsIgnoreCase("Equipa")) {
+                    setHorizontalAlignment(SwingConstants.LEFT);
+                } else {
+                    setHorizontalAlignment(SwingConstants.CENTER);
+                }
+
+                // Destacar as 2 primeiras equipas
+                if (isSelected) {
+                    c.setBackground(Tema.COR_SELECAO_NEUTRA); // seleção neutra
+                } else if (row == 0 || row == 1) {
+                    c.setBackground(new Color(220, 252, 231)); // verde só para classificação
+                } else {
+                    c.setBackground(Tema.COR_CARD);
+                }
+
+                c.setForeground(Tema.COR_TEXTO_PRINCIPAL);
+
+                return c;
+            }
+        };
+
+        for (int i = 0; i < tabela.getColumnCount(); i++) {
+            tabela.getColumnModel().getColumn(i).setCellRenderer(renderer);
+        }
+    }
+    private DefaultTableModel criarModeloNaoEditavel(String[] colunas) {
+        return new DefaultTableModel(colunas, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+    }
+
+    private void limparSelecaoTabelas() {
+        for (JTable tabela : tabelasDashboard) {
+            tabela.clearSelection();
+        }
+    }
+
+    private void limparSelecaoAoClicar(JComponent componente) {
+        componente.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mousePressed(java.awt.event.MouseEvent e) {
+                limparSelecaoTabelas();
+            }
+        });
     }
 }
