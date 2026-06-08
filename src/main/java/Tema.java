@@ -34,6 +34,10 @@ public class Tema {
     public static final Color CARD_ROXO = new Color(233, 213, 255);
     public static final Color CARD_AMARELO = new Color(254, 240, 138);
 
+    public static final Color COR_INPUT = Color.WHITE;
+    public static final Color COR_VERDE_SUAVE = new Color(220, 252, 231);
+    public static final Color COR_VERDE_FORTE = new Color(22, 163, 74);
+
     public static final Color CARD_TEXTO_AZUL = new Color(79, 70, 229);
     public static final Color CARD_TEXTO_VERDE = new Color(22, 101, 52);
     public static final Color CARD_TEXTO_ROXO = new Color(109, 40, 217);
