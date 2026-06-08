@@ -1,6 +1,4 @@
-package ui.components;
-
-import ui.theme.AppColors;
+package GrupoEeleminatoria;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -8,17 +6,18 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import java.awt.*;
 
-public class CartaoGrupo extends RoundedPanel {
+public class cartaogrupo extends JPanel {
 
-    public CartaoGrupo(String nomeGrupo, String[] equipas) {
-        super(18, Color.WHITE);
+    private final Color COR_TEXTO = new Color(30, 41, 59);
 
+    public cartaogrupo(String nomeGrupo, String[] equipas) {
+        setOpaque(false);
         setLayout(new BorderLayout());
         setBorder(new EmptyBorder(14, 14, 14, 14));
 
         JLabel tituloGrupo = new JLabel("🏆  " + nomeGrupo);
         tituloGrupo.setFont(new Font("Segoe UI", Font.BOLD, 18));
-        tituloGrupo.setForeground(AppColors.TEXT);
+        tituloGrupo.setForeground(COR_TEXTO);
 
         String[] colunas = {
                 "#",
@@ -79,7 +78,23 @@ public class CartaoGrupo extends RoundedPanel {
         scroll.getViewport().setBackground(Color.WHITE);
 
         add(tituloGrupo, BorderLayout.NORTH);
-        add(Box.createVerticalStrut(8), BorderLayout.CENTER);
-        add(scroll, BorderLayout.SOUTH);
+        add(scroll, BorderLayout.CENTER);
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        Graphics2D desenho = (Graphics2D) g.create();
+
+        desenho.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+        desenho.setColor(new Color(0, 0, 0, 18));
+        desenho.fillRoundRect(4, 6, getWidth() - 8, getHeight() - 8, 18, 18);
+
+        desenho.setColor(Color.WHITE);
+        desenho.fillRoundRect(0, 0, getWidth() - 8, getHeight() - 8, 18, 18);
+
+        desenho.dispose();
+
+        super.paintComponent(g);
     }
 }

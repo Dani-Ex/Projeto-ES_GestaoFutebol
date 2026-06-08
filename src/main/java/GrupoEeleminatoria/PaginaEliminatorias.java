@@ -1,6 +1,4 @@
-package ui.paginas;
-
-import ui.components.PrimaryButton;
+package GrupoEeleminatoria;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -12,10 +10,7 @@ public class PaginaEliminatorias extends JPanel {
     private final Runnable alternarMenu;
     private final Consumer<String> mostrarPagina;
 
-    public PaginaEliminatorias(
-            Runnable alternarMenu,
-            Consumer<String> mostrarPagina
-    ) {
+    public PaginaEliminatorias(Runnable alternarMenu, Consumer<String> mostrarPagina) {
         this.alternarMenu = alternarMenu;
         this.mostrarPagina = mostrarPagina;
 
@@ -39,11 +34,11 @@ public class PaginaEliminatorias extends JPanel {
         botaoMenu.setCursor(new Cursor(Cursor.HAND_CURSOR));
         botaoMenu.addActionListener(e -> alternarMenu.run());
 
-        JLabel titulo = new JLabel("Fase Eliminatória");
+        JLabel titulo = new JLabel("Fase Eliminatória", SwingConstants.CENTER);
         titulo.setFont(new Font("Segoe UI", Font.BOLD, 30));
         titulo.setForeground(Color.WHITE);
 
-        PrimaryButton botaoVoltar = new PrimaryButton("Ver Grupos");
+        JButton botaoVoltar = criarBotaoAzul("Ver Grupos");
         botaoVoltar.addActionListener(e -> mostrarPagina.accept("grupos"));
 
         barraSuperior.add(botaoMenu, BorderLayout.WEST);
@@ -52,7 +47,21 @@ public class PaginaEliminatorias extends JPanel {
 
         add(barraSuperior, BorderLayout.NORTH);
 
-        ChaveamentoEliminatorio chaveamento = new ChaveamentoEliminatorio();
+        chaveamentoEliminatoria chaveamento = new chaveamentoEliminatoria();
         add(chaveamento, BorderLayout.CENTER);
+    }
+
+    private JButton criarBotaoAzul(String texto) {
+        JButton botao = new JButton(texto);
+
+        botao.setFocusPainted(false);
+        botao.setBorderPainted(false);
+        botao.setBackground(new Color(37, 99, 235));
+        botao.setForeground(Color.WHITE);
+        botao.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        botao.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        botao.setBorder(new EmptyBorder(10, 18, 10, 18));
+
+        return botao;
     }
 }
