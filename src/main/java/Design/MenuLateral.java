@@ -2,6 +2,7 @@ package Design;
 
 import Frames.*;
 import Frames.SeccaoEquipas.EquipasFrame;
+import Frames.SeccaoFinancas.FinancasFrame;
 import Frames.SeccaoJogadores.JogadoresFrame;
 
 import javax.swing.*;
@@ -31,7 +32,7 @@ public class MenuLateral extends JPanel {
         JButton btnJogadores = criarBotaoMenu("Jogadores");
         JButton btnJogos = criarBotaoMenu("Jogos");
         JButton btnEstatisticas = criarBotaoMenu("Estatisticas");
-        JButton btnFinancas = criarBotaoMenu("Financas");
+        JButton btnFinancas = criarBotaoMenu("Finan\u00E7as");
         JButton btnEstadios = criarBotaoMenu("Estadios");
         JButton btnBilheteria = criarBotaoMenu("Bilheteria");
         JButton btnRegras = criarBotaoMenu("Regras");
@@ -60,7 +61,10 @@ public class MenuLateral extends JPanel {
             new EstadisticasFrame();
         });
 
-        btnFinancas.addActionListener(e -> abrirPlaceholder(frame, "Financas"));
+        btnFinancas.addActionListener(e -> {
+            frame.dispose();
+            new FinancasFrame();
+        });
         btnEstadios.addActionListener(e -> abrirPlaceholder(frame, "Estadios"));
         btnBilheteria.addActionListener(e -> abrirPlaceholder(frame, "Bilheteria"));
 
