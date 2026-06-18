@@ -2,29 +2,16 @@ package GrupoEeleminatoria;
 
 import Models.Campeonato;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class CampeonatoRepositorio {
 
-    private static final List<Campeonato> campeonatos = new ArrayList<>();
+    private static final String PASTA_DADOS = "dados";
+    private static final String FICHEIRO = PASTA_DADOS + File.separator + "campeonatos.dat";
 
-    static {
-        Campeonato ligaPrimavera = new Campeonato("Liga Primavera");
-        Campeonato tacaRegional = new Campeonato("Taça Regional");
-        Campeonato superLiga = new Campeonato("Super Liga");
-        Campeonato championLeague = new Campeonato("Champion League");
-        Campeonato torneioLitoral = new Campeonato("Torneio Litoral");
-        Campeonato mundial = new Campeonato("Mundial FIFA 2026");
-
-        // Exemplos: estes já podem aparecer como planeados, mas sem grupos gerados.
-        campeonatos.add(ligaPrimavera);
-        campeonatos.add(tacaRegional);
-        campeonatos.add(superLiga);
-        campeonatos.add(championLeague);
-        campeonatos.add(torneioLitoral);
-        campeonatos.add(mundial);
-    }
+    private static List<Campeonato> campeonatos = carregarDoFicheiro();
 
     public static List<Campeonato> listar() {
         return campeonatos;
@@ -32,15 +19,69 @@ public class CampeonatoRepositorio {
 
     public static void adicionar(Campeonato campeonato) {
         campeonatos.add(campeonato);
+        salvar();
+    }
+
+    public static void remover(Campeonato campeonato) {
+        campeonatos.remove(campeonato);
+        salvar();
     }
 
     public static Campeonato procurarPorNome(String nome) {
         for (Campeonato campeonato : campeonatos) {
-            if (campeonato.getNome().equals(nome)) {
+            if (campeonato.getNome().equalsIgnoreCase(nome)) {
                 return campeonato;
             }
         }
 
         return null;
+    }
+
+    public static boolean existeCampeonatoComNome(String nome) {
+        return procurarPorNome(nome) != null;
+    }
+
+    public static void salvar() {
+        try {
+            File pasta = new File(PASTA_DADOS);
+
+            if (!pasta.exists()) {
+                pasta.mkdirs();
+            }
+
+            ObjectOutputStream output = new ObjectOutputStream(
+                    new FileOutputStream(FICHEIRO)
+            );
+
+            output.writeObject(campeonatos);
+            output.close();
+
+        } catch (IOException e) {
+            System.out.println("Erro ao guardar campeonatos: " + e.getMessage());
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private static List<Campeonato> carregarDoFicheiro() {
+        File ficheiro = new File(FICHEIRO);
+
+        if (!ficheiro.exists()) {
+            return new ArrayList<>();
+        }
+
+        try {
+            ObjectInputStream input = new ObjectInputStream(
+                    new FileInputStream(FICHEIRO)
+            );
+
+            List<Campeonato> lista = (List<Campeonato>) input.readObject();
+            input.close();
+
+            return lista;
+
+        } catch (IOException | ClassNotFoundException e) {
+            System.out.println("Erro ao carregar campeonatos: " + e.getMessage());
+            return new ArrayList<>();
+        }
     }
 }
