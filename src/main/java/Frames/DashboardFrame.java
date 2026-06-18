@@ -19,7 +19,8 @@ public class DashboardFrame extends JFrame {
 
     public DashboardFrame() {
         setTitle("Dashboard do Campeonato");
-        setSize(1280, 760);
+        setSize(1920, 1080);
+        setMinimumSize(new Dimension(1280, 760));
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 

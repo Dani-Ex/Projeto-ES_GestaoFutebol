@@ -1,6 +1,7 @@
 package Frames;
 
 import Design.MenuLateral;
+import Design.ModernScrollBarUI;
 import Design.PlaceholderTextField;
 import Design.RoundedPanel;
 import Design.Tema;
@@ -28,7 +29,8 @@ public class EquipasFrame extends JFrame {
 
     public EquipasFrame() {
         setTitle("Equipas");
-        setSize(1280, 760);
+        setSize(1920, 1080);
+        setMinimumSize(new Dimension(1280, 760));
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
@@ -46,25 +48,12 @@ public class EquipasFrame extends JFrame {
 
         menuLateral = new MenuLateral(this);
         menuLateral.setVisible(false);
-
-        JPanel navegacao = new JPanel(new BorderLayout());
-        navegacao.setFocusable(true);
-        navegacao.setOpaque(false);
-        limparSelecaoAoClicar(navegacao);
-
-        JPanel menuTopo = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
-        menuTopo.setOpaque(false);
-        menuTopo.setBorder(BorderFactory.createEmptyBorder(0, 0, Tema.ESPACAMENTO_PEQUENO, 0));
-        menuTopo.add(criarBotaoMenu(main));
-
-        navegacao.add(menuTopo, BorderLayout.NORTH);
-        navegacao.add(menuLateral, BorderLayout.CENTER);
-        main.add(navegacao, BorderLayout.WEST);
+        main.add(menuLateral, BorderLayout.WEST);
 
         JPanel content = new JPanel();
         content.setFocusable(true);
         content.setOpaque(false);
-        content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
+        content.setLayout(new BorderLayout());
         content.setBorder(BorderFactory.createEmptyBorder(
                 Tema.ESPACAMENTO_GRANDE + 5,
                 Tema.ESPACAMENTO_GRANDE + 5,
@@ -73,15 +62,51 @@ public class EquipasFrame extends JFrame {
         ));
         limparSelecaoAoClicar(content);
 
-        content.add(criarTopo());
-        content.add(Box.createVerticalStrut(Tema.ESPACAMENTO_MEDIO));
-        content.add(criarPesquisa());
-        content.add(Box.createVerticalStrut(Tema.ESPACAMENTO_MEDIO + 5));
-        content.add(criarAreaPrincipal());
+        content.add(criarCabecalho(), BorderLayout.NORTH);
+        content.add(criarAreaPrincipal(), BorderLayout.CENTER);
 
-        main.add(content, BorderLayout.CENTER);
+        JPanel centro = new JPanel(new BorderLayout());
+        centro.setOpaque(false);
+        centro.add(criarLinhaMenu(main), BorderLayout.NORTH);
+        centro.add(content, BorderLayout.CENTER);
+
+        main.add(centro, BorderLayout.CENTER);
 
         setVisible(true);
+    }
+
+    private JPanel criarCabecalho() {
+        JPanel cabecalho = new JPanel(new GridBagLayout());
+        cabecalho.setFocusable(true);
+        cabecalho.setOpaque(false);
+        limparSelecaoAoClicar(cabecalho);
+
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.weightx = 1;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.anchor = GridBagConstraints.WEST;
+
+        gbc.gridy = 0;
+        gbc.insets = new Insets(0, 0, Tema.ESPACAMENTO_MEDIO, 0);
+        cabecalho.add(criarTopo(), gbc);
+
+        gbc.gridy = 1;
+        gbc.insets = new Insets(0, 0, Tema.ESPACAMENTO_MEDIO + 5, 0);
+        cabecalho.add(criarPesquisa(), gbc);
+
+        return cabecalho;
+    }
+
+    private JPanel criarLinhaMenu(JPanel main) {
+        JPanel linha = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        linha.setFocusable(true);
+        linha.setOpaque(false);
+        linha.setBorder(BorderFactory.createEmptyBorder(0, Tema.ESPACAMENTO_GRANDE + 5, 0, 0));
+        limparSelecaoAoClicar(linha);
+        linha.add(criarBotaoMenu(main));
+
+        return linha;
     }
 
     private JPanel criarTopo() {
@@ -144,14 +169,19 @@ public class EquipasFrame extends JFrame {
     }
 
     private JPanel criarPesquisa() {
-        JPanel linha = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        Dimension tamanhoCampo = new Dimension(250, 40);
+
+        JPanel linha = new JPanel(new BorderLayout());
         linha.setFocusable(true);
         linha.setOpaque(false);
-        linha.setMaximumSize(new Dimension(Integer.MAX_VALUE, 45));
+        linha.setPreferredSize(new Dimension(250, 45));
+        linha.setMinimumSize(new Dimension(250, 45));
         limparSelecaoAoClicar(linha);
 
         campoPesquisa = new PlaceholderTextField("Pesquisar equipa...");
-        campoPesquisa.setPreferredSize(new Dimension(250, 40));
+        campoPesquisa.setPreferredSize(tamanhoCampo);
+        campoPesquisa.setMinimumSize(tamanhoCampo);
+        campoPesquisa.setMaximumSize(tamanhoCampo);
         campoPesquisa.setFont(Tema.FONTE_TEXTO_PEQUENO);
         campoPesquisa.setForeground(Tema.COR_TEXTO_PRINCIPAL);
         campoPesquisa.setBorder(BorderFactory.createEmptyBorder(0, 15, 0, 15));
@@ -175,11 +205,20 @@ public class EquipasFrame extends JFrame {
 
         RoundedPanel campo = new RoundedPanel(18, Tema.COR_INPUT);
         campo.setLayout(new BorderLayout());
-        campo.setPreferredSize(new Dimension(250, 40));
+        campo.setPreferredSize(tamanhoCampo);
+        campo.setMinimumSize(tamanhoCampo);
+        campo.setMaximumSize(tamanhoCampo);
         campo.setBorder(new RoundedBorder(Tema.COR_LINHA, 18));
         campo.add(campoPesquisa, BorderLayout.CENTER);
 
-        linha.add(campo);
+        JPanel esquerda = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        esquerda.setOpaque(false);
+        esquerda.setPreferredSize(tamanhoCampo);
+        esquerda.setMinimumSize(tamanhoCampo);
+        esquerda.setMaximumSize(tamanhoCampo);
+        esquerda.add(campo);
+
+        linha.add(esquerda, BorderLayout.WEST);
 
         return linha;
     }
@@ -188,7 +227,6 @@ public class EquipasFrame extends JFrame {
         JPanel area = new JPanel(new BorderLayout(25, 0));
         area.setFocusable(true);
         area.setOpaque(false);
-        area.setMaximumSize(new Dimension(Integer.MAX_VALUE, 520));
         limparSelecaoAoClicar(area);
 
         area.add(criarCardTabelaEquipas(), BorderLayout.CENTER);
@@ -246,6 +284,7 @@ public class EquipasFrame extends JFrame {
             }
         });
         scroll.setBackground(Tema.COR_CARD);
+        ModernScrollBarUI.aplicar(scroll);
 
         JPanel topo = new JPanel(new BorderLayout());
         topo.setFocusable(true);
