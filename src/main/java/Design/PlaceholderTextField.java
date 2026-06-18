@@ -1,7 +1,11 @@
 package Design;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.*;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 
 public class PlaceholderTextField extends JTextField {
 
@@ -9,13 +13,42 @@ public class PlaceholderTextField extends JTextField {
 
     public PlaceholderTextField(String placeholder) {
         this.placeholder = placeholder;
+
+        getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                repaint();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                repaint();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                repaint();
+            }
+        });
+
+        addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                repaint();
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                repaint();
+            }
+        });
     }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        if (getText().isEmpty() && !isFocusOwner()) {
+        if (getText().isEmpty()) {
             Graphics2D g2 = (Graphics2D) g.create();
 
             g2.setRenderingHint(
