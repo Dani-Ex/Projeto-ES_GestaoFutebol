@@ -5,6 +5,7 @@ import Frames.CampeonatosFrame;
 import Frames.SeccaoEquipas.EquipasFrame;
 import Frames.seccaoEstadios.EstadiosFrame;
 import Models.Campeonato;
+import Models.CalendarioJogosService;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -428,6 +429,18 @@ public class GruposFrame extends JFrame {
 
         campeonato.setGrupos(grupos);
         campeonato.setGruposGerados(true);
+
+        try {
+            campeonato.setJogos(CalendarioJogosService.gerarJogosFaseGrupos(campeonato));
+        } catch (IllegalArgumentException ex) {
+            campeonato.setGruposGerados(false);
+            campeonato.getGrupos().clear();
+
+            mostrarErro(ex.getMessage());
+            return;
+        }
+
+        CampeonatoRepositorio.salvar();
 
         JOptionPane.showMessageDialog(
                 this,

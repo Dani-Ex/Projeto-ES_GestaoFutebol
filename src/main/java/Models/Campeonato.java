@@ -1,6 +1,7 @@
 package Models;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -25,18 +26,60 @@ public class Campeonato implements Serializable {
     private List<String> equipasEliminatorias;
 
     private ArrayList<Estadio> estadios;
+    private ArrayList<Jogo> jogos;
 
     private int numeroEquipasNecessarias;
     private int numeroEstadiosNecessarios;
 
+    private LocalDate dataInicioCampeonato;
+    private LocalDate dataFimGrupos;
+    private LocalDate dataInicioEliminatoria;
+    private LocalDate dataFimCampeonato;
+
     private String estado;
 
     public Campeonato(String nome) {
-        this(nome, 0, 0);
+        this(
+                nome,
+                0,
+                0,
+                LocalDate.now(),
+                LocalDate.now().plusDays(7),
+                LocalDate.now().plusDays(8),
+                LocalDate.now().plusDays(14)
+        );
     }
 
     public Campeonato(String nome, int numeroEquipasNecessarias, int numeroEstadiosNecessarios) {
+        this(
+                nome,
+                numeroEquipasNecessarias,
+                numeroEstadiosNecessarios,
+                LocalDate.now(),
+                LocalDate.now().plusDays(7),
+                LocalDate.now().plusDays(8),
+                LocalDate.now().plusDays(14)
+        );
+    }
+
+    public Campeonato(
+            String nome,
+            int numeroEquipasNecessarias,
+            int numeroEstadiosNecessarios,
+            LocalDate dataInicioCampeonato,
+            LocalDate dataFimGrupos,
+            LocalDate dataInicioEliminatoria,
+            LocalDate dataFimCampeonato
+    ) {
         this.nome = nome;
+
+        this.numeroEquipasNecessarias = numeroEquipasNecessarias;
+        this.numeroEstadiosNecessarios = numeroEstadiosNecessarios;
+
+        this.dataInicioCampeonato = dataInicioCampeonato;
+        this.dataFimGrupos = dataFimGrupos;
+        this.dataInicioEliminatoria = dataInicioEliminatoria;
+        this.dataFimCampeonato = dataFimCampeonato;
 
         this.gruposGerados = false;
         this.faseGruposTerminada = false;
@@ -47,9 +90,7 @@ public class Campeonato implements Serializable {
         this.equipasEliminatorias = new ArrayList<>();
 
         this.estadios = new ArrayList<>();
-
-        this.numeroEquipasNecessarias = numeroEquipasNecessarias;
-        this.numeroEstadiosNecessarios = numeroEstadiosNecessarios;
+        this.jogos = new ArrayList<>();
 
         this.estado = ESTADO_CONFIGURACAO;
     }
@@ -178,6 +219,18 @@ public class Campeonato implements Serializable {
         return false;
     }
 
+    public ArrayList<Jogo> getJogos() {
+        return jogos;
+    }
+
+    public void setJogos(ArrayList<Jogo> jogos) {
+        if (jogos == null) {
+            this.jogos = new ArrayList<>();
+        } else {
+            this.jogos = jogos;
+        }
+    }
+
     public int getNumeroEquipasNecessarias() {
         return numeroEquipasNecessarias;
     }
@@ -194,6 +247,38 @@ public class Campeonato implements Serializable {
         this.numeroEstadiosNecessarios = numeroEstadiosNecessarios;
     }
 
+    public LocalDate getDataInicioCampeonato() {
+        return dataInicioCampeonato;
+    }
+
+    public void setDataInicioCampeonato(LocalDate dataInicioCampeonato) {
+        this.dataInicioCampeonato = dataInicioCampeonato;
+    }
+
+    public LocalDate getDataFimGrupos() {
+        return dataFimGrupos;
+    }
+
+    public void setDataFimGrupos(LocalDate dataFimGrupos) {
+        this.dataFimGrupos = dataFimGrupos;
+    }
+
+    public LocalDate getDataInicioEliminatoria() {
+        return dataInicioEliminatoria;
+    }
+
+    public void setDataInicioEliminatoria(LocalDate dataInicioEliminatoria) {
+        this.dataInicioEliminatoria = dataInicioEliminatoria;
+    }
+
+    public LocalDate getDataFimCampeonato() {
+        return dataFimCampeonato;
+    }
+
+    public void setDataFimCampeonato(LocalDate dataFimCampeonato) {
+        this.dataFimCampeonato = dataFimCampeonato;
+    }
+
     public boolean temEquipasSuficientes() {
         return equipas.size() >= numeroEquipasNecessarias;
     }
@@ -205,7 +290,8 @@ public class Campeonato implements Serializable {
     public boolean podeIniciarCampeonato() {
         return isEmConfiguracao()
                 && temEquipasSuficientes()
-                && temEstadiosSuficientes();
+                && temEstadiosSuficientes()
+                && gruposGerados;
     }
 
     public String getMensagemBloqueioInicio() {
@@ -227,6 +313,10 @@ public class Campeonato implements Serializable {
                     + " de "
                     + numeroEstadiosNecessarios
                     + " estádios necessários.";
+        }
+
+        if (!gruposGerados) {
+            return "Primeiro tens de gerar os grupos antes de iniciar o campeonato.";
         }
 
         return "";

@@ -1,6 +1,10 @@
 package Models;
 
-public class Jogo {
+import java.io.Serializable;
+
+public class Jogo implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private final String id;
     private final String data;

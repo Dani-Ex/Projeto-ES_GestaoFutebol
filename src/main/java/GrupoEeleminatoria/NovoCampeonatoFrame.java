@@ -3,6 +3,7 @@ package GrupoEeleminatoria;
 import Design.MenuLateral;
 import Frames.CampeonatosFrame;
 import Models.Campeonato;
+import java.time.temporal.ChronoUnit;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -335,12 +336,29 @@ public class NovoCampeonatoFrame extends JFrame {
             return;
         }
 
+        if (!validarCapacidadeJogosPorEstadios(
+                numeroEquipas,
+                numeroEstadios,
+                inicioCampeonato,
+                fimGrupos
+        )) {
+            return;
+        }
+
         if (CampeonatoRepositorio.existeCampeonatoComNome(nome)) {
             mostrarErro("Já existe um campeonato com esse nome.");
             return;
         }
 
-        Campeonato campeonato = new Campeonato(nome, numeroEquipas, numeroEstadios);
+        Campeonato campeonato = new Campeonato(
+                nome,
+                numeroEquipas,
+                numeroEstadios,
+                inicioCampeonato,
+                fimGrupos,
+                inicioEliminatoria,
+                fimCampeonato
+        );
 
         CampeonatoRepositorio.adicionar(campeonato);
 
@@ -353,6 +371,50 @@ public class NovoCampeonatoFrame extends JFrame {
 
         dispose();
         new GruposFrame(campeonato);
+    }
+
+    private boolean validarCapacidadeJogosPorEstadios(
+            int numeroEquipas,
+            int numeroEstadios,
+            LocalDate inicioCampeonato,
+            LocalDate fimGrupos
+    ) {
+        int numeroGrupos = numeroEquipas / 4;
+
+        // Cada grupo de 4 equipas gera 6 jogos:
+        // A vs B, A vs C, A vs D, B vs C, B vs D, C vs D
+        int jogosPorGrupo = 6;
+
+        int totalJogosFaseGrupos = numeroGrupos * jogosPorGrupo;
+
+        long diasDisponiveis = ChronoUnit.DAYS.between(inicioCampeonato, fimGrupos) + 1;
+
+        if (diasDisponiveis <= 0) {
+            mostrarErro("O intervalo da fase de grupos é inválido.");
+            return false;
+        }
+
+        long capacidadeMaximaJogos = diasDisponiveis * numeroEstadios;
+
+        if (totalJogosFaseGrupos > capacidadeMaximaJogos) {
+            long estadiosMinimosNecessarios = (long) Math.ceil((double) totalJogosFaseGrupos / diasDisponiveis);
+            long diasMinimosNecessarios = (long) Math.ceil((double) totalJogosFaseGrupos / numeroEstadios);
+
+            mostrarErro(
+                    "Não é possível calendarizar a fase de grupos com estes dados.\n\n"
+                            + "Total de jogos da fase de grupos: " + totalJogosFaseGrupos + "\n"
+                            + "Dias disponíveis: " + diasDisponiveis + "\n"
+                            + "Estádios disponíveis: " + numeroEstadios + "\n"
+                            + "Capacidade máxima: " + capacidadeMaximaJogos + " jogos\n\n"
+                            + "Para cumprir as regras dos estádios, precisas de pelo menos:\n"
+                            + "- " + estadiosMinimosNecessarios + " estádios nesse intervalo de datas; ou\n"
+                            + "- " + diasMinimosNecessarios + " dias com " + numeroEstadios + " estádios."
+            );
+
+            return false;
+        }
+
+        return true;
     }
 
     private void mostrarErro(String mensagem) {
