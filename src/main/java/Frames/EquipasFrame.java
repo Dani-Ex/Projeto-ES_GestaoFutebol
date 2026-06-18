@@ -4,8 +4,12 @@ import Design.MenuLateral;
 import Design.PlaceholderTextField;
 import Design.RoundedPanel;
 import Design.Tema;
+import Models.Equipa;
+import Models.EquipaService;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
@@ -18,7 +22,9 @@ public class EquipasFrame extends JFrame {
     private boolean menuAberto = false;
 
     private JTable tabelaEquipas;
+    private DefaultTableModel modeloEquipas;
     private PlaceholderTextField campoPesquisa;
+    private final EquipaService equipaService = new EquipaService();
 
     public EquipasFrame() {
         setTitle("Equipas");
@@ -104,6 +110,7 @@ public class EquipasFrame extends JFrame {
         tituloBox.add(subtitulo);
 
         JButton btnNova = criarBotaoArredondado("+ Nova Equipa", Tema.COR_INFO, Tema.COR_TEXTO_CLARO);
+        btnNova.addActionListener(e -> new NovaEquipaFrame(this::atualizarTabela));
 
         topo.add(tituloBox, BorderLayout.WEST);
         topo.add(btnNova, BorderLayout.EAST);
@@ -149,6 +156,22 @@ public class EquipasFrame extends JFrame {
         campoPesquisa.setForeground(Tema.COR_TEXTO_PRINCIPAL);
         campoPesquisa.setBorder(BorderFactory.createEmptyBorder(0, 15, 0, 15));
         campoPesquisa.setOpaque(false);
+        campoPesquisa.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                atualizarTabela();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                atualizarTabela();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                atualizarTabela();
+            }
+        });
 
         RoundedPanel campo = new RoundedPanel(18, Tema.COR_INPUT);
         campo.setLayout(new BorderLayout());
@@ -198,21 +221,11 @@ public class EquipasFrame extends JFrame {
                 "Pontos"
         };
 
-        DefaultTableModel model = criarModeloNaoEditavel(colunas);
+        modeloEquipas = criarModeloNaoEditavel(colunas);
 
-        model.addRow(new Object[]{"Portugal", "Grupo A", "Ativa", 23, 34});
-        model.addRow(new Object[]{"Espanha", "Grupo A", "Ativa", 23, 31});
-        model.addRow(new Object[]{"Argentina", "Grupo B", "Ativa", 23, 28});
-        model.addRow(new Object[]{"Inglaterra", "Grupo B", "Ativa", 23, 23});
-        model.addRow(new Object[]{"França", "Grupo C", "Ativa", 23, 21});
-        model.addRow(new Object[]{"Brasil", "Grupo C", "Ativa", 23, 18});
-        model.addRow(new Object[]{"Bélgica", "Grupo D", "Ativa", 23, 16});
-        model.addRow(new Object[]{"Alemanha", "Grupo D", "Inativa", 20, 10});
-        model.addRow(new Object[]{"Japão", "Grupo A", "Inativa", 22, 8});
-        model.addRow(new Object[]{"Uruguai", "Grupo B", "Ativa", 23, 14});
-
-        tabelaEquipas = new JTable(model);
+        tabelaEquipas = new JTable(modeloEquipas);
         configurarTabelaEquipas(tabelaEquipas);
+        atualizarTabela();
 
         tabelaEquipas.getColumnModel().getColumn(0).setPreferredWidth(180);
         tabelaEquipas.getColumnModel().getColumn(1).setPreferredWidth(100);
@@ -295,6 +308,26 @@ public class EquipasFrame extends JFrame {
                 return false;
             }
         };
+    }
+
+    private void atualizarTabela() {
+        if (modeloEquipas == null) {
+            return;
+        }
+
+        modeloEquipas.setRowCount(0);
+
+        String termoPesquisa = campoPesquisa == null ? "" : campoPesquisa.getText();
+
+        for (Equipa equipa : equipaService.pesquisarEquipas(termoPesquisa)) {
+            modeloEquipas.addRow(new Object[]{
+                    equipa.getNome(),
+                    equipa.getGrupo(),
+                    equipa.getEstadoTexto(),
+                    equipa.getTotalJogadores(),
+                    equipa.getPontos()
+            });
+        }
     }
 
     private void configurarTabelaEquipas(JTable tabela) {
