@@ -16,7 +16,6 @@ public class Estadio {
                    int lugaresNormal,
                    int lugaresVip,
                    int lugaresPremium) {
-
         this.nome = nome;
         this.cidade = cidade;
         this.proprietario = proprietario;
