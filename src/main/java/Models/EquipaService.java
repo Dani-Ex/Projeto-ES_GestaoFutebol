@@ -36,7 +36,7 @@ public class EquipaService {
         }
 
         if (campeonatos.isEmpty()) {
-            campeonatos.add("Campeonato Principal");
+            campeonatos.add("Models.Campeonato Principal");
         }
 
         return campeonatos;

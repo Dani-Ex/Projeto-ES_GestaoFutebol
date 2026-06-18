@@ -257,7 +257,7 @@ public class EquipasFrame extends JFrame {
 
         String[] colunas = {
                 "Nome da Equipa",
-                "Campeonato",
+                "Models.Campeonato",
                 "Grupo",
                 "Estado",
                 "Jogadores",

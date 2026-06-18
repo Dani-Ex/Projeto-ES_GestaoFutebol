@@ -18,7 +18,7 @@ public class DashboardFrame extends JFrame {
     private java.util.List<JTable> tabelasDashboard = new java.util.ArrayList<>();
 
     public DashboardFrame() {
-        setTitle("Dashboard do Campeonato");
+        setTitle("Dashboard do Models.Campeonato");
         setSize(1920, 1080);
         setMinimumSize(new Dimension(1280, 760));
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -67,7 +67,7 @@ public class DashboardFrame extends JFrame {
         tituloBox.setOpaque(false);
         tituloBox.setLayout(new BoxLayout(tituloBox, BoxLayout.Y_AXIS));
 
-        JLabel titulo = new JLabel("Dashboard do Campeonato");
+        JLabel titulo = new JLabel("Dashboard do Models.Campeonato");
         titulo.setFont(Tema.FONTE_TITULO_GRANDE);
         titulo.setForeground(Tema.COR_TEXTO_PRINCIPAL);
 

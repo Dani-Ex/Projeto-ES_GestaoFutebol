@@ -4,6 +4,7 @@ import Frames.*;
 import Frames.SeccaoEquipas.EquipasFrame;
 import Frames.SeccaoFinancas.FinancasFrame;
 import Frames.SeccaoJogadores.JogadoresFrame;
+import Frames.CampeonatosFrame;
 
 import javax.swing.*;
 import java.awt.*;
@@ -21,7 +22,7 @@ public class MenuLateral extends JPanel {
                 Tema.PADDING_MENU.right
         ));
 
-        JLabel titulo = new JLabel("Campeonato");
+        JLabel titulo = new JLabel("Models.Campeonato");
         titulo.setForeground(Tema.COR_TEXTO_CLARO);
         titulo.setFont(Tema.FONTE_MENU_TITULO);
         titulo.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -42,7 +43,10 @@ public class MenuLateral extends JPanel {
             new DashboardFrame();
         });
 
-        btnCampeonatos.addActionListener(e -> abrirPlaceholder(frame, "Campeonatos"));
+        btnCampeonatos.addActionListener(e -> {
+            frame.dispose();
+            new CampeonatosFrame();
+        });
 
         btnEquipas.addActionListener(e -> {
             frame.dispose();

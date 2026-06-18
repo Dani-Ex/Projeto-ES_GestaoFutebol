@@ -174,7 +174,7 @@ public class PerfilJogadorFrame extends JFrame {
         detalhes.setBorder(new EmptyBorder(28, 0, 0, 0));
 
         detalhes.add(criarMiniInfo("Equipa", jogador.getEquipa()));
-        detalhes.add(criarMiniInfo("Campeonato", jogador.getCampeonato()));
+        detalhes.add(criarMiniInfo("Models.Campeonato", jogador.getCampeonato()));
         detalhes.add(criarMiniInfo("Grupo", jogador.getGrupo()));
         detalhes.add(criarMiniInfo("Ranking", jogador.getRanking()));
 
