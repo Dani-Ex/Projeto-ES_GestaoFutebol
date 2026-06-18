@@ -30,7 +30,7 @@ public class ConsultaEquipaFrame extends JFrame {
     public ConsultaEquipaFrame(Equipa equipa, Runnable onEquipaAtualizada) {
         this.equipa = equipa;
         this.onEquipaAtualizada = onEquipaAtualizada;
-        this.jogadoresEquipa = new JogadorService().listarPorEquipa(
+        this.jogadoresEquipa = JogadorService.getInstance().listarPorEquipa(
                 equipa.getNome(),
                 equipa.getCampeonato()
         );
@@ -432,7 +432,7 @@ public class ConsultaEquipaFrame extends JFrame {
         Jogador jogador = jogadoresEquipa.get(linhaModelo);
 
         new PerfilJogadorFrame(jogador, () -> {
-            new JogadorService().guardarJogadores();
+            JogadorService.getInstance().guardarJogadores();
 
             if (onEquipaAtualizada != null) {
                 onEquipaAtualizada.run();

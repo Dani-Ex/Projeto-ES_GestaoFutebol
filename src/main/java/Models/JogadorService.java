@@ -15,9 +15,17 @@ public class JogadorService {
 
     private static final Path FICHEIRO_JOGADORES = Paths.get("data", "jogadores.tsv");
     private static final List<Jogador> jogadores = new ArrayList<>();
+    private static final JogadorService INSTANCE = new JogadorService();
 
     static {
         carregarJogadores();
+    }
+
+    private JogadorService() {
+    }
+
+    public static JogadorService getInstance() {
+        return INSTANCE;
     }
 
     public List<Jogador> listarJogadores() {

@@ -18,8 +18,8 @@ public class EditarReceitaFrame extends JFrame {
 
     private final String idJogo;
     private final Runnable onReceitaAlterada;
-    private final JogoService jogoService = new JogoService();
-    private final ReceitaService receitaService = new ReceitaService();
+    private final JogoService jogoService = JogoService.getInstance();
+    private final ReceitaService receitaService = ReceitaService.getInstance();
 
     private PlaceholderTextField campoJogo;
     private PlaceholderTextField campoCampeonato;
