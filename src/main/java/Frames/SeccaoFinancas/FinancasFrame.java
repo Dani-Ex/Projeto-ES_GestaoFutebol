@@ -138,8 +138,9 @@ public class FinancasFrame extends JFrame {
         JPanel topo = new JPanel(new BorderLayout());
         topo.setFocusable(true);
         topo.setOpaque(false);
-        topo.setMaximumSize(new Dimension(Integer.MAX_VALUE, 70));
-        topo.setAlignmentX(Component.LEFT_ALIGNMENT);
+        topo.setPreferredSize(new Dimension(LARGURA_AREA_FINANCAS, 70));
+        topo.setMaximumSize(new Dimension(LARGURA_AREA_FINANCAS, 70));
+        topo.setAlignmentX(Component.CENTER_ALIGNMENT);
         limparSelecaoAoClicar(topo);
 
         JPanel tituloBox = new JPanel();
@@ -179,7 +180,7 @@ public class FinancasFrame extends JFrame {
         painel.setLayout(new BoxLayout(painel, BoxLayout.X_AXIS));
         painel.setPreferredSize(new Dimension(LARGURA_AREA_FINANCAS, 90));
         painel.setMaximumSize(new Dimension(LARGURA_AREA_FINANCAS, 90));
-        painel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        painel.setAlignmentX(Component.CENTER_ALIGNMENT);
         limparSelecaoAoClicar(painel);
 
         valorLucroTotal = new JLabel();
@@ -240,7 +241,7 @@ public class FinancasFrame extends JFrame {
         card.setLayout(new BorderLayout());
         card.setPreferredSize(new Dimension(LARGURA_AREA_FINANCAS, 520));
         card.setMaximumSize(new Dimension(LARGURA_AREA_FINANCAS, Integer.MAX_VALUE));
-        card.setAlignmentX(Component.LEFT_ALIGNMENT);
+        card.setAlignmentX(Component.CENTER_ALIGNMENT);
         card.setBorder(BorderFactory.createEmptyBorder(
                 Tema.PADDING_CARD.top,
                 Tema.PADDING_CARD.left,
