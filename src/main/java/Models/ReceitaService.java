@@ -57,6 +57,16 @@ public class ReceitaService {
         return false;
     }
 
+    public Receita procurarPorJogo(String idJogo) {
+        for (Receita receita : listarReceitas()) {
+            if (receita.getIdJogo().equalsIgnoreCase(idJogo)) {
+                return receita;
+            }
+        }
+
+        return null;
+    }
+
     public void adicionarReceita(Receita receita) {
         if (receita == null) {
             throw new IllegalArgumentException("A receita n\u00E3o pode ser vazia.");
@@ -72,6 +82,42 @@ public class ReceitaService {
 
         List<Receita> receitas = new ArrayList<>(listarReceitas());
         receitas.add(receita);
+        guardarReceitas(receitas);
+    }
+
+    public void atualizarReceita(Receita receitaAtualizada) {
+        if (receitaAtualizada == null) {
+            throw new IllegalArgumentException("A receita n\u00E3o pode ser vazia.");
+        }
+
+        List<Receita> receitas = new ArrayList<>(listarReceitas());
+        boolean encontrada = false;
+
+        for (int i = 0; i < receitas.size(); i++) {
+            Receita receita = receitas.get(i);
+
+            if (receita.getIdJogo().equalsIgnoreCase(receitaAtualizada.getIdJogo())) {
+                receitas.set(i, receitaAtualizada);
+                encontrada = true;
+                break;
+            }
+        }
+
+        if (!encontrada) {
+            throw new IllegalArgumentException("A receita selecionada j\u00E1 n\u00E3o existe.");
+        }
+
+        guardarReceitas(receitas);
+    }
+
+    public void removerReceita(String idJogo) {
+        List<Receita> receitas = new ArrayList<>(listarReceitas());
+        boolean removida = receitas.removeIf(receita -> receita.getIdJogo().equalsIgnoreCase(idJogo));
+
+        if (!removida) {
+            throw new IllegalArgumentException("A receita selecionada j\u00E1 n\u00E3o existe.");
+        }
+
         guardarReceitas(receitas);
     }
 

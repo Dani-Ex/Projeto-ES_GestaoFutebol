@@ -273,6 +273,14 @@ public class FinancasFrame extends JFrame {
 
         tabelaReceitas = new JTable(modeloReceitas);
         configurarTabelaReceitas(tabelaReceitas);
+        tabelaReceitas.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent e) {
+                if (e.getClickCount() == 2) {
+                    abrirReceitaSelecionada();
+                }
+            }
+        });
         atualizarTabela();
 
         JScrollPane scroll = new JScrollPane(tabelaReceitas);
@@ -330,6 +338,20 @@ public class FinancasFrame extends JFrame {
         atualizarTabela();
     }
 
+    private void abrirReceitaSelecionada() {
+        int linha = tabelaReceitas.getSelectedRow();
+
+        if (linha < 0) {
+            return;
+        }
+
+        int linhaModelo = tabelaReceitas.convertRowIndexToModel(linha);
+
+        if (linhaModelo >= 0 && linhaModelo < receitas.size()) {
+            new EditarReceitaFrame(receitas.get(linhaModelo).idJogo, this::recarregarReceitas);
+        }
+    }
+
     private void atualizarResumo() {
         if (valorLucroTotal == null) {
             return;
@@ -367,6 +389,7 @@ public class FinancasFrame extends JFrame {
             String nomeJogo = jogo == null ? receita.getIdJogo() : jogo.getNomeJogo();
 
             receitas.add(new ReceitaJogo(
+                    receita.getIdJogo(),
                     nomeJogo,
                     receita.getBilhetes(),
                     receita.getBilheteira(),
@@ -405,13 +428,22 @@ public class FinancasFrame extends JFrame {
     }
 
     private static class ReceitaJogo {
+        private final String idJogo;
         private final String jogo;
         private final int bilhetes;
         private final double bilheteira;
         private final double patrocinio;
         private final double direitosTv;
 
-        private ReceitaJogo(String jogo, int bilhetes, double bilheteira, double patrocinio, double direitosTv) {
+        private ReceitaJogo(
+                String idJogo,
+                String jogo,
+                int bilhetes,
+                double bilheteira,
+                double patrocinio,
+                double direitosTv
+        ) {
+            this.idJogo = idJogo;
             this.jogo = jogo;
             this.bilhetes = bilhetes;
             this.bilheteira = bilheteira;
