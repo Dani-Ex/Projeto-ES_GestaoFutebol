@@ -24,17 +24,22 @@ public class MenuLateral extends JPanel {
         titulo.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         JButton btnDashboard = criarBotaoMenu("Dashboard");
+        JButton btnCampeonatos = criarBotaoMenu("Campeonatos");
         JButton btnEquipas = criarBotaoMenu("Equipas");
         JButton btnJogadores = criarBotaoMenu("Jogadores");
-        JButton btnEstadios = criarBotaoMenu("Estádios");
-        JButton btnBilhetes = criarBotaoMenu("Bilhetes");
-        JButton btnEstatisticas = criarBotaoMenu("Estatísticas");
+        JButton btnJogos = criarBotaoMenu("Jogos");
+        JButton btnEstatisticas = criarBotaoMenu("Estatisticas");
+        JButton btnFinancas = criarBotaoMenu("Financas");
+        JButton btnEstadios = criarBotaoMenu("Estadios");
+        JButton btnBilheteria = criarBotaoMenu("Bilheteria");
         JButton btnRegras = criarBotaoMenu("Regras");
 
         btnDashboard.addActionListener(e -> {
             frame.dispose();
             new DashboardFrame();
         });
+
+        btnCampeonatos.addActionListener(e -> abrirPlaceholder(frame, "Campeonatos"));
 
         btnEquipas.addActionListener(e -> {
             frame.dispose();
@@ -46,10 +51,16 @@ public class MenuLateral extends JPanel {
             new JogadoresFrame();
         });
 
+        btnJogos.addActionListener(e -> abrirPlaceholder(frame, "Jogos"));
+
         btnEstatisticas.addActionListener(e -> {
             frame.dispose();
             new EstadisticasFrame();
         });
+
+        btnFinancas.addActionListener(e -> abrirPlaceholder(frame, "Financas"));
+        btnEstadios.addActionListener(e -> abrirPlaceholder(frame, "Estadios"));
+        btnBilheteria.addActionListener(e -> abrirPlaceholder(frame, "Bilheteria"));
 
         btnRegras.addActionListener(e -> {
             frame.dispose();
@@ -60,17 +71,28 @@ public class MenuLateral extends JPanel {
         add(Box.createVerticalStrut(Tema.ESPACAMENTO_GRANDE));
         add(btnDashboard);
         add(Box.createVerticalStrut(Tema.ESPACAMENTO_PEQUENO));
+        add(btnCampeonatos);
+        add(Box.createVerticalStrut(Tema.ESPACAMENTO_PEQUENO));
         add(btnEquipas);
         add(Box.createVerticalStrut(Tema.ESPACAMENTO_PEQUENO));
         add(btnJogadores);
         add(Box.createVerticalStrut(Tema.ESPACAMENTO_PEQUENO));
-        add(btnEstadios);
-        add(Box.createVerticalStrut(Tema.ESPACAMENTO_PEQUENO));
-        add(btnBilhetes);
-        add(Box.createVerticalStrut(Tema.ESPACAMENTO_PEQUENO));
+        add(btnJogos);
+        add(Box.createVerticalStrut(Tema.ESPACAMENTO_GRANDE));
         add(btnEstatisticas);
         add(Box.createVerticalStrut(Tema.ESPACAMENTO_PEQUENO));
+        add(btnFinancas);
+        add(Box.createVerticalStrut(Tema.ESPACAMENTO_PEQUENO));
+        add(btnEstadios);
+        add(Box.createVerticalStrut(Tema.ESPACAMENTO_PEQUENO));
+        add(btnBilheteria);
+        add(Box.createVerticalStrut(Tema.ESPACAMENTO_PEQUENO));
         add(btnRegras);
+    }
+
+    private void abrirPlaceholder(JFrame frame, String titulo) {
+        frame.dispose();
+        new SecaoPlaceholderFrame(titulo);
     }
 
     private JButton criarBotaoMenu(String texto) {
