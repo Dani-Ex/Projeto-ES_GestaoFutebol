@@ -1,11 +1,15 @@
 package GrupoEeleminatoria;
 
-import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import java.awt.*;
 import Design.MenuLateral;
 import Frames.CampeonatosFrame;
 import Models.Campeonato;
+
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import java.awt.*;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 public class NovoCampeonatoFrame extends JFrame {
 
@@ -13,6 +17,8 @@ public class NovoCampeonatoFrame extends JFrame {
     private final Color TEXT = new Color(30, 41, 59);
     private final Color MUTED = new Color(120, 130, 150);
     private final Color BLUE = new Color(37, 99, 235);
+
+    private final DateTimeFormatter FORMATO_DATA = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     private JTextField campoNome;
     private JTextField campoDataInicioCampeonato;
@@ -23,7 +29,7 @@ public class NovoCampeonatoFrame extends JFrame {
     private JTextField campoNumeroEstadios;
 
     public NovoCampeonatoFrame() {
-        setTitle("Novo Models.Campeonato");
+        setTitle("Novo Campeonato");
         setSize(1250, 780);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -70,12 +76,12 @@ public class NovoCampeonatoFrame extends JFrame {
         centro.setLayout(new BoxLayout(centro, BoxLayout.Y_AXIS));
         centro.setBorder(new EmptyBorder(10, 130, 20, 130));
 
-        JLabel titulo = new JLabel("Novo Models.Campeonato");
+        JLabel titulo = new JLabel("Novo Campeonato");
         titulo.setFont(new Font("Segoe UI", Font.BOLD, 28));
         titulo.setForeground(TEXT);
         titulo.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        JLabel subtitulo = new JLabel("Criação de um novo campeonato com fases, datas, grupos e regras.");
+        JLabel subtitulo = new JLabel("Criação de campeonato em estado de configuração.");
         subtitulo.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         subtitulo.setForeground(MUTED);
         subtitulo.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -105,7 +111,7 @@ public class NovoCampeonatoFrame extends JFrame {
         card.setBorder(new EmptyBorder(28, 28, 20, 28));
         card.setPreferredSize(new Dimension(700, 520));
 
-        JLabel tituloCard = new JLabel("Dados do Models.Campeonato");
+        JLabel tituloCard = new JLabel("Dados do Campeonato");
         tituloCard.setFont(new Font("Segoe UI", Font.BOLD, 22));
         tituloCard.setForeground(TEXT);
 
@@ -119,21 +125,23 @@ public class NovoCampeonatoFrame extends JFrame {
         gbc.weightx = 1;
 
         campoNome = criarCampoTexto("Ex: Liga Primavera 2026");
-        campoDataInicioCampeonato = criarCampoTexto("Selecionar data");
-        campoDataFimGrupos = criarCampoTexto("Selecionar data");
-        campoDataInicioEliminatoria = criarCampoTexto("Selecionar data");
-        campoDataFimCampeonato = criarCampoTexto("Selecionar data");
+        campoDataInicioCampeonato = criarCampoTexto("Ex: 2026-07-01");
+        campoDataFimGrupos = criarCampoTexto("Ex: 2026-07-10");
+        campoDataInicioEliminatoria = criarCampoTexto("Ex: 2026-07-12");
+        campoDataFimCampeonato = criarCampoTexto("Ex: 2026-07-22");
         campoNumeroEquipas = criarCampoTexto("Ex: 24");
         campoNumeroEstadios = criarCampoTexto("Ex: 6");
 
         gbc.gridx = 0;
         gbc.gridy = 0;
+        gbc.gridwidth = 2;
+        formulario.add(criarCampoComLabel("Nome do Campeonato", campoNome), gbc);
+
         gbc.gridwidth = 1;
-        formulario.add(criarCampoComLabel("Nome do Models.Campeonato", campoNome), gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 1;
-        formulario.add(criarCampoComLabel("Data de Início do Models.Campeonato", campoDataInicioCampeonato), gbc);
+        formulario.add(criarCampoComLabel("Data de Início do Campeonato", campoDataInicioCampeonato), gbc);
 
         gbc.gridx = 1;
         gbc.gridy = 1;
@@ -145,7 +153,7 @@ public class NovoCampeonatoFrame extends JFrame {
 
         gbc.gridx = 1;
         gbc.gridy = 2;
-        formulario.add(criarCampoComLabel("Data de Fim do Models.Campeonato", campoDataFimCampeonato), gbc);
+        formulario.add(criarCampoComLabel("Data de Fim do Campeonato", campoDataFimCampeonato), gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 3;
@@ -153,7 +161,7 @@ public class NovoCampeonatoFrame extends JFrame {
 
         gbc.gridx = 1;
         gbc.gridy = 3;
-        formulario.add(criarCampoComLabel("Número de Estádios", campoNumeroEstadios), gbc);
+        formulario.add(criarCampoComLabel("Número de Estádios Necessários", campoNumeroEstadios), gbc);
 
         JPanel botoes = new JPanel(new FlowLayout(FlowLayout.RIGHT, 12, 0));
         botoes.setOpaque(false);
@@ -164,7 +172,7 @@ public class NovoCampeonatoFrame extends JFrame {
             new CampeonatosFrame();
         });
 
-        JButton criar = criarBotaoAzul("Criar Models.Campeonato");
+        JButton criar = criarBotaoAzul("Criar Campeonato");
         criar.addActionListener(e -> criarCampeonato());
 
         botoes.add(cancelar);
@@ -194,13 +202,21 @@ public class NovoCampeonatoFrame extends JFrame {
         texto.setText("""
                 Validações
 
-                • Cada grupo deve ter número par de equipas.
+                Formato obrigatório:
+                yyyy-MM-dd
 
-                • O sistema deve verificar se as datas permitem terminar todos os jogos.
+                Exemplo:
+                2026-07-01
 
-                • O calendário depende da quantidade de estádios disponíveis.
+                Ordem correta:
 
-                • 1.º e 2.º lugar passam para a fase mata-mata.
+                • Início do campeonato
+                • Fim da fase de grupos
+                • Início da eliminatória
+                • Fim do campeonato
+
+                O número de equipas deve ser
+                múltiplo de 4.
                 """);
 
         card.add(texto, BorderLayout.CENTER);
@@ -226,17 +242,126 @@ public class NovoCampeonatoFrame extends JFrame {
         JTextField campo = new JTextField();
         campo.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         campo.setForeground(TEXT);
+        campo.setToolTipText(placeholder);
+
         campo.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(new Color(203, 213, 225)),
                 new EmptyBorder(10, 12, 10, 12)
         ));
 
-        campo.setText("");
-        campo.putClientProperty("placeholder", placeholder);
-
-        campo.setToolTipText(placeholder);
-
         return campo;
+    }
+
+    private void criarCampeonato() {
+        String nome = campoNome.getText().trim();
+        String inicioCampeonatoTexto = campoDataInicioCampeonato.getText().trim();
+        String fimGruposTexto = campoDataFimGrupos.getText().trim();
+        String inicioEliminatoriaTexto = campoDataInicioEliminatoria.getText().trim();
+        String fimCampeonatoTexto = campoDataFimCampeonato.getText().trim();
+        String numeroEquipasTexto = campoNumeroEquipas.getText().trim();
+        String numeroEstadiosTexto = campoNumeroEstadios.getText().trim();
+
+        if (nome.isEmpty()) {
+            mostrarErro("O nome do campeonato é obrigatório.");
+            return;
+        }
+
+        if (inicioCampeonatoTexto.isEmpty()
+                || fimGruposTexto.isEmpty()
+                || inicioEliminatoriaTexto.isEmpty()
+                || fimCampeonatoTexto.isEmpty()) {
+            mostrarErro("Todas as datas são obrigatórias.");
+            return;
+        }
+
+        LocalDate inicioCampeonato;
+        LocalDate fimGrupos;
+        LocalDate inicioEliminatoria;
+        LocalDate fimCampeonato;
+
+        try {
+            inicioCampeonato = LocalDate.parse(inicioCampeonatoTexto, FORMATO_DATA);
+            fimGrupos = LocalDate.parse(fimGruposTexto, FORMATO_DATA);
+            inicioEliminatoria = LocalDate.parse(inicioEliminatoriaTexto, FORMATO_DATA);
+            fimCampeonato = LocalDate.parse(fimCampeonatoTexto, FORMATO_DATA);
+        } catch (DateTimeParseException e) {
+            mostrarErro("As datas devem estar no formato correto: yyyy-MM-dd.\nExemplo: 2026-07-01");
+            return;
+        }
+
+        if (fimGrupos.isBefore(inicioCampeonato)) {
+            mostrarErro("A data de fim da fase de grupos não pode ser antes da data de início do campeonato.");
+            return;
+        }
+
+        if (inicioEliminatoria.isBefore(fimGrupos)) {
+            mostrarErro("A data de início da fase eliminatória não pode ser antes do fim da fase de grupos.");
+            return;
+        }
+
+        if (fimCampeonato.isBefore(inicioEliminatoria)) {
+            mostrarErro("A data de fim do campeonato não pode ser antes do início da fase eliminatória.");
+            return;
+        }
+
+        if (fimCampeonato.isBefore(inicioCampeonato)) {
+            mostrarErro("A data de fim do campeonato não pode ser antes da data de início do campeonato.");
+            return;
+        }
+
+        if (numeroEquipasTexto.isEmpty() || numeroEstadiosTexto.isEmpty()) {
+            mostrarErro("O número de equipas e o número de estádios são obrigatórios.");
+            return;
+        }
+
+        int numeroEquipas;
+        int numeroEstadios;
+
+        try {
+            numeroEquipas = Integer.parseInt(numeroEquipasTexto);
+            numeroEstadios = Integer.parseInt(numeroEstadiosTexto);
+        } catch (NumberFormatException e) {
+            mostrarErro("O número de equipas e o número de estádios devem ser valores numéricos.");
+            return;
+        }
+
+        if (numeroEquipas <= 0 || numeroEstadios <= 0) {
+            mostrarErro("O número de equipas e de estádios deve ser maior que zero.");
+            return;
+        }
+
+        if (numeroEquipas % 4 != 0) {
+            mostrarErro("O número de equipas deve ser múltiplo de 4.");
+            return;
+        }
+
+        if (CampeonatoRepositorio.existeCampeonatoComNome(nome)) {
+            mostrarErro("Já existe um campeonato com esse nome.");
+            return;
+        }
+
+        Campeonato campeonato = new Campeonato(nome, numeroEquipas, numeroEstadios);
+
+        CampeonatoRepositorio.adicionar(campeonato);
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Campeonato criado com sucesso.\n\nEstado: Em configuração\n\nAgora adiciona equipas e estádios antes de iniciar.",
+                "Sucesso",
+                JOptionPane.INFORMATION_MESSAGE
+        );
+
+        dispose();
+        new GruposFrame(campeonato);
+    }
+
+    private void mostrarErro(String mensagem) {
+        JOptionPane.showMessageDialog(
+                this,
+                mensagem,
+                "Erro",
+                JOptionPane.ERROR_MESSAGE
+        );
     }
 
     private JButton criarBotaoAzul(String texto) {
@@ -265,71 +390,6 @@ public class NovoCampeonatoFrame extends JFrame {
         botao.setBorder(new EmptyBorder(12, 20, 12, 20));
 
         return botao;
-    }
-
-    private void criarCampeonato() {
-        String nome = campoNome.getText().trim();
-        String inicioCampeonato = campoDataInicioCampeonato.getText().trim();
-        String fimGrupos = campoDataFimGrupos.getText().trim();
-        String inicioEliminatoria = campoDataInicioEliminatoria.getText().trim();
-        String fimCampeonato = campoDataFimCampeonato.getText().trim();
-        String numeroEquipasTexto = campoNumeroEquipas.getText().trim();
-        String numeroEstadiosTexto = campoNumeroEstadios.getText().trim();
-
-        if (nome.isEmpty()) {
-            mostrarErro("O nome do campeonato é obrigatório.");
-            return;
-        }
-
-        if (inicioCampeonato.isEmpty() || fimGrupos.isEmpty() || inicioEliminatoria.isEmpty() || fimCampeonato.isEmpty()) {
-            mostrarErro("Todas as datas são obrigatórias.");
-            return;
-        }
-
-        int numeroEquipas;
-        int numeroEstadios;
-
-        try {
-            numeroEquipas = Integer.parseInt(numeroEquipasTexto);
-            numeroEstadios = Integer.parseInt(numeroEstadiosTexto);
-        } catch (NumberFormatException e) {
-            mostrarErro("O número de equipas e o número de estádios devem ser valores numéricos.");
-            return;
-        }
-
-        if (numeroEquipas <= 0 || numeroEstadios <= 0) {
-            mostrarErro("O número de equipas e de estádios deve ser maior que zero.");
-            return;
-        }
-
-        if (numeroEquipas % 4 != 0) {
-            mostrarErro("O número de equipas deve ser múltiplo de 4.");
-            return;
-        }
-
-        CampeonatoRepositorio.adicionar(new Campeonato(nome));
-
-        JOptionPane.showMessageDialog(
-                this,
-                "Models.Campeonato criado com sucesso:\n" + nome,
-                "Sucesso",
-                JOptionPane.INFORMATION_MESSAGE
-        );
-
-        dispose();
-        new CampeonatosFrame();
-
-        dispose();
-        new CampeonatosFrame();
-    }
-
-    private void mostrarErro(String mensagem) {
-        JOptionPane.showMessageDialog(
-                this,
-                mensagem,
-                "Erro",
-                JOptionPane.ERROR_MESSAGE
-        );
     }
 
     static class PainelArredondado extends JPanel {
