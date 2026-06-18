@@ -169,11 +169,12 @@ public class PerfilJogadorFrame extends JFrame {
         parteSuperior.add(avatar, BorderLayout.WEST);
         parteSuperior.add(info, BorderLayout.CENTER);
 
-        JPanel detalhes = new JPanel(new GridLayout(1, 3, 20, 0));
+        JPanel detalhes = new JPanel(new GridLayout(1, 4, 20, 0));
         detalhes.setOpaque(false);
         detalhes.setBorder(new EmptyBorder(28, 0, 0, 0));
 
         detalhes.add(criarMiniInfo("Equipa", jogador.getEquipa()));
+        detalhes.add(criarMiniInfo("Campeonato", jogador.getCampeonato()));
         detalhes.add(criarMiniInfo("Grupo", jogador.getGrupo()));
         detalhes.add(criarMiniInfo("Ranking", jogador.getRanking()));
 

@@ -5,6 +5,7 @@ import Design.RoundedButton;
 import Design.RoundedPanel;
 import Design.TableStyle;
 import Design.Tema;
+import Frames.SeccaoJogadores.PerfilJogadorFrame;
 import Models.Equipa;
 import Models.Jogador;
 import Models.JogadorService;
@@ -13,6 +14,8 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class ConsultaEquipaFrame extends JFrame {
 
@@ -265,6 +268,14 @@ public class ConsultaEquipaFrame extends JFrame {
         header.add(subtitulo);
 
         JTable tabela = criarTabelaJogadores();
+        tabela.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2) {
+                    abrirJogadorSelecionado(tabela);
+                }
+            }
+        });
         JScrollPane scroll = new JScrollPane(tabela);
         TableStyle.configurarScrollLimpo(scroll, Tema.COR_CARD);
 
@@ -403,6 +414,30 @@ public class ConsultaEquipaFrame extends JFrame {
         }
 
         return total;
+    }
+
+    private void abrirJogadorSelecionado(JTable tabela) {
+        int linha = tabela.getSelectedRow();
+
+        if (linha < 0 || jogadoresEquipa.isEmpty()) {
+            return;
+        }
+
+        int linhaModelo = tabela.convertRowIndexToModel(linha);
+
+        if (linhaModelo < 0 || linhaModelo >= jogadoresEquipa.size()) {
+            return;
+        }
+
+        Jogador jogador = jogadoresEquipa.get(linhaModelo);
+
+        new PerfilJogadorFrame(jogador, () -> {
+            new JogadorService().guardarJogadores();
+
+            if (onEquipaAtualizada != null) {
+                onEquipaAtualizada.run();
+            }
+        });
     }
 
     private void abrirEditarEquipa() {
