@@ -1,5 +1,9 @@
+package GrupoEeleminatoria;
+
 import javax.swing.*;
 import java.awt.*;
+import Design.MenuLateral;
+import Models.Campeonato;
 
 public class EliminatoriasFrame extends JFrame {
 

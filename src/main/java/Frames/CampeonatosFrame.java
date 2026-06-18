@@ -1,9 +1,17 @@
+package Frames;
+
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import Design.MenuLateral;
+import Models.Campeonato;
+import GrupoEeleminatoria.GruposFrame;
+import GrupoEeleminatoria.NovoCampeonatoFrame;
+import GrupoEeleminatoria.CampeonatoRepositorio;
 
 public class CampeonatosFrame extends JFrame {
 
@@ -82,7 +90,7 @@ public class CampeonatosFrame extends JFrame {
         textos.add(Box.createVerticalStrut(4));
         textos.add(subtitulo);
 
-        JButton btnNovo = criarBotaoAzul("+ Novo Campeonato");
+        JButton btnNovo = criarBotaoAzul("+ Novo Models.Campeonato");
         btnNovo.addActionListener(e -> {
             dispose();
             new NovoCampeonatoFrame();
@@ -132,7 +140,7 @@ public class CampeonatosFrame extends JFrame {
         titulo.setForeground(TEXT);
 
         String[] colunas = {
-                "Campeonato",
+                "Models.Campeonato",
                 "Início",
                 "Fim",
                 "Equipas",
@@ -212,7 +220,7 @@ public class CampeonatosFrame extends JFrame {
         texto.setWrapStyleWord(true);
 
         texto.setText("""
-                Regras do Campeonato
+                Regras do Models.Campeonato
 
                 • Equipas divididas por grupos
 

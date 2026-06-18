@@ -1,13 +1,11 @@
+package GrupoEeleminatoria;
+
+import Models.Campeonato;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.util.function.Consumer;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 
 public class PaginaGrupos extends JPanel {
 
@@ -235,7 +233,7 @@ public class PaginaGrupos extends JPanel {
     }
 
     private void criarNovoCampeonato() {
-        JTextField nomeField = new JTextField("Novo Campeonato");
+        JTextField nomeField = new JTextField("Novo Models.Campeonato");
 
         JPanel painel = new JPanel(new BorderLayout(0, 8));
         painel.add(new JLabel("Nome do campeonato:"), BorderLayout.NORTH);
@@ -244,7 +242,7 @@ public class PaginaGrupos extends JPanel {
         int resultado = JOptionPane.showConfirmDialog(
                 this,
                 painel,
-                "Novo Campeonato",
+                "Novo Models.Campeonato",
                 JOptionPane.OK_CANCEL_OPTION,
                 JOptionPane.PLAIN_MESSAGE
         );

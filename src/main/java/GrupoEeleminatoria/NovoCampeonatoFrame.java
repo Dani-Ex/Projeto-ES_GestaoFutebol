@@ -1,6 +1,11 @@
+package GrupoEeleminatoria;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import Design.MenuLateral;
+import Frames.CampeonatosFrame;
+import Models.Campeonato;
 
 public class NovoCampeonatoFrame extends JFrame {
 
@@ -18,7 +23,7 @@ public class NovoCampeonatoFrame extends JFrame {
     private JTextField campoNumeroEstadios;
 
     public NovoCampeonatoFrame() {
-        setTitle("Novo Campeonato");
+        setTitle("Novo Models.Campeonato");
         setSize(1250, 780);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -65,7 +70,7 @@ public class NovoCampeonatoFrame extends JFrame {
         centro.setLayout(new BoxLayout(centro, BoxLayout.Y_AXIS));
         centro.setBorder(new EmptyBorder(10, 130, 20, 130));
 
-        JLabel titulo = new JLabel("Novo Campeonato");
+        JLabel titulo = new JLabel("Novo Models.Campeonato");
         titulo.setFont(new Font("Segoe UI", Font.BOLD, 28));
         titulo.setForeground(TEXT);
         titulo.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -100,7 +105,7 @@ public class NovoCampeonatoFrame extends JFrame {
         card.setBorder(new EmptyBorder(28, 28, 20, 28));
         card.setPreferredSize(new Dimension(700, 520));
 
-        JLabel tituloCard = new JLabel("Dados do Campeonato");
+        JLabel tituloCard = new JLabel("Dados do Models.Campeonato");
         tituloCard.setFont(new Font("Segoe UI", Font.BOLD, 22));
         tituloCard.setForeground(TEXT);
 
@@ -124,11 +129,11 @@ public class NovoCampeonatoFrame extends JFrame {
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.gridwidth = 1;
-        formulario.add(criarCampoComLabel("Nome do Campeonato", campoNome), gbc);
+        formulario.add(criarCampoComLabel("Nome do Models.Campeonato", campoNome), gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 1;
-        formulario.add(criarCampoComLabel("Data de Início do Campeonato", campoDataInicioCampeonato), gbc);
+        formulario.add(criarCampoComLabel("Data de Início do Models.Campeonato", campoDataInicioCampeonato), gbc);
 
         gbc.gridx = 1;
         gbc.gridy = 1;
@@ -140,7 +145,7 @@ public class NovoCampeonatoFrame extends JFrame {
 
         gbc.gridx = 1;
         gbc.gridy = 2;
-        formulario.add(criarCampoComLabel("Data de Fim do Campeonato", campoDataFimCampeonato), gbc);
+        formulario.add(criarCampoComLabel("Data de Fim do Models.Campeonato", campoDataFimCampeonato), gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 3;
@@ -159,7 +164,7 @@ public class NovoCampeonatoFrame extends JFrame {
             new CampeonatosFrame();
         });
 
-        JButton criar = criarBotaoAzul("Criar Campeonato");
+        JButton criar = criarBotaoAzul("Criar Models.Campeonato");
         criar.addActionListener(e -> criarCampeonato());
 
         botoes.add(cancelar);
@@ -306,7 +311,7 @@ public class NovoCampeonatoFrame extends JFrame {
 
         JOptionPane.showMessageDialog(
                 this,
-                "Campeonato criado com sucesso:\n" + nome,
+                "Models.Campeonato criado com sucesso:\n" + nome,
                 "Sucesso",
                 JOptionPane.INFORMATION_MESSAGE
         );

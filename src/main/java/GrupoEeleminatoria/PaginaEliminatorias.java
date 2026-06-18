@@ -1,3 +1,7 @@
+package GrupoEeleminatoria;
+
+import Models.Campeonato;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;

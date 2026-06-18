@@ -1,10 +1,14 @@
+package GrupoEeleminatoria;
+
 import javax.swing.*;
 import java.awt.*;
+import Design.MenuLateral;
+import Models.Campeonato;
 
 public class GruposFrame extends JFrame {
 
     public GruposFrame(Campeonato campeonato) {
-        setTitle("Campeonato - " + campeonato.getNome());
+        setTitle("Models.Campeonato - " + campeonato.getNome());
         setSize(1250, 780);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

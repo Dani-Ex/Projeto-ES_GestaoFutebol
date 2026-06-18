@@ -1,3 +1,7 @@
+package GrupoEeleminatoria;
+
+import Models.Campeonato;
+
 import java.util.ArrayList;
 import java.util.List;
 
