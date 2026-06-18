@@ -5,9 +5,12 @@ import Design.RoundedButton;
 import Design.RoundedPanel;
 import Design.TableStyle;
 import Design.Tema;
+import Models.Jogo;
+import Models.JogoService;
+import Models.Receita;
+import Models.ReceitaService;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.text.NumberFormat;
@@ -26,6 +29,8 @@ public class FinancasFrame extends JFrame {
     private static final int LARGURA_AREA_FINANCAS = (LARGURA_CARD_RESUMO * 6) + (ESPACAMENTO_CARDS * 5);
 
     private final List<ReceitaJogo> receitas = new ArrayList<>();
+    private final JogoService jogoService = new JogoService();
+    private final ReceitaService receitaService = new ReceitaService();
 
     private MenuLateral menuLateral;
     private boolean menuAberto = false;
@@ -47,7 +52,7 @@ public class FinancasFrame extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        carregarDadosExemplo();
+        carregarReceitas();
 
         JPanel main = new JPanel(new BorderLayout());
         main.setFocusable(true);
@@ -318,82 +323,6 @@ public class FinancasFrame extends JFrame {
         atualizarResumo();
     }
 
-    private void editarCelulaFinanceira() {
-        int linha = tabelaReceitas.getSelectedRow();
-        int coluna = tabelaReceitas.getSelectedColumn();
-
-        if (linha < 0 || !(coluna == 2 || coluna == 4 || coluna == 6 || coluna == 8)) {
-            return;
-        }
-
-        int linhaModelo = tabelaReceitas.convertRowIndexToModel(linha);
-        ReceitaJogo receita = receitas.get(linhaModelo);
-
-        String campo = campoDaColuna(coluna);
-        String valorAtual = valorAtualDaColuna(receita, coluna);
-        String novoValor = JOptionPane.showInputDialog(
-                this,
-                "Novo valor para " + campo + ":",
-                valorAtual
-        );
-
-        if (novoValor == null || novoValor.trim().isEmpty()) {
-            limparSelecao();
-            return;
-        }
-
-        try {
-            aplicarNovoValor(receita, coluna, novoValor.trim());
-            atualizarTabela();
-        } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(
-                    this,
-                    "O valor deve ser numerico e positivo.",
-                    "Valor invalido",
-                    JOptionPane.ERROR_MESSAGE
-            );
-        }
-
-        limparSelecao();
-    }
-
-    private String campoDaColuna(int coluna) {
-        return switch (coluna) {
-            case 2 -> "bilhetes vendidos";
-            case 4 -> "bilheteira";
-            case 6 -> "patroc\u00EDnio";
-            case 8 -> "direitos TV";
-            default -> "valor";
-        };
-    }
-
-    private String valorAtualDaColuna(ReceitaJogo receita, int coluna) {
-        return switch (coluna) {
-            case 2 -> String.valueOf(receita.bilhetes);
-            case 4 -> String.valueOf(receita.bilheteira);
-            case 6 -> String.valueOf(receita.patrocinio);
-            case 8 -> String.valueOf(receita.direitosTv);
-            default -> "";
-        };
-    }
-
-    private void aplicarNovoValor(ReceitaJogo receita, int coluna, String valor) {
-        double numero = Double.parseDouble(valor.replace(".", "").replace(",", "."));
-
-        if (numero < 0) {
-            throw new NumberFormatException();
-        }
-
-        switch (coluna) {
-            case 2 -> receita.bilhetes = (int) Math.round(numero);
-            case 4 -> receita.bilheteira = numero;
-            case 6 -> receita.patrocinio = numero;
-            case 8 -> receita.direitosTv = numero;
-            default -> {
-            }
-        }
-    }
-
     private void atualizarResumo() {
         if (valorLucroTotal == null) {
             return;
@@ -423,12 +352,21 @@ public class FinancasFrame extends JFrame {
         valorMediaJogo.setText(formatarEuros(media));
     }
 
-    private void carregarDadosExemplo() {
-        receitas.add(new ReceitaJogo("Porto vs Benfica", 41532, 120000, 50000, 80000));
-        receitas.add(new ReceitaJogo("Sporting vs Braga", 28765, 85000, 35000, 70000));
-        receitas.add(new ReceitaJogo("Benfica vs Vit\u00F3ria", 52118, 150000, 60000, 90000));
-        receitas.add(new ReceitaJogo("Moreirense vs Gil", 12345, 22000, 10000, 20000));
-        receitas.add(new ReceitaJogo("Rio Ave vs Estoril", 9860, 18000, 8000, 18000));
+    private void carregarReceitas() {
+        receitas.clear();
+
+        for (Receita receita : receitaService.listarReceitas()) {
+            Jogo jogo = jogoService.procurarPorId(receita.getIdJogo());
+            String nomeJogo = jogo == null ? receita.getIdJogo() : jogo.getNomeJogo();
+
+            receitas.add(new ReceitaJogo(
+                    nomeJogo,
+                    receita.getBilhetes(),
+                    receita.getBilheteira(),
+                    receita.getPatrocinio(),
+                    receita.getDireitosTv()
+            ));
+        }
     }
 
     private String formatarEuros(double valor) {
@@ -461,10 +399,10 @@ public class FinancasFrame extends JFrame {
 
     private static class ReceitaJogo {
         private final String jogo;
-        private int bilhetes;
-        private double bilheteira;
-        private double patrocinio;
-        private double direitosTv;
+        private final int bilhetes;
+        private final double bilheteira;
+        private final double patrocinio;
+        private final double direitosTv;
 
         private ReceitaJogo(String jogo, int bilhetes, double bilheteira, double patrocinio, double direitosTv) {
             this.jogo = jogo;
