@@ -1,6 +1,7 @@
 package Frames;
 
 import Design.Tema;
+import Models.Jogador;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;

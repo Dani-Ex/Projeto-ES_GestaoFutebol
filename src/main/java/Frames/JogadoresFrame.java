@@ -1,6 +1,8 @@
 package Frames;
 
+import Design.MenuLateral;
 import Design.RoundedPanel;
+import Models.Jogador;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;

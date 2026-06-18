@@ -1,6 +1,7 @@
 package Frames;
 
 import Design.RoundedPanel;
+import Models.Jogador;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;

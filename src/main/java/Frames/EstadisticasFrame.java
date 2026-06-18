@@ -1,5 +1,6 @@
 package Frames;
 
+import Design.MenuLateral;
 import Design.Tema;
 
 import javax.swing.*;

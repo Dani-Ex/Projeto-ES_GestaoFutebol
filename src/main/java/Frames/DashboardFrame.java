@@ -1,5 +1,6 @@
 package Frames;
 
+import Design.MenuLateral;
 import Design.RoundedPanel;
 import Design.Tema;
 
