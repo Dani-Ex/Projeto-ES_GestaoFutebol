@@ -1,3 +1,5 @@
+package Design;
+
 import java.awt.*;
 
 public class Tema {
@@ -34,6 +36,12 @@ public class Tema {
     public static final Color CARD_ROXO = new Color(233, 213, 255);
     public static final Color CARD_AMARELO = new Color(254, 240, 138);
 
+    public static final Color COR_INPUT = Color.WHITE;
+    public static final Color COR_BOTAO_SECUNDARIO = new Color(241, 245, 249);
+    public static final Color COR_ERRO_SUAVE = new Color(254, 226, 226);
+    public static final Color COR_VERDE_SUAVE = new Color(220, 252, 231);
+    public static final Color COR_VERDE_FORTE = new Color(22, 163, 74);
+
     public static final Color CARD_TEXTO_AZUL = new Color(79, 70, 229);
     public static final Color CARD_TEXTO_VERDE = new Color(22, 101, 52);
     public static final Color CARD_TEXTO_ROXO = new Color(109, 40, 217);
@@ -59,6 +67,8 @@ public class Tema {
 
     public static final Font FONTE_TITULO =
             new Font(FONTE_PADRAO, Font.BOLD, 24);
+
+    public static final Font FONTE_TABELA_TITULO = new Font(FONTE_PADRAO, Font.BOLD, 20);
 
     public static final Font FONTE_SUBTITULO =
             new Font(FONTE_PADRAO, Font.PLAIN, 14);

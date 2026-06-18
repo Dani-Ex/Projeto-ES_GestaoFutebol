@@ -1,8 +1,12 @@
+package Frames;
+
+import Design.MenuLateral;
+import Design.RoundedPanel;
+import Design.Tema;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.JTableHeader;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.JTableHeader;
 
@@ -15,7 +19,8 @@ public class DashboardFrame extends JFrame {
 
     public DashboardFrame() {
         setTitle("Dashboard do Campeonato");
-        setSize(1280, 760);
+        setSize(1920, 1080);
+        setMinimumSize(new Dimension(1280, 760));
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 

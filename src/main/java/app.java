@@ -1,4 +1,4 @@
-
+import Frames.DashboardFrame;
 
 public class app {
     public static void main(String[] args) {
