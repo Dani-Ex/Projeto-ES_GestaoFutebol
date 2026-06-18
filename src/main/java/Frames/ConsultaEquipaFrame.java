@@ -19,9 +19,15 @@ public class ConsultaEquipaFrame extends JFrame {
 
     private final Equipa equipa;
     private final java.util.List<Jogador> jogadoresEquipa;
+    private final Runnable onEquipaAtualizada;
 
     public ConsultaEquipaFrame(Equipa equipa) {
+        this(equipa, null);
+    }
+
+    public ConsultaEquipaFrame(Equipa equipa, Runnable onEquipaAtualizada) {
         this.equipa = equipa;
+        this.onEquipaAtualizada = onEquipaAtualizada;
         this.jogadoresEquipa = new JogadorService().listarPorEquipa(
                 equipa.getNome(),
                 equipa.getCampeonato()
@@ -87,8 +93,8 @@ public class ConsultaEquipaFrame extends JFrame {
         topo.setOpaque(false);
 
         JButton voltar = criarBotao("← Voltar a Equipas", Tema.COR_CARD, Tema.COR_TEXTO_PRINCIPAL, this::dispose);
-        JButton editar = criarBotao("Editar Equipa", Tema.COR_INFO, Tema.COR_TEXTO_CLARO, () -> mostrarFuncionalidadePendente("Editar equipa"));
-        JButton editarJogadores = criarBotao("Editar Jogadores", Tema.COR_CARD, Tema.COR_INFO, () -> mostrarFuncionalidadePendente("Editar jogadores"));
+        JButton editar = criarBotao("Editar Equipa", Tema.COR_INFO, Tema.COR_TEXTO_CLARO, this::abrirEditarEquipa);
+        JButton editarJogadores = criarBotao("Editar Jogadores", Tema.COR_CARD, Tema.COR_INFO, this::abrirEditarJogadores);
 
         JPanel esquerda = new JPanel();
         esquerda.setOpaque(false);
@@ -439,9 +445,19 @@ public class ConsultaEquipaFrame extends JFrame {
     }
 
     private int totalJogadores() {
-        return jogadoresEquipa.isEmpty()
-                ? equipa.getTotalJogadores()
-                : jogadoresEquipa.size();
+        if (jogadoresEquipa.isEmpty()) {
+            return equipa.getTotalJogadores();
+        }
+
+        int total = 0;
+
+        for (Jogador jogador : jogadoresEquipa) {
+            if (jogador.isAtivo()) {
+                total++;
+            }
+        }
+
+        return total;
     }
 
     private int totalGolos() {
@@ -465,5 +481,27 @@ public class ConsultaEquipaFrame extends JFrame {
                 "Funcionalidade pendente",
                 JOptionPane.INFORMATION_MESSAGE
         );
+    }
+
+    private void abrirEditarEquipa() {
+        new EditarEquipaFrame(equipa, () -> {
+            if (onEquipaAtualizada != null) {
+                onEquipaAtualizada.run();
+            }
+
+            dispose();
+            new ConsultaEquipaFrame(equipa, onEquipaAtualizada);
+        });
+    }
+
+    private void abrirEditarJogadores() {
+        new EditarJogadoresFrame(equipa, () -> {
+            if (onEquipaAtualizada != null) {
+                onEquipaAtualizada.run();
+            }
+
+            dispose();
+            new ConsultaEquipaFrame(equipa, onEquipaAtualizada);
+        });
     }
 }

@@ -41,7 +41,15 @@ public class JogadorService {
     }
 
     public int contarJogadoresPorEquipa(String equipa, String campeonato) {
-        return listarPorEquipa(equipa, campeonato).size();
+        int total = 0;
+
+        for (Jogador jogador : listarPorEquipa(equipa, campeonato)) {
+            if (jogador.isAtivo()) {
+                total++;
+            }
+        }
+
+        return total;
     }
 
     public int somarGolosPorEquipa(String equipa, String campeonato) {
@@ -65,6 +73,74 @@ public class JogadorService {
 
         jogador.setGolos(golos);
         guardarJogadores();
+    }
+
+    public void atualizarEquipaDosJogadores(String equipaAntiga,
+                                             String campeonatoAntigo,
+                                             String novaEquipa,
+                                             String novoCampeonato) {
+        String equipaAntigaNormalizada = normalizar(equipaAntiga);
+        String campeonatoAntigoNormalizado = normalizar(campeonatoAntigo);
+        boolean alterou = false;
+
+        for (Jogador jogador : jogadores) {
+            if (normalizar(jogador.getEquipa()).equals(equipaAntigaNormalizada)
+                    && normalizar(jogador.getCampeonato()).equals(campeonatoAntigoNormalizado)) {
+                jogador.setEquipa(novaEquipa);
+                jogador.setCampeonato(novoCampeonato);
+                alterou = true;
+            }
+        }
+
+        if (alterou) {
+            guardarJogadores();
+        }
+    }
+
+    public void adicionarJogador(Jogador jogador) {
+        if (jogador == null) {
+            throw new IllegalArgumentException("O jogador nao pode ser nulo.");
+        }
+
+        if (jogador.getNome() == null || jogador.getNome().trim().isEmpty()) {
+            throw new IllegalArgumentException("O nome do jogador e obrigatorio.");
+        }
+
+        if (contarJogadoresPorEquipa(jogador.getEquipa(), jogador.getCampeonato()) >= 23
+                && jogador.isAtivo()) {
+            throw new IllegalArgumentException("A equipa ja tem 23 jogadores ativos.");
+        }
+
+        if (numeroAtivoExisteNaEquipa(jogador.getEquipa(), jogador.getCampeonato(), jogador.getNumero())) {
+            throw new IllegalArgumentException("Ja existe um jogador ativo com esse numero nesta equipa.");
+        }
+
+        jogadores.add(jogador);
+        guardarJogadores();
+    }
+
+    public void removerOuInativarJogador(Jogador jogador, boolean campeonatoIniciado) {
+        if (jogador == null) {
+            throw new IllegalArgumentException("O jogador nao pode ser nulo.");
+        }
+
+        if (campeonatoIniciado) {
+            jogador.setAtivo(false);
+        } else {
+            jogadores.remove(jogador);
+        }
+
+        guardarJogadores();
+    }
+
+    private boolean numeroAtivoExisteNaEquipa(String equipa, String campeonato, int numero) {
+        for (Jogador jogador : listarPorEquipa(equipa, campeonato)) {
+            if (jogador.isAtivo() && jogador.getNumero() == numero) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public void guardarJogadores() {

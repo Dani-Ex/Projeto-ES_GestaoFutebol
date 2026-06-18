@@ -68,20 +68,40 @@ public class Equipa {
         return nome;
     }
 
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
     public String getCidade() {
         return cidade;
+    }
+
+    public void setCidade(String cidade) {
+        this.cidade = cidade;
     }
 
     public String getPais() {
         return pais;
     }
 
+    public void setPais(String pais) {
+        this.pais = pais;
+    }
+
     public String getTreinador() {
         return treinador;
     }
 
+    public void setTreinador(String treinador) {
+        this.treinador = treinador;
+    }
+
     public String getCapitao() {
         return capitao;
+    }
+
+    public void setCapitao(String capitao) {
+        this.capitao = capitao;
     }
 
     public String getCampeonato() {

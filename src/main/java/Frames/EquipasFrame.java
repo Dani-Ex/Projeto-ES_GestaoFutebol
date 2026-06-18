@@ -397,7 +397,7 @@ public class EquipasFrame extends JFrame {
         int linhaModelo = tabelaEquipas.convertRowIndexToModel(linha);
 
         if (linhaModelo >= 0 && linhaModelo < equipasVisiveis.size()) {
-            new ConsultaEquipaFrame(equipasVisiveis.get(linhaModelo));
+            new ConsultaEquipaFrame(equipasVisiveis.get(linhaModelo), this::atualizarTabela);
         }
     }
 

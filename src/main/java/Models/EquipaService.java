@@ -102,6 +102,48 @@ public class EquipaService {
         return false;
     }
 
+    public boolean outraEquipaExisteNoCampeonato(Equipa equipaAtual, String nome, String campeonato) {
+        String nomeNormalizado = normalizar(nome);
+        String campeonatoNormalizado = normalizar(campeonato);
+
+        for (Equipa equipa : equipas) {
+            if (equipa == equipaAtual) {
+                continue;
+            }
+
+            if (normalizar(equipa.getNome()).equals(nomeNormalizado)
+                    && normalizar(equipa.getCampeonato()).equals(campeonatoNormalizado)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public void guardarAlteracoes() {
+        guardarEquipas();
+    }
+
+    public void atualizarEstatisticasDaEquipa(Equipa equipa) {
+        if (equipa == null) {
+            return;
+        }
+
+        JogadorService jogadorService = new JogadorService();
+        int totalJogadores = jogadorService.contarJogadoresPorEquipa(
+                equipa.getNome(),
+                equipa.getCampeonato()
+        );
+
+        equipa.setTotalJogadores(totalJogadores);
+        equipa.setGolos(jogadorService.somarGolosPorEquipa(
+                equipa.getNome(),
+                equipa.getCampeonato()
+        ));
+        equipa.setAtiva(totalJogadores == 23);
+        guardarEquipas();
+    }
+
     public void adicionarJogador(Equipa equipa,
                                  Jogador jogador) {
 
