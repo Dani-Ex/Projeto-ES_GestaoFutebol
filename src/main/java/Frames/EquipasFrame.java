@@ -16,6 +16,10 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.border.AbstractBorder;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 public class EquipasFrame extends JFrame {
 
@@ -25,6 +29,7 @@ public class EquipasFrame extends JFrame {
     private JTable tabelaEquipas;
     private DefaultTableModel modeloEquipas;
     private PlaceholderTextField campoPesquisa;
+    private final List<Equipa> equipasVisiveis = new ArrayList<>();
     private final EquipaService equipaService = new EquipaService();
 
     public EquipasFrame() {
@@ -264,6 +269,14 @@ public class EquipasFrame extends JFrame {
 
         tabelaEquipas = new JTable(modeloEquipas);
         configurarTabelaEquipas(tabelaEquipas);
+        tabelaEquipas.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2) {
+                    abrirEquipaSelecionada();
+                }
+            }
+        });
         atualizarTabela();
 
         tabelaEquipas.getColumnModel().getColumn(0).setPreferredWidth(170);
@@ -357,10 +370,12 @@ public class EquipasFrame extends JFrame {
         }
 
         modeloEquipas.setRowCount(0);
+        equipasVisiveis.clear();
 
         String termoPesquisa = campoPesquisa == null ? "" : campoPesquisa.getText();
 
         for (Equipa equipa : equipaService.pesquisarEquipas(termoPesquisa)) {
+            equipasVisiveis.add(equipa);
             modeloEquipas.addRow(new Object[]{
                     equipa.getNome(),
                     equipa.getCampeonato(),
@@ -369,6 +384,20 @@ public class EquipasFrame extends JFrame {
                     equipa.getTotalJogadores(),
                     equipa.getPontos()
             });
+        }
+    }
+
+    private void abrirEquipaSelecionada() {
+        int linha = tabelaEquipas.getSelectedRow();
+
+        if (linha < 0) {
+            return;
+        }
+
+        int linhaModelo = tabelaEquipas.convertRowIndexToModel(linha);
+
+        if (linhaModelo >= 0 && linhaModelo < equipasVisiveis.size()) {
+            new ConsultaEquipaFrame(equipasVisiveis.get(linhaModelo));
         }
     }
 

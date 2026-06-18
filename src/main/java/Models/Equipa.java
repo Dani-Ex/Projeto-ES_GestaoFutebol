@@ -11,6 +11,7 @@ public class Equipa {
     private String treinador;
     private String capitao;
     private String campeonato;
+    private String ranking;
 
     private int pontos;
     private int golos;
@@ -87,6 +88,10 @@ public class Equipa {
         return campeonato;
     }
 
+    public String getRanking() {
+        return ranking;
+    }
+
     public int getPontos() {
         return pontos;
     }
@@ -133,6 +138,10 @@ public class Equipa {
 
     public void setCampeonato(String campeonato) {
         this.campeonato = campeonato;
+    }
+
+    public void setRanking(String ranking) {
+        this.ranking = ranking;
     }
 
     public void setAtiva(boolean ativa) {

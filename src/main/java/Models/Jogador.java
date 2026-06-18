@@ -15,6 +15,7 @@ public class Jogador {
     private String paisOrigem;
     private String cidadeNascimento;
     private String equipa;
+    private String campeonato;
     private String grupo;
     private String ranking;
 
@@ -53,6 +54,56 @@ public class Jogador {
             int disciplina,
             boolean ativo
     ) {
+        this(
+                nome,
+                numero,
+                posicao,
+                peso,
+                altura,
+                peDominante,
+                dataNascimento,
+                paisOrigem,
+                cidadeNascimento,
+                equipa,
+                "Campeonato Principal",
+                grupo,
+                ranking,
+                jogos,
+                golos,
+                assistencias,
+                cartoes,
+                minutos,
+                finalizacao,
+                passeCriacao,
+                disciplina,
+                ativo
+        );
+    }
+
+    public Jogador(
+            String nome,
+            int numero,
+            String posicao,
+            int peso,
+            double altura,
+            String peDominante,
+            LocalDate dataNascimento,
+            String paisOrigem,
+            String cidadeNascimento,
+            String equipa,
+            String campeonato,
+            String grupo,
+            String ranking,
+            int jogos,
+            int golos,
+            int assistencias,
+            int cartoes,
+            int minutos,
+            int finalizacao,
+            int passeCriacao,
+            int disciplina,
+            boolean ativo
+    ) {
         this.nome = nome;
         this.numero = numero;
         this.posicao = posicao;
@@ -63,6 +114,7 @@ public class Jogador {
         this.paisOrigem = paisOrigem;
         this.cidadeNascimento = cidadeNascimento;
         this.equipa = equipa;
+        this.campeonato = campeonato;
         this.grupo = grupo;
         this.ranking = ranking;
         this.jogos = jogos;
@@ -114,6 +166,10 @@ public class Jogador {
 
     public String getEquipa() {
         return equipa;
+    }
+
+    public String getCampeonato() {
+        return campeonato;
     }
 
     public String getGrupo() {
@@ -214,6 +270,10 @@ public class Jogador {
 
     public void setEquipa(String equipa) {
         this.equipa = equipa;
+    }
+
+    public void setCampeonato(String campeonato) {
+        this.campeonato = campeonato;
     }
 
     public void setGrupo(String grupo) {

@@ -83,6 +83,7 @@ public class EquipaService {
             );
         }
 
+        equipa.setAtiva(equipa.getTotalJogadores() == 23);
         equipas.add(equipa);
         guardarEquipas();
     }
@@ -136,6 +137,7 @@ public class EquipaService {
     private static void carregarEquipas() {
         if (Files.exists(FICHEIRO_EQUIPAS)) {
             carregarEquipasGuardadas();
+            sincronizarEstatisticasComJogadores();
         }
     }
 
@@ -152,6 +154,8 @@ public class EquipaService {
                     continue;
                 }
 
+                boolean formatoComGolos = campos.length >= 12;
+
                 Equipa equipa = new Equipa(
                         desescapar(campos[0]),
                         desescapar(campos[1]),
@@ -161,10 +165,20 @@ public class EquipaService {
                         desescapar(campos[5]),
                         desescapar(campos[6]),
                         parseInt(campos[7]),
-                        Boolean.parseBoolean(campos[9])
+                        Boolean.parseBoolean(formatoComGolos ? campos[10] : campos[9])
                 );
 
-                equipa.setTotalJogadores(parseInt(campos[8]));
+                if (formatoComGolos) {
+                    equipa.setGolos(parseInt(campos[8]));
+                    equipa.setTotalJogadores(parseInt(campos[9]));
+                    equipa.setRanking(desescapar(campos[11]));
+                } else {
+                    equipa.setTotalJogadores(parseInt(campos[8]));
+                    if (campos.length > 10) {
+                        equipa.setRanking(desescapar(campos[10]));
+                    }
+                }
+
                 equipas.add(equipa);
             }
         } catch (IOException e) {
@@ -179,6 +193,8 @@ public class EquipaService {
             List<String> linhas = new ArrayList<>();
 
             for (Equipa equipa : equipas) {
+                equipa.setAtiva(equipa.getTotalJogadores() == 23);
+
                 linhas.add(String.join("\t",
                         escapar(equipa.getNome()),
                         escapar(equipa.getCidade()),
@@ -188,8 +204,10 @@ public class EquipaService {
                         escapar(equipa.getCampeonato()),
                         escapar(equipa.getGrupo()),
                         String.valueOf(equipa.getPontos()),
+                        String.valueOf(equipa.getGolos()),
                         String.valueOf(equipa.getTotalJogadores()),
-                        String.valueOf(equipa.isAtiva())
+                        String.valueOf(equipa.isAtiva()),
+                        escapar(equipa.getRanking())
                 ));
             }
 
@@ -204,6 +222,24 @@ public class EquipaService {
             return Integer.parseInt(valor);
         } catch (NumberFormatException e) {
             return 0;
+        }
+    }
+
+    private static void sincronizarEstatisticasComJogadores() {
+        JogadorService jogadorService = new JogadorService();
+
+        for (Equipa equipa : equipas) {
+            int totalJogadores = jogadorService.contarJogadoresPorEquipa(
+                    equipa.getNome(),
+                    equipa.getCampeonato()
+            );
+
+            equipa.setTotalJogadores(totalJogadores);
+            equipa.setGolos(jogadorService.somarGolosPorEquipa(
+                    equipa.getNome(),
+                    equipa.getCampeonato()
+            ));
+            equipa.setAtiva(totalJogadores == 23);
         }
     }
 
