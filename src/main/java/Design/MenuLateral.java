@@ -1,4 +1,6 @@
-import Design.Tema;
+package Design;
+
+import Frames.*;
 
 import javax.swing.*;
 import java.awt.*;

@@ -1,3 +1,5 @@
+package Frames;
+
 import Design.Tema;
 
 import javax.swing.*;

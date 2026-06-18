@@ -1,3 +1,5 @@
+package Frames;
+
 import Design.RoundedPanel;
 
 import javax.swing.*;
