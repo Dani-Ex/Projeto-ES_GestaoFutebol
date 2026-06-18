@@ -47,6 +47,64 @@ public class ReceitaService {
         return receitas;
     }
 
+    public boolean existeReceitaParaJogo(String idJogo) {
+        for (Receita receita : listarReceitas()) {
+            if (receita.getIdJogo().equalsIgnoreCase(idJogo)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public void adicionarReceita(Receita receita) {
+        if (receita == null) {
+            throw new IllegalArgumentException("A receita n\u00E3o pode ser vazia.");
+        }
+
+        if (receita.getIdJogo() == null || receita.getIdJogo().trim().isEmpty()) {
+            throw new IllegalArgumentException("Deve selecionar um jogo.");
+        }
+
+        if (existeReceitaParaJogo(receita.getIdJogo())) {
+            throw new IllegalArgumentException("Esse jogo j\u00E1 tem uma receita registada.");
+        }
+
+        List<Receita> receitas = new ArrayList<>(listarReceitas());
+        receitas.add(receita);
+        guardarReceitas(receitas);
+    }
+
+    private void guardarReceitas(List<Receita> receitas) {
+        try {
+            Files.createDirectories(FICHEIRO_RECEITAS.getParent());
+
+            List<String> linhas = new ArrayList<>();
+
+            for (Receita receita : receitas) {
+                linhas.add(String.join("\t",
+                        receita.getIdJogo(),
+                        String.valueOf(receita.getBilhetes()),
+                        formatarNumero(receita.getBilheteira()),
+                        formatarNumero(receita.getPatrocinio()),
+                        formatarNumero(receita.getDireitosTv())
+                ));
+            }
+
+            Files.write(FICHEIRO_RECEITAS, linhas, StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            throw new IllegalStateException("N\u00E3o foi poss\u00EDvel guardar os dados da receita.");
+        }
+    }
+
+    private String formatarNumero(double valor) {
+        if (valor == Math.rint(valor)) {
+            return String.valueOf((long) valor);
+        }
+
+        return String.valueOf(valor);
+    }
+
     private int parseInt(String valor) {
         try {
             return Integer.parseInt(valor);

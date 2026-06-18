@@ -11,6 +11,7 @@ public class Jogo {
     private final String faseGrupo;
     private final String estado;
     private final String resultado;
+    private final String campeonato;
 
     public Jogo(
             String id,
@@ -21,7 +22,8 @@ public class Jogo {
             String estadio,
             String faseGrupo,
             String estado,
-            String resultado
+            String resultado,
+            String campeonato
     ) {
         this.id = id;
         this.data = data;
@@ -32,6 +34,7 @@ public class Jogo {
         this.faseGrupo = faseGrupo;
         this.estado = estado;
         this.resultado = resultado;
+        this.campeonato = campeonato;
     }
 
     public String getId() {
@@ -68,6 +71,10 @@ public class Jogo {
 
     public String getResultado() {
         return resultado;
+    }
+
+    public String getCampeonato() {
+        return campeonato;
     }
 
     public String getNomeJogo() {

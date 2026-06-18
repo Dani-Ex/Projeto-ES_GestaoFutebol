@@ -161,11 +161,12 @@ public class FinancasFrame extends JFrame {
         tituloBox.add(Box.createVerticalStrut(4));
         tituloBox.add(subtitulo);
 
-        JButton btnNovaReceita = new RoundedButton("Nova Receita", Tema.COR_INFO, Tema.COR_TEXTO_CLARO, 14);
+        JButton btnNovaReceita = new RoundedButton("+ Nova Receita", Tema.COR_INFO, Tema.COR_TEXTO_CLARO, 14);
         btnNovaReceita.setPreferredSize(new Dimension(150, 40));
         btnNovaReceita.setMinimumSize(new Dimension(150, 40));
         btnNovaReceita.setMaximumSize(new Dimension(150, 40));
         btnNovaReceita.setBorder(BorderFactory.createEmptyBorder(0, 14, 0, 14));
+        btnNovaReceita.addActionListener(e -> new NovaReceitaFrame(this::recarregarReceitas));
 
         topo.add(tituloBox, BorderLayout.WEST);
         topo.add(btnNovaReceita, BorderLayout.EAST);
@@ -322,6 +323,11 @@ public class FinancasFrame extends JFrame {
         }
 
         atualizarResumo();
+    }
+
+    private void recarregarReceitas() {
+        carregarReceitas();
+        atualizarTabela();
     }
 
     private void atualizarResumo() {

@@ -41,7 +41,8 @@ public class JogoService {
                         campos[5],
                         campos[6],
                         campos[7],
-                        campos[8]
+                        campos[8],
+                        campos.length > 9 ? campos[9] : "Campeonato Principal"
                 ));
             }
         } catch (IOException e) {
