@@ -1,6 +1,8 @@
 package Design;
 
 import Frames.*;
+import Frames.SeccaoEquipas.EquipasFrame;
+import Frames.SeccaoJogadores.JogadoresFrame;
 
 import javax.swing.*;
 import java.awt.*;

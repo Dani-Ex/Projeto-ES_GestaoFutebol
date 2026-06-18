@@ -1,4 +1,4 @@
-package Frames;
+package Frames.SeccaoJogadores;
 
 import Design.MenuLateral;
 import Design.RoundedPanel;

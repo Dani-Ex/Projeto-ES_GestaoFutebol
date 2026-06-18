@@ -1,4 +1,4 @@
-package Frames;
+package Frames.SeccaoEquipas;
 
 import Design.MenuLateral;
 import Design.PlaceholderTextField;

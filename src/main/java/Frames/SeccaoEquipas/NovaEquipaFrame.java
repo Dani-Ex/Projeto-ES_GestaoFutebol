@@ -1,4 +1,4 @@
-package Frames;
+package Frames.SeccaoEquipas;
 
 import Design.PlaceholderTextField;
 import Design.FormUtils;

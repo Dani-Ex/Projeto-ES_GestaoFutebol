@@ -1,4 +1,4 @@
-package Frames;
+package Frames.SeccaoJogadores;
 
 import Design.Tema;
 import Models.Jogador;
