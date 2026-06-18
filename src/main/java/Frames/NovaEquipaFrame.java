@@ -1,13 +1,14 @@
 package Frames;
 
 import Design.PlaceholderTextField;
+import Design.FormUtils;
+import Design.RoundedButton;
 import Design.RoundedPanel;
 import Design.Tema;
 import Models.Equipa;
 import Models.EquipaService;
 
 import javax.swing.*;
-import javax.swing.border.AbstractBorder;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
@@ -140,7 +141,7 @@ public class NovaEquipaFrame extends JFrame {
         JPanel botoes = new JPanel(new FlowLayout(FlowLayout.RIGHT, 18, 0));
         botoes.setOpaque(false);
         botoes.setBorder(new EmptyBorder(18, 0, 0, 0));
-        botoes.add(criarBotao("Cancelar", new Color(241, 245, 249), Tema.COR_TEXTO_PRINCIPAL, this::dispose));
+        botoes.add(criarBotao("Cancelar", Tema.COR_BOTAO_SECUNDARIO, Tema.COR_TEXTO_PRINCIPAL, this::dispose));
         botoes.add(criarBotao("Guardar Equipa", Tema.COR_INFO, Tema.COR_TEXTO_CLARO, this::guardarEquipa));
 
         card.add(titulo, BorderLayout.NORTH);
@@ -151,7 +152,7 @@ public class NovaEquipaFrame extends JFrame {
     }
 
     private RoundedPanel criarRegraCard() {
-        RoundedPanel card = new RoundedPanel(Tema.RAIO_CARD, new Color(220, 252, 231));
+        RoundedPanel card = new RoundedPanel(Tema.RAIO_CARD, Tema.COR_VERDE_SUAVE);
         card.setPreferredSize(new Dimension(230, 520));
         card.setLayout(new BorderLayout());
         card.setBorder(new EmptyBorder(26, 20, 26, 20));
@@ -180,75 +181,24 @@ public class NovaEquipaFrame extends JFrame {
     }
 
     private PlaceholderTextField criarCampo(String placeholder) {
-        PlaceholderTextField campo = new PlaceholderTextField(placeholder);
-        campo.setPreferredSize(new Dimension(305, 44));
-        campo.setMinimumSize(new Dimension(240, 44));
-        campo.setFont(Tema.FONTE_TEXTO_PEQUENO);
-        campo.setForeground(Tema.COR_TEXTO_PRINCIPAL);
-        campo.setBackground(Tema.COR_INPUT);
-        campo.setOpaque(true);
-        campo.setBorder(BorderFactory.createCompoundBorder(
-                new RoundedBorder(Tema.COR_LINHA, 12),
-                new EmptyBorder(0, 13, 0, 13)
-        ));
-
-        return campo;
+        return FormUtils.criarCampo(placeholder, new Dimension(305, 44), 12);
     }
 
     private JComboBox<String> criarComboCampeonato() {
-        JComboBox<String> combo = new JComboBox<>(
-                equipaService.listarCampeonatos().toArray(new String[0])
+        return FormUtils.criarCombo(
+                equipaService.listarCampeonatos().toArray(new String[0]),
+                null,
+                new Dimension(305, 44),
+                12
         );
-        combo.setPreferredSize(new Dimension(305, 44));
-        combo.setMinimumSize(new Dimension(240, 44));
-        combo.setFont(Tema.FONTE_TEXTO_PEQUENO);
-        combo.setForeground(Tema.COR_TEXTO_SECUNDARIO);
-        combo.setBackground(Tema.COR_INPUT);
-        combo.setFocusable(false);
-        combo.setBorder(new RoundedBorder(Tema.COR_LINHA, 12));
-
-        return combo;
     }
 
     private JPanel criarCampoComLabel(String label, JComponent campo) {
-        JPanel painel = new JPanel(new BorderLayout(0, 8));
-        painel.setOpaque(false);
-
-        JLabel lbl = new JLabel(label);
-        lbl.setFont(new Font(Tema.FONTE_PADRAO, Font.BOLD, 12));
-        lbl.setForeground(Tema.COR_TEXTO_PRINCIPAL);
-
-        painel.add(lbl, BorderLayout.NORTH);
-        painel.add(campo, BorderLayout.CENTER);
-
-        return painel;
+        return FormUtils.criarCampoComLabel(label, campo);
     }
 
     private JButton criarBotao(String texto, Color fundo, Color corTexto, Runnable acao) {
-        JButton botao = new JButton(texto) {
-            @Override
-            protected void paintComponent(Graphics g) {
-                Graphics2D g2 = (Graphics2D) g.create();
-                g2.setRenderingHint(
-                        RenderingHints.KEY_ANTIALIASING,
-                        RenderingHints.VALUE_ANTIALIAS_ON
-                );
-                g2.setColor(getBackground());
-                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 12, 12);
-                g2.dispose();
-
-                super.paintComponent(g);
-            }
-        };
-
-        botao.setFont(new Font(Tema.FONTE_PADRAO, Font.BOLD, 12));
-        botao.setBackground(fundo);
-        botao.setForeground(corTexto);
-        botao.setFocusPainted(false);
-        botao.setBorderPainted(false);
-        botao.setContentAreaFilled(false);
-        botao.setOpaque(false);
-        botao.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        JButton botao = new RoundedButton(texto, fundo, corTexto, 12);
         botao.setPreferredSize(new Dimension(128, 36));
         botao.addActionListener(e -> acao.run());
 
@@ -307,43 +257,6 @@ public class NovaEquipaFrame extends JFrame {
     private void notificarEquipaCriada() {
         if (onEquipaCriada != null) {
             onEquipaCriada.run();
-        }
-    }
-
-    private static class RoundedBorder extends AbstractBorder {
-
-        private final Color color;
-        private final int radius;
-
-        private RoundedBorder(Color color, int radius) {
-            this.color = color;
-            this.radius = radius;
-        }
-
-        @Override
-        public Insets getBorderInsets(Component c) {
-            return new Insets(1, 1, 1, 1);
-        }
-
-        @Override
-        public Insets getBorderInsets(Component c, Insets insets) {
-            insets.top = 1;
-            insets.left = 1;
-            insets.bottom = 1;
-            insets.right = 1;
-            return insets;
-        }
-
-        @Override
-        public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
-            Graphics2D g2 = (Graphics2D) g.create();
-            g2.setRenderingHint(
-                    RenderingHints.KEY_ANTIALIASING,
-                    RenderingHints.VALUE_ANTIALIAS_ON
-            );
-            g2.setColor(color);
-            g2.drawRoundRect(x, y, width - 1, height - 1, radius, radius);
-            g2.dispose();
         }
     }
 }

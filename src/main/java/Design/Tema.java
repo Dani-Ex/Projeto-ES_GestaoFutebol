@@ -37,6 +37,8 @@ public class Tema {
     public static final Color CARD_AMARELO = new Color(254, 240, 138);
 
     public static final Color COR_INPUT = Color.WHITE;
+    public static final Color COR_BOTAO_SECUNDARIO = new Color(241, 245, 249);
+    public static final Color COR_ERRO_SUAVE = new Color(254, 226, 226);
     public static final Color COR_VERDE_SUAVE = new Color(220, 252, 231);
     public static final Color COR_VERDE_FORTE = new Color(22, 163, 74);
 

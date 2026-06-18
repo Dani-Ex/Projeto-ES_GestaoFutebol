@@ -2,8 +2,11 @@ package Frames;
 
 import Design.ModernScrollBarUI;
 import Design.PlaceholderTextField;
+import Design.FocusUtils;
+import Design.FormUtils;
 import Design.RoundedButton;
 import Design.RoundedPanel;
+import Design.TableStyle;
 import Design.Tema;
 import Models.Equipa;
 import Models.EquipaService;
@@ -11,11 +14,9 @@ import Models.Jogador;
 import Models.JogadorService;
 
 import javax.swing.*;
-import javax.swing.border.AbstractBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.JTableHeader;
 import java.awt.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -70,7 +71,7 @@ public class EditarJogadoresFrame extends JFrame {
                 limparFoco();
             }
         });
-        ModernScrollBarUI.aplicar(scroll);
+        TableStyle.configurarScrollLimpo(scroll, Tema.COR_CARD);
 
         fundo.add(scroll, BorderLayout.CENTER);
 
@@ -320,63 +321,16 @@ public class EditarJogadoresFrame extends JFrame {
         tabela.setSelectionForeground(Tema.COR_TEXTO_PRINCIPAL);
         tabela.setFocusable(false);
 
-        configurarHeader(tabela);
+        TableStyle.configurarHeader(tabela, 1);
         configurarRenderers(tabela);
         preencherTabela();
 
         return tabela;
     }
 
-    private void configurarHeader(JTable tabela) {
-        JTableHeader header = tabela.getTableHeader();
-        header.setFont(Tema.FONTE_CARD_TITULO);
-        header.setForeground(Tema.COR_TEXTO_SECUNDARIO);
-        header.setBackground(Tema.COR_CARD);
-        header.setBorder(BorderFactory.createEmptyBorder());
-        header.setReorderingAllowed(false);
-        header.setResizingAllowed(false);
-        header.setDefaultRenderer(new DefaultTableCellRenderer() {
-            @Override
-            public Component getTableCellRendererComponent(
-                    JTable table,
-                    Object value,
-                    boolean isSelected,
-                    boolean hasFocus,
-                    int row,
-                    int column
-            ) {
-                JLabel label = (JLabel) super.getTableCellRendererComponent(
-                        table,
-                        value,
-                        isSelected,
-                        hasFocus,
-                        row,
-                        column
-                );
-
-                label.setFont(Tema.FONTE_CARD_TITULO);
-                label.setForeground(Tema.COR_TEXTO_SECUNDARIO);
-                label.setBackground(Tema.COR_CARD);
-                label.setOpaque(true);
-                label.setHorizontalAlignment(column == 1 ? SwingConstants.LEFT : SwingConstants.CENTER);
-                label.setBorder(BorderFactory.createCompoundBorder(
-                        BorderFactory.createMatteBorder(0, 0, 1, 0, Tema.COR_LINHA),
-                        BorderFactory.createEmptyBorder(0, 8, 8, 8)
-                ));
-
-                return label;
-            }
-        });
-    }
-
     private void configurarRenderers(JTable tabela) {
-        DefaultTableCellRenderer centro = new DefaultTableCellRenderer();
-        centro.setHorizontalAlignment(SwingConstants.CENTER);
-        centro.setBorder(new EmptyBorder(0, 8, 0, 8));
-
-        DefaultTableCellRenderer esquerda = new DefaultTableCellRenderer();
-        esquerda.setHorizontalAlignment(SwingConstants.LEFT);
-        esquerda.setBorder(new EmptyBorder(0, 8, 0, 8));
+        DefaultTableCellRenderer centro = TableStyle.rendererCentro();
+        DefaultTableCellRenderer esquerda = TableStyle.rendererEsquerda();
 
         for (int i = 0; i < tabela.getColumnCount(); i++) {
             tabela.getColumnModel().getColumn(i).setCellRenderer(centro);
@@ -410,47 +364,23 @@ public class EditarJogadoresFrame extends JFrame {
     }
 
     private PlaceholderTextField criarCampo(String placeholder) {
-        PlaceholderTextField campo = new PlaceholderTextField(placeholder == null ? "" : placeholder);
-        campo.setPreferredSize(new Dimension(235, 36));
-        campo.setMinimumSize(new Dimension(210, 36));
-        campo.setFont(Tema.FONTE_TEXTO_PEQUENO);
-        campo.setForeground(Tema.COR_TEXTO_PRINCIPAL);
-        campo.setBackground(Tema.COR_INPUT);
-        campo.setOpaque(true);
-        campo.setBorder(BorderFactory.createCompoundBorder(
-                new RoundedBorder(Tema.COR_LINHA, 8),
-                new EmptyBorder(0, 10, 0, 10)
-        ));
-
-        return campo;
+        return FormUtils.criarCampo(placeholder, new Dimension(235, 36), 8);
     }
 
     private JComboBox<String> criarCombo(String[] opcoes) {
-        JComboBox<String> combo = new JComboBox<>(opcoes);
-        combo.setPreferredSize(new Dimension(235, 36));
-        combo.setMinimumSize(new Dimension(210, 36));
-        combo.setFont(Tema.FONTE_TEXTO_PEQUENO);
-        combo.setForeground(Tema.COR_TEXTO_PRINCIPAL);
-        combo.setBackground(Tema.COR_INPUT);
-        combo.setFocusable(false);
-        combo.setBorder(new RoundedBorder(Tema.COR_LINHA, 8));
-        return combo;
+        return FormUtils.criarCombo(opcoes, null, new Dimension(235, 36), 8);
     }
 
     private JPanel criarCampoComLabel(String label, JComponent campo) {
-        JPanel painel = new JPanel(new BorderLayout(0, 7));
-        painel.setOpaque(false);
+        JPanel painel = FormUtils.criarCampoComLabel(
+                label,
+                campo,
+                Tema.COR_TEXTO_SECUNDARIO,
+                7,
+                new Dimension(235, 58)
+        );
         painel.setFocusable(true);
         limparFocoAoClicar(painel);
-        painel.setPreferredSize(new Dimension(235, 58));
-        painel.setMinimumSize(new Dimension(210, 58));
-
-        JLabel lbl = new JLabel(label);
-        lbl.setFont(new Font(Tema.FONTE_PADRAO, Font.BOLD, 12));
-        lbl.setForeground(Tema.COR_TEXTO_SECUNDARIO);
-
-        painel.add(lbl, BorderLayout.NORTH);
-        painel.add(campo, BorderLayout.CENTER);
 
         return painel;
     }
@@ -483,9 +413,9 @@ public class EditarJogadoresFrame extends JFrame {
 
             Jogador jogador = new Jogador(
                     campoNome.getText().trim(),
-                    Integer.parseInt(campoNumero.getText().trim()),
+                    parseNumeroPositivo(campoNumero.getText().trim(), "Numero"),
                     String.valueOf(campoPosicao.getSelectedItem()),
-                    Integer.parseInt(campoPeso.getText().trim()),
+                    parseNumeroPositivo(campoPeso.getText().trim(), "Peso"),
                     normalizarAltura(campoAltura.getText().trim()),
                     String.valueOf(campoPeDominante.getSelectedItem()),
                     parseData(campoDataNascimento.getText().trim()),
@@ -595,16 +525,39 @@ public class EditarJogadoresFrame extends JFrame {
     }
 
     private LocalDate parseData(String valor) {
+        LocalDate data;
+
         try {
-            return LocalDate.parse(valor);
+            data = LocalDate.parse(valor);
         } catch (DateTimeParseException ignored) {
-            return LocalDate.parse(valor, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+            data = LocalDate.parse(valor, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
         }
+
+        if (data.isAfter(LocalDate.now())) {
+            throw new IllegalArgumentException("Nao e aceito essa data de nascimento.");
+        }
+
+        return data;
     }
 
     private double normalizarAltura(String valor) {
         double altura = Double.parseDouble(valor.replace(",", "."));
+
+        if (altura <= 0) {
+            throw new IllegalArgumentException("Nao e permitido valores negativos na altura.");
+        }
+
         return altura > 3 ? altura / 100 : altura;
+    }
+
+    private int parseNumeroPositivo(String valor, String campo) {
+        int numero = Integer.parseInt(valor);
+
+        if (numero <= 0) {
+            throw new IllegalArgumentException("Nao e permitido valores negativos no campo " + campo + ".");
+        }
+
+        return numero;
     }
 
     private void limparFormularioAdicionar() {
@@ -632,22 +585,17 @@ public class EditarJogadoresFrame extends JFrame {
     }
 
     private void limparFoco() {
-        KeyboardFocusManager.getCurrentKeyboardFocusManager().clearGlobalFocusOwner();
+        FocusUtils.limparFoco();
     }
 
     private void limparFocoAoClicar(JComponent componente) {
-        componente.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override
-            public void mousePressed(java.awt.event.MouseEvent e) {
-                limparFoco();
-            }
-        });
+        FocusUtils.limparFocoAoClicar(componente);
     }
 
     private class BotaoRemoverRenderer extends RoundedButton implements javax.swing.table.TableCellRenderer {
 
         private BotaoRemoverRenderer() {
-            super("Remover", new Color(254, 226, 226), Tema.COR_ERRO, 8);
+            super("Remover", Tema.COR_ERRO_SUAVE, Tema.COR_ERRO, 8);
             setFont(new Font(Tema.FONTE_PADRAO, Font.BOLD, 11));
         }
 
@@ -662,7 +610,7 @@ public class EditarJogadoresFrame extends JFrame {
         ) {
             setText(String.valueOf(value));
             setForeground("Inativo".equals(value) ? Tema.COR_TEXTO_SECUNDARIO : Tema.COR_ERRO);
-            setBackground("Inativo".equals(value) ? new Color(241, 245, 249) : new Color(254, 226, 226));
+            setBackground("Inativo".equals(value) ? Tema.COR_BOTAO_SECUNDARIO : Tema.COR_ERRO_SUAVE);
             return this;
         }
     }
@@ -675,7 +623,7 @@ public class EditarJogadoresFrame extends JFrame {
 
         private BotaoRemoverEditor(JTable table) {
             this.table = table;
-            this.button = new RoundedButton("Remover", new Color(254, 226, 226), Tema.COR_ERRO, 8);
+            this.button = new RoundedButton("Remover", Tema.COR_ERRO_SUAVE, Tema.COR_ERRO, 8);
             this.button.setFont(new Font(Tema.FONTE_PADRAO, Font.BOLD, 11));
             this.button.addActionListener(e -> {
                 fireEditingStopped();
@@ -700,43 +648,6 @@ public class EditarJogadoresFrame extends JFrame {
         @Override
         public Object getCellEditorValue() {
             return "Remover";
-        }
-    }
-
-    private static class RoundedBorder extends AbstractBorder {
-
-        private final Color color;
-        private final int radius;
-
-        private RoundedBorder(Color color, int radius) {
-            this.color = color;
-            this.radius = radius;
-        }
-
-        @Override
-        public Insets getBorderInsets(Component c) {
-            return new Insets(1, 1, 1, 1);
-        }
-
-        @Override
-        public Insets getBorderInsets(Component c, Insets insets) {
-            insets.top = 1;
-            insets.left = 1;
-            insets.bottom = 1;
-            insets.right = 1;
-            return insets;
-        }
-
-        @Override
-        public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
-            Graphics2D g2 = (Graphics2D) g.create();
-            g2.setRenderingHint(
-                    RenderingHints.KEY_ANTIALIASING,
-                    RenderingHints.VALUE_ANTIALIAS_ON
-            );
-            g2.setColor(color);
-            g2.drawRoundRect(x, y, width - 1, height - 1, radius, radius);
-            g2.dispose();
         }
     }
 }

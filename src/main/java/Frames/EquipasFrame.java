@@ -1,9 +1,11 @@
 package Frames;
 
 import Design.MenuLateral;
-import Design.ModernScrollBarUI;
 import Design.PlaceholderTextField;
+import Design.RoundedBorder;
+import Design.RoundedButton;
 import Design.RoundedPanel;
+import Design.TableStyle;
 import Design.Tema;
 import Models.Equipa;
 import Models.EquipaService;
@@ -11,10 +13,7 @@ import Models.EquipaService;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.JTableHeader;
-import javax.swing.border.AbstractBorder;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -297,7 +296,7 @@ public class EquipasFrame extends JFrame {
             }
         });
         scroll.setBackground(Tema.COR_CARD);
-        ModernScrollBarUI.aplicar(scroll);
+        TableStyle.configurarScrollLimpo(scroll, Tema.COR_CARD);
 
         JPanel topo = new JPanel(new BorderLayout());
         topo.setFocusable(true);
@@ -402,79 +401,8 @@ public class EquipasFrame extends JFrame {
     }
 
     private void configurarTabelaEquipas(JTable tabela) {
-        tabela.setFont(Tema.FONTE_TEXTO_PEQUENO);
-        tabela.setRowHeight(34);
-
-        tabela.setForeground(Tema.COR_TEXTO_PRINCIPAL);
-        tabela.setBackground(Tema.COR_CARD);
-
-        tabela.setShowGrid(false);
-        tabela.setShowHorizontalLines(false);
-        tabela.setShowVerticalLines(false);
-        tabela.setIntercellSpacing(new Dimension(0, 0));
-
-        tabela.setBorder(BorderFactory.createEmptyBorder());
-        tabela.setFocusable(false);
-
-        tabela.setSelectionBackground(Tema.COR_SELECAO_NEUTRA);
-        tabela.setSelectionForeground(Tema.COR_TEXTO_PRINCIPAL);
-
-        JTableHeader header = tabela.getTableHeader();
-        header.setFont(Tema.FONTE_CARD_TITULO);
-        header.setForeground(Tema.COR_TEXTO_SECUNDARIO);
-        header.setBackground(Tema.COR_CARD);
-        header.setBorder(BorderFactory.createEmptyBorder());
-        header.setReorderingAllowed(false);
-        header.setResizingAllowed(false);
-        header.setDefaultRenderer(new DefaultTableCellRenderer() {
-            @Override
-            public Component getTableCellRendererComponent(
-                    JTable table,
-                    Object value,
-                    boolean isSelected,
-                    boolean hasFocus,
-                    int row,
-                    int column
-            ) {
-                JLabel label = (JLabel) super.getTableCellRendererComponent(
-                        table,
-                        value,
-                        isSelected,
-                        hasFocus,
-                        row,
-                        column
-                );
-
-                label.setFont(Tema.FONTE_CARD_TITULO);
-                label.setForeground(Tema.COR_TEXTO_SECUNDARIO);
-                label.setBackground(Tema.COR_CARD);
-                label.setOpaque(true);
-                label.setHorizontalAlignment(column == 0 || column == 1 ? SwingConstants.LEFT : SwingConstants.CENTER);
-                label.setBorder(BorderFactory.createCompoundBorder(
-                        BorderFactory.createMatteBorder(0, 0, 1, 0, Tema.COR_LINHA),
-                        BorderFactory.createEmptyBorder(0, 8, 8, 8)
-                ));
-
-                return label;
-            }
-        });
-
-        DefaultTableCellRenderer centro = new DefaultTableCellRenderer();
-        centro.setHorizontalAlignment(SwingConstants.CENTER);
-        centro.setVerticalAlignment(SwingConstants.CENTER);
-        centro.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 8));
-
-        DefaultTableCellRenderer esquerda = new DefaultTableCellRenderer();
-        esquerda.setHorizontalAlignment(SwingConstants.LEFT);
-        esquerda.setVerticalAlignment(SwingConstants.CENTER);
-        esquerda.setBorder(BorderFactory.createEmptyBorder(0, 8, 0, 8));
-
-        for (int i = 0; i < tabela.getColumnCount(); i++) {
-            tabela.getColumnModel().getColumn(i).setCellRenderer(centro);
-        }
-
-        tabela.getColumnModel().getColumn(0).setCellRenderer(esquerda);
-        tabela.getColumnModel().getColumn(1).setCellRenderer(esquerda);
+        TableStyle.aplicarTabelaLimpa(tabela, 0);
+        tabela.getColumnModel().getColumn(1).setCellRenderer(TableStyle.rendererEsquerda());
     }
 
     private void limparSelecao() {
@@ -495,74 +423,10 @@ public class EquipasFrame extends JFrame {
     }
 
     private JButton criarBotaoArredondado(String texto, Color fundo, Color corTexto) {
-        JButton botao = new JButton(texto) {
-            @Override
-            protected void paintComponent(Graphics g) {
-                Graphics2D g2 = (Graphics2D) g.create();
-
-                g2.setRenderingHint(
-                        RenderingHints.KEY_ANTIALIASING,
-                        RenderingHints.VALUE_ANTIALIAS_ON
-                );
-
-                g2.setColor(getBackground());
-                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 14, 14);
-                g2.dispose();
-
-                super.paintComponent(g);
-            }
-        };
-
-        botao.setFont(new Font(Tema.FONTE_PADRAO, Font.BOLD, 14));
-        botao.setBackground(fundo);
-        botao.setForeground(corTexto);
-        botao.setFocusPainted(false);
-        botao.setBorderPainted(false);
-        botao.setContentAreaFilled(false);
-        botao.setOpaque(false);
-        botao.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        JButton botao = new RoundedButton(texto, fundo, corTexto, 14);
         botao.setPreferredSize(new Dimension(150, 40));
         botao.setBorder(BorderFactory.createEmptyBorder(0, 14, 0, 14));
 
         return botao;
-    }
-
-    private static class RoundedBorder extends AbstractBorder {
-
-        private final Color color;
-        private final int radius;
-
-        private RoundedBorder(Color color, int radius) {
-            this.color = color;
-            this.radius = radius;
-        }
-
-        @Override
-        public Insets getBorderInsets(Component c) {
-            return new Insets(1, 1, 1, 1);
-        }
-
-        @Override
-        public Insets getBorderInsets(Component c, Insets insets) {
-            insets.top = 1;
-            insets.left = 1;
-            insets.bottom = 1;
-            insets.right = 1;
-            return insets;
-        }
-
-        @Override
-        public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
-            Graphics2D g2 = (Graphics2D) g.create();
-
-            g2.setRenderingHint(
-                    RenderingHints.KEY_ANTIALIASING,
-                    RenderingHints.VALUE_ANTIALIAS_ON
-            );
-
-            g2.setColor(color);
-            g2.drawRoundRect(x, y, width - 1, height - 1, radius, radius);
-            g2.dispose();
-        }
     }
 }

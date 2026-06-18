@@ -3,6 +3,7 @@ package Frames;
 import Design.ModernScrollBarUI;
 import Design.RoundedButton;
 import Design.RoundedPanel;
+import Design.TableStyle;
 import Design.Tema;
 import Models.Equipa;
 import Models.Jogador;
@@ -10,9 +11,7 @@ import Models.JogadorService;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.JTableHeader;
 import java.awt.*;
 
 public class ConsultaEquipaFrame extends JFrame {
@@ -206,7 +205,7 @@ public class ConsultaEquipaFrame extends JFrame {
 
     private RoundedPanel criarCardValidacao() {
         boolean plantelCompleto = totalJogadores() == 23;
-        RoundedPanel card = new RoundedPanel(12, plantelCompleto ? Tema.COR_VERDE_SUAVE : new Color(254, 226, 226));
+        RoundedPanel card = new RoundedPanel(12, plantelCompleto ? Tema.COR_VERDE_SUAVE : Tema.COR_ERRO_SUAVE);
         card.setPreferredSize(new Dimension(290, 170));
         card.setLayout(new BorderLayout());
         card.setBorder(new EmptyBorder(22, 22, 22, 22));
@@ -267,15 +266,7 @@ public class ConsultaEquipaFrame extends JFrame {
 
         JTable tabela = criarTabelaJogadores();
         JScrollPane scroll = new JScrollPane(tabela);
-        scroll.setBorder(BorderFactory.createEmptyBorder());
-        scroll.setViewportBorder(BorderFactory.createEmptyBorder());
-        scroll.getViewport().setBackground(Tema.COR_CARD);
-        if (scroll.getColumnHeader() != null) {
-            scroll.getColumnHeader().setBorder(BorderFactory.createEmptyBorder());
-            scroll.getColumnHeader().setBackground(Tema.COR_CARD);
-        }
-        scroll.setBackground(Tema.COR_CARD);
-        ModernScrollBarUI.aplicar(scroll);
+        TableStyle.configurarScrollLimpo(scroll, Tema.COR_CARD);
 
         card.add(header, BorderLayout.NORTH);
         card.add(scroll, BorderLayout.CENTER);
@@ -308,73 +299,13 @@ public class ConsultaEquipaFrame extends JFrame {
         }
 
         JTable tabela = new JTable(modelo);
-        tabela.setFont(Tema.FONTE_TEXTO_PEQUENO);
-        tabela.setRowHeight(34);
-        tabela.setForeground(Tema.COR_TEXTO_PRINCIPAL);
-        tabela.setBackground(Tema.COR_CARD);
-        tabela.setShowGrid(false);
-        tabela.setShowHorizontalLines(false);
-        tabela.setShowVerticalLines(false);
-        tabela.setIntercellSpacing(new Dimension(0, 0));
-        tabela.setBorder(BorderFactory.createEmptyBorder());
-        tabela.setTableHeader(tabela.getTableHeader());
-        tabela.setSelectionBackground(Tema.COR_SELECAO_NEUTRA);
-        tabela.setSelectionForeground(Tema.COR_TEXTO_PRINCIPAL);
-        tabela.setFocusable(false);
-
-        JTableHeader header = tabela.getTableHeader();
-        header.setFont(Tema.FONTE_CARD_TITULO);
-        header.setForeground(Tema.COR_TEXTO_SECUNDARIO);
-        header.setBackground(Tema.COR_CARD);
-        header.setBorder(BorderFactory.createEmptyBorder());
-        header.setReorderingAllowed(false);
-        header.setResizingAllowed(false);
-        header.setDefaultRenderer(new DefaultTableCellRenderer() {
-            @Override
-            public Component getTableCellRendererComponent(
-                    JTable table,
-                    Object value,
-                    boolean isSelected,
-                    boolean hasFocus,
-                    int row,
-                    int column
-            ) {
-                JLabel label = (JLabel) super.getTableCellRendererComponent(
-                        table,
-                        value,
-                        isSelected,
-                        hasFocus,
-                        row,
-                        column
-                );
-
-                label.setFont(Tema.FONTE_CARD_TITULO);
-                label.setForeground(Tema.COR_TEXTO_SECUNDARIO);
-                label.setBackground(Tema.COR_CARD);
-                label.setOpaque(true);
-                label.setHorizontalAlignment(column == 1 ? SwingConstants.LEFT : SwingConstants.CENTER);
-                label.setBorder(BorderFactory.createCompoundBorder(
-                        BorderFactory.createMatteBorder(0, 0, 1, 0, Tema.COR_LINHA),
-                        BorderFactory.createEmptyBorder(0, 8, 8, 8)
-                ));
-
-                return label;
-            }
-        });
-
-        DefaultTableCellRenderer centro = new DefaultTableCellRenderer();
-        centro.setHorizontalAlignment(SwingConstants.CENTER);
-        centro.setBorder(new EmptyBorder(0, 8, 0, 8));
-
-        DefaultTableCellRenderer esquerda = new DefaultTableCellRenderer();
-        esquerda.setHorizontalAlignment(SwingConstants.LEFT);
-        esquerda.setBorder(new EmptyBorder(0, 8, 0, 8));
+        TableStyle.aplicarTabelaLimpa(tabela, 1);
 
         for (int i = 0; i < tabela.getColumnCount(); i++) {
-            tabela.getColumnModel().getColumn(i).setCellRenderer(centro);
+            tabela.getColumnModel().getColumn(i).setCellRenderer(TableStyle.rendererCentro());
         }
 
-        tabela.getColumnModel().getColumn(1).setCellRenderer(esquerda);
+        tabela.getColumnModel().getColumn(1).setCellRenderer(TableStyle.rendererEsquerda());
 
         return tabela;
     }
@@ -472,15 +403,6 @@ public class ConsultaEquipaFrame extends JFrame {
         }
 
         return total;
-    }
-
-    private void mostrarFuncionalidadePendente(String nome) {
-        JOptionPane.showMessageDialog(
-                this,
-                nome + " será implementado numa próxima etapa.",
-                "Funcionalidade pendente",
-                JOptionPane.INFORMATION_MESSAGE
-        );
     }
 
     private void abrirEditarEquipa() {

@@ -8,7 +8,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 
 public class EquipaService {
 
@@ -44,9 +43,7 @@ public class EquipaService {
     }
 
     public List<Equipa> pesquisarEquipas(String termo) {
-        String termoNormalizado = termo == null
-                ? ""
-                : termo.trim().toLowerCase(Locale.ROOT);
+        String termoNormalizado = TextUtils.normalizar(termo);
 
         if (termoNormalizado.isEmpty()) {
             return listarEquipas();
@@ -144,43 +141,13 @@ public class EquipaService {
         guardarEquipas();
     }
 
-    public void adicionarJogador(Equipa equipa,
-                                 Jogador jogador) {
-
-        if (equipa.getJogadores().size() >= 23) {
-            throw new IllegalArgumentException(
-                    "A equipa já possui 23 jogadores");
-        }
-
-        equipa.getJogadores().add(jogador);
-    }
-
-    public void removerJogador(Equipa equipa,
-                               Jogador jogador,
-                               boolean campeonatoIniciado) {
-
-        if (campeonatoIniciado) {
-            throw new IllegalStateException(
-                    "Não é possível remover jogador durante a competição");
-        }
-
-        equipa.getJogadores().remove(jogador);
-    }
-
     private boolean contem(String valor, String termo) {
         return valor != null
-                && valor.toLowerCase(Locale.ROOT).contains(termo);
+                && TextUtils.normalizar(valor).contains(termo);
     }
 
     private String normalizar(String valor) {
-        return valor == null
-                ? ""
-                : valor
-                .replace("\uFEFF", "")
-                .replace("\u200B", "")
-                .replace("\u00A0", " ")
-                .trim()
-                .toLowerCase(Locale.ROOT);
+        return TextUtils.normalizar(valor);
     }
 
     private static void carregarEquipas() {

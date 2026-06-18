@@ -10,7 +10,6 @@ import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 
 public class JogadorService {
 
@@ -254,14 +253,7 @@ public class JogadorService {
     }
 
     private static String normalizar(String valor) {
-        return valor == null
-                ? ""
-                : valor
-                .replace("\uFEFF", "")
-                .replace("\u200B", "")
-                .replace("\u00A0", " ")
-                .trim()
-                .toLowerCase(Locale.ROOT);
+        return TextUtils.normalizar(valor);
     }
 
     private static String escapar(String valor) {
