@@ -1,6 +1,7 @@
 package Frames.SeccaoFinancas;
 
 import Design.MenuLateral;
+import Design.RoundedButton;
 import Design.RoundedPanel;
 import Design.TableStyle;
 import Design.Tema;
@@ -20,6 +21,9 @@ public class FinancasFrame extends JFrame {
     private static final Color CARD_DIREITOS_TV = new Color(255, 237, 213);
     private static final Color CARD_BILHETES = new Color(229, 231, 235);
     private static final Color CARD_MEDIA = new Color(254, 226, 226);
+    private static final int LARGURA_CARD_RESUMO = 180;
+    private static final int ESPACAMENTO_CARDS = 18;
+    private static final int LARGURA_AREA_FINANCAS = (LARGURA_CARD_RESUMO * 6) + (ESPACAMENTO_CARDS * 5);
 
     private final List<ReceitaJogo> receitas = new ArrayList<>();
 
@@ -130,6 +134,7 @@ public class FinancasFrame extends JFrame {
         topo.setFocusable(true);
         topo.setOpaque(false);
         topo.setMaximumSize(new Dimension(Integer.MAX_VALUE, 70));
+        topo.setAlignmentX(Component.LEFT_ALIGNMENT);
         limparSelecaoAoClicar(topo);
 
         JPanel tituloBox = new JPanel();
@@ -150,16 +155,26 @@ public class FinancasFrame extends JFrame {
         tituloBox.add(Box.createVerticalStrut(4));
         tituloBox.add(subtitulo);
 
+        JButton btnNovaReceita = new RoundedButton("Nova Receita", Tema.COR_INFO, Tema.COR_TEXTO_CLARO, 14);
+        btnNovaReceita.setPreferredSize(new Dimension(150, 40));
+        btnNovaReceita.setMinimumSize(new Dimension(150, 40));
+        btnNovaReceita.setMaximumSize(new Dimension(150, 40));
+        btnNovaReceita.setBorder(BorderFactory.createEmptyBorder(0, 14, 0, 14));
+
         topo.add(tituloBox, BorderLayout.WEST);
+        topo.add(btnNovaReceita, BorderLayout.EAST);
 
         return topo;
     }
 
     private JPanel criarCardsResumo() {
-        JPanel painel = new JPanel(new FlowLayout(FlowLayout.LEFT, 18, 0));
+        JPanel painel = new JPanel();
         painel.setFocusable(true);
         painel.setOpaque(false);
-        painel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 90));
+        painel.setLayout(new BoxLayout(painel, BoxLayout.X_AXIS));
+        painel.setPreferredSize(new Dimension(LARGURA_AREA_FINANCAS, 90));
+        painel.setMaximumSize(new Dimension(LARGURA_AREA_FINANCAS, 90));
+        painel.setAlignmentX(Component.LEFT_ALIGNMENT);
         limparSelecaoAoClicar(painel);
 
         valorLucroTotal = new JLabel();
@@ -170,10 +185,15 @@ public class FinancasFrame extends JFrame {
         valorMediaJogo = new JLabel();
 
         painel.add(criarCardResumo("Lucro Total", valorLucroTotal, Tema.CARD_AZUL, Tema.CARD_TEXTO_AZUL));
+        painel.add(Box.createHorizontalStrut(ESPACAMENTO_CARDS));
         painel.add(criarCardResumo("Bilheteira", valorBilheteira, CARD_BILHETEIRA, Tema.CARD_TEXTO_VERDE));
+        painel.add(Box.createHorizontalStrut(ESPACAMENTO_CARDS));
         painel.add(criarCardResumo("Patroc\u00EDnios", valorPatrocinios, Tema.CARD_ROXO, Tema.CARD_TEXTO_ROXO));
+        painel.add(Box.createHorizontalStrut(ESPACAMENTO_CARDS));
         painel.add(criarCardResumo("Direitos TV", valorDireitosTv, CARD_DIREITOS_TV, Tema.CARD_TEXTO_LARANJA));
+        painel.add(Box.createHorizontalStrut(ESPACAMENTO_CARDS));
         painel.add(criarCardResumo("Bilhetes Vendidos", valorBilhetesVendidos, CARD_BILHETES, Tema.COR_TEXTO_PRINCIPAL));
+        painel.add(Box.createHorizontalStrut(ESPACAMENTO_CARDS));
         painel.add(criarCardResumo("M\u00E9dio/Jogo", valorMediaJogo, CARD_MEDIA, Tema.COR_ERRO));
 
         atualizarResumo();
@@ -184,9 +204,9 @@ public class FinancasFrame extends JFrame {
     private JPanel criarCardResumo(String titulo, JLabel valor, Color corFundo, Color corTitulo) {
         RoundedPanel card = new RoundedPanel(Tema.RAIO_CARD, corFundo);
         card.setFocusable(true);
-        card.setPreferredSize(new Dimension(180, Tema.ALTURA_CARD_RESUMO));
-        card.setMinimumSize(new Dimension(180, Tema.ALTURA_CARD_RESUMO));
-        card.setMaximumSize(new Dimension(180, Tema.ALTURA_CARD_RESUMO));
+        card.setPreferredSize(new Dimension(LARGURA_CARD_RESUMO, Tema.ALTURA_CARD_RESUMO));
+        card.setMinimumSize(new Dimension(LARGURA_CARD_RESUMO, Tema.ALTURA_CARD_RESUMO));
+        card.setMaximumSize(new Dimension(LARGURA_CARD_RESUMO, Tema.ALTURA_CARD_RESUMO));
         card.setLayout(new BorderLayout());
         card.setBorder(BorderFactory.createEmptyBorder(
                 Tema.PADDING_CARD_RESUMO.top,
@@ -213,8 +233,8 @@ public class FinancasFrame extends JFrame {
         RoundedPanel card = new RoundedPanel(Tema.RAIO_CARD, Tema.COR_CARD);
         card.setFocusable(true);
         card.setLayout(new BorderLayout());
-        card.setPreferredSize(new Dimension(760, 520));
-        card.setMaximumSize(new Dimension(760, Integer.MAX_VALUE));
+        card.setPreferredSize(new Dimension(LARGURA_AREA_FINANCAS, 520));
+        card.setMaximumSize(new Dimension(LARGURA_AREA_FINANCAS, Integer.MAX_VALUE));
         card.setAlignmentX(Component.LEFT_ALIGNMENT);
         card.setBorder(BorderFactory.createEmptyBorder(
                 Tema.PADDING_CARD.top,
@@ -231,31 +251,21 @@ public class FinancasFrame extends JFrame {
         String[] colunas = {
                 "Jogo",
                 "Bilhetes",
-                "",
                 "Bilheteira",
-                "",
                 "Patroc\u00EDnio",
-                "",
                 "Direitos TV",
-                "",
                 "Lucro"
         };
 
         modeloReceitas = new DefaultTableModel(colunas, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                return column == 2 || column == 4 || column == 6 || column == 8;
+                return false;
             }
         };
 
         tabelaReceitas = new JTable(modeloReceitas);
         configurarTabelaReceitas(tabelaReceitas);
-        tabelaReceitas.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override
-            public void mouseClicked(java.awt.event.MouseEvent e) {
-                editarCelulaFinanceira();
-            }
-        });
         atualizarTabela();
 
         JScrollPane scroll = new JScrollPane(tabelaReceitas);
@@ -277,30 +287,18 @@ public class FinancasFrame extends JFrame {
     private void configurarTabelaReceitas(JTable tabela) {
         TableStyle.aplicarTabelaLimpa(tabela, 0);
         tabela.setRowHeight(34);
-        tabela.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        tabela.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 
-        tabela.getColumnModel().getColumn(0).setPreferredWidth(150);
-        tabela.getColumnModel().getColumn(1).setPreferredWidth(82);
-        tabela.getColumnModel().getColumn(2).setPreferredWidth(30);
-        tabela.getColumnModel().getColumn(3).setPreferredWidth(95);
-        tabela.getColumnModel().getColumn(4).setPreferredWidth(30);
-        tabela.getColumnModel().getColumn(5).setPreferredWidth(95);
-        tabela.getColumnModel().getColumn(6).setPreferredWidth(30);
-        tabela.getColumnModel().getColumn(7).setPreferredWidth(95);
-        tabela.getColumnModel().getColumn(8).setPreferredWidth(30);
-        tabela.getColumnModel().getColumn(9).setPreferredWidth(95);
+        tabela.getColumnModel().getColumn(0).setPreferredWidth(260);
+        tabela.getColumnModel().getColumn(1).setPreferredWidth(140);
+        tabela.getColumnModel().getColumn(2).setPreferredWidth(170);
+        tabela.getColumnModel().getColumn(3).setPreferredWidth(170);
+        tabela.getColumnModel().getColumn(4).setPreferredWidth(170);
+        tabela.getColumnModel().getColumn(5).setPreferredWidth(170);
 
-        DefaultTableCellRenderer editorRenderer = new DefaultTableCellRenderer();
-        editorRenderer.setHorizontalAlignment(SwingConstants.CENTER);
-        editorRenderer.setVerticalAlignment(SwingConstants.CENTER);
-        editorRenderer.setForeground(Tema.COR_TEXTO_PRINCIPAL);
-        editorRenderer.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
-
-        for (int coluna : new int[]{2, 4, 6, 8}) {
-            tabela.getColumnModel().getColumn(coluna).setCellRenderer(editorRenderer);
+        for (int coluna = 1; coluna < tabela.getColumnCount(); coluna++) {
+            tabela.getColumnModel().getColumn(coluna).setCellRenderer(TableStyle.rendererCentro());
         }
-
-        tabela.getColumnModel().getColumn(9).setCellRenderer(TableStyle.rendererCentro());
     }
 
     private void atualizarTabela() {
@@ -310,13 +308,9 @@ public class FinancasFrame extends JFrame {
             modeloReceitas.addRow(new Object[]{
                     receita.jogo,
                     formatarInteiro(receita.bilhetes),
-                    "\u270E",
                     formatarEuros(receita.bilheteira),
-                    "\u270E",
                     formatarEuros(receita.patrocinio),
-                    "\u270E",
                     formatarEuros(receita.direitosTv),
-                    "\u270E",
                     formatarEuros(receita.lucro())
             });
         }
