@@ -10,6 +10,7 @@ public class Equipa {
     private String pais;
     private String treinador;
     private String capitao;
+    private String campeonato;
 
     private int pontos;
     private int golos;
@@ -25,7 +26,7 @@ public class Equipa {
                   String pais,
                   String treinador,
                   String capitao) {
-        this(nome, cidade, pais, treinador, capitao, "Sem grupo", 0, true);
+        this(nome, cidade, pais, treinador, capitao, "Campeonato Principal", "Sem grupo", 0, true);
     }
 
     public Equipa(String nome,
@@ -36,12 +37,25 @@ public class Equipa {
                   String grupo,
                   int pontos,
                   boolean ativa) {
+        this(nome, cidade, pais, treinador, capitao, "Campeonato Principal", grupo, pontos, ativa);
+    }
+
+    public Equipa(String nome,
+                  String cidade,
+                  String pais,
+                  String treinador,
+                  String capitao,
+                  String campeonato,
+                  String grupo,
+                  int pontos,
+                  boolean ativa) {
 
         this.nome = nome;
         this.cidade = cidade;
         this.pais = pais;
         this.treinador = treinador;
         this.capitao = capitao;
+        this.campeonato = campeonato;
         this.grupo = grupo;
         this.pontos = pontos;
         this.ativa = ativa;
@@ -67,6 +81,10 @@ public class Equipa {
 
     public String getCapitao() {
         return capitao;
+    }
+
+    public String getCampeonato() {
+        return campeonato;
     }
 
     public int getPontos() {
@@ -111,6 +129,10 @@ public class Equipa {
 
     public void setGrupo(String grupo) {
         this.grupo = grupo;
+    }
+
+    public void setCampeonato(String campeonato) {
+        this.campeonato = campeonato;
     }
 
     public void setAtiva(boolean ativa) {

@@ -210,11 +210,12 @@ public class EquipasFrame extends JFrame {
         limparSelecaoAoClicar(card);
 
         JLabel titulo = new JLabel("Equipas Registadas");
-        titulo.setFont(Tema.FONTE_TITULO);
+        titulo.setFont(Tema.FONTE_TABELA_TITULO);
         titulo.setForeground(Tema.COR_TEXTO_PRINCIPAL);
 
         String[] colunas = {
                 "Nome da Equipa",
+                "Campeonato",
                 "Grupo",
                 "Estado",
                 "Jogadores",
@@ -227,15 +228,16 @@ public class EquipasFrame extends JFrame {
         configurarTabelaEquipas(tabelaEquipas);
         atualizarTabela();
 
-        tabelaEquipas.getColumnModel().getColumn(0).setPreferredWidth(180);
-        tabelaEquipas.getColumnModel().getColumn(1).setPreferredWidth(100);
+        tabelaEquipas.getColumnModel().getColumn(0).setPreferredWidth(170);
+        tabelaEquipas.getColumnModel().getColumn(1).setPreferredWidth(150);
         tabelaEquipas.getColumnModel().getColumn(2).setPreferredWidth(90);
-        tabelaEquipas.getColumnModel().getColumn(3).setPreferredWidth(80);
-        tabelaEquipas.getColumnModel().getColumn(4).setPreferredWidth(70);
+        tabelaEquipas.getColumnModel().getColumn(3).setPreferredWidth(85);
+        tabelaEquipas.getColumnModel().getColumn(4).setPreferredWidth(80);
+        tabelaEquipas.getColumnModel().getColumn(5).setPreferredWidth(70);
 
         JScrollPane scroll = new JScrollPane(tabelaEquipas);
-        scroll.setBorder(null);
-        scroll.setViewportBorder(null);
+        scroll.setBorder(BorderFactory.createEmptyBorder());
+        scroll.setViewportBorder(BorderFactory.createEmptyBorder());
         scroll.getViewport().setBackground(Tema.COR_CARD);
         scroll.getViewport().addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
@@ -322,6 +324,7 @@ public class EquipasFrame extends JFrame {
         for (Equipa equipa : equipaService.pesquisarEquipas(termoPesquisa)) {
             modeloEquipas.addRow(new Object[]{
                     equipa.getNome(),
+                    equipa.getCampeonato(),
                     equipa.getGrupo(),
                     equipa.getEstadoTexto(),
                     equipa.getTotalJogadores(),
@@ -338,12 +341,11 @@ public class EquipasFrame extends JFrame {
         tabela.setBackground(Tema.COR_CARD);
 
         tabela.setShowGrid(false);
-        tabela.setShowHorizontalLines(true);
+        tabela.setShowHorizontalLines(false);
         tabela.setShowVerticalLines(false);
-        tabela.setGridColor(Tema.COR_LINHA);
-        tabela.setIntercellSpacing(new Dimension(0, 1));
+        tabela.setIntercellSpacing(new Dimension(0, 0));
 
-        tabela.setBorder(null);
+        tabela.setBorder(BorderFactory.createEmptyBorder());
         tabela.setFocusable(false);
 
         tabela.setSelectionBackground(Tema.COR_SELECAO_NEUTRA);
@@ -353,7 +355,7 @@ public class EquipasFrame extends JFrame {
         header.setFont(Tema.FONTE_CARD_TITULO);
         header.setForeground(Tema.COR_TEXTO_SECUNDARIO);
         header.setBackground(Tema.COR_CARD);
-        header.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Tema.COR_LINHA));
+        header.setBorder(BorderFactory.createEmptyBorder());
         header.setReorderingAllowed(false);
         header.setResizingAllowed(false);
         header.setDefaultRenderer(new DefaultTableCellRenderer() {
@@ -379,7 +381,7 @@ public class EquipasFrame extends JFrame {
                 label.setForeground(Tema.COR_TEXTO_SECUNDARIO);
                 label.setBackground(Tema.COR_CARD);
                 label.setOpaque(true);
-                label.setHorizontalAlignment(column == 0 ? SwingConstants.LEFT : SwingConstants.CENTER);
+                label.setHorizontalAlignment(column == 0 || column == 1 ? SwingConstants.LEFT : SwingConstants.CENTER);
                 label.setBorder(BorderFactory.createCompoundBorder(
                         BorderFactory.createMatteBorder(0, 0, 1, 0, Tema.COR_LINHA),
                         BorderFactory.createEmptyBorder(0, 8, 8, 8)
@@ -404,6 +406,7 @@ public class EquipasFrame extends JFrame {
         }
 
         tabela.getColumnModel().getColumn(0).setCellRenderer(esquerda);
+        tabela.getColumnModel().getColumn(1).setCellRenderer(esquerda);
     }
 
     private void limparSelecao() {

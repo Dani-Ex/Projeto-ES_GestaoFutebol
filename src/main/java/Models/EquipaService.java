@@ -30,6 +30,7 @@ public class EquipaService {
 
         for (Equipa equipa : equipas) {
             if (contem(equipa.getNome(), termoNormalizado)
+                    || contem(equipa.getCampeonato(), termoNormalizado)
                     || contem(equipa.getGrupo(), termoNormalizado)
                     || contem(equipa.getEstadoTexto(), termoNormalizado)
                     || contem(equipa.getPais(), termoNormalizado)
@@ -86,16 +87,16 @@ public class EquipaService {
             return;
         }
 
-        adicionarEquipaDemo("Portugal", "Lisboa", "Portugal", "Roberto Martinez", "Cristiano Ronaldo", "Grupo A", 34, true, 23);
-        adicionarEquipaDemo("Espanha", "Madrid", "Espanha", "Luis de la Fuente", "Álvaro Morata", "Grupo A", 31, true, 23);
-        adicionarEquipaDemo("Argentina", "Buenos Aires", "Argentina", "Lionel Scaloni", "Lionel Messi", "Grupo B", 28, true, 23);
-        adicionarEquipaDemo("Inglaterra", "Londres", "Inglaterra", "Gareth Southgate", "Harry Kane", "Grupo B", 23, true, 23);
-        adicionarEquipaDemo("França", "Paris", "França", "Didier Deschamps", "Kylian Mbappé", "Grupo C", 21, true, 23);
-        adicionarEquipaDemo("Brasil", "Brasília", "Brasil", "Dorival Júnior", "Marquinhos", "Grupo C", 18, true, 23);
-        adicionarEquipaDemo("Bélgica", "Bruxelas", "Bélgica", "Domenico Tedesco", "Kevin De Bruyne", "Grupo D", 16, true, 23);
-        adicionarEquipaDemo("Alemanha", "Berlim", "Alemanha", "Julian Nagelsmann", "İlkay Gündoğan", "Grupo D", 10, false, 20);
-        adicionarEquipaDemo("Japão", "Tóquio", "Japão", "Hajime Moriyasu", "Wataru Endo", "Grupo A", 8, false, 22);
-        adicionarEquipaDemo("Uruguai", "Montevidéu", "Uruguai", "Marcelo Bielsa", "Federico Valverde", "Grupo B", 14, true, 23);
+        adicionarEquipaDemo("Portugal", "Lisboa", "Portugal", "Roberto Martinez", "Cristiano Ronaldo", "Mundial de Clubes", "Grupo A", 34, true, 23);
+        adicionarEquipaDemo("Espanha", "Madrid", "Espanha", "Luis de la Fuente", "Álvaro Morata", "Mundial de Clubes", "Grupo A", 31, true, 23);
+        adicionarEquipaDemo("Argentina", "Buenos Aires", "Argentina", "Lionel Scaloni", "Lionel Messi", "Mundial de Clubes", "Grupo B", 28, true, 23);
+        adicionarEquipaDemo("Inglaterra", "Londres", "Inglaterra", "Gareth Southgate", "Harry Kane", "Liga Internacional", "Grupo B", 23, true, 23);
+        adicionarEquipaDemo("França", "Paris", "França", "Didier Deschamps", "Kylian Mbappé", "Liga Internacional", "Grupo C", 21, true, 23);
+        adicionarEquipaDemo("Brasil", "Brasília", "Brasil", "Dorival Júnior", "Marquinhos", "Liga Internacional", "Grupo C", 18, true, 23);
+        adicionarEquipaDemo("Bélgica", "Bruxelas", "Bélgica", "Domenico Tedesco", "Kevin De Bruyne", "Taça Global", "Grupo D", 16, true, 23);
+        adicionarEquipaDemo("Alemanha", "Berlim", "Alemanha", "Julian Nagelsmann", "İlkay Gündoğan", "Taça Global", "Grupo D", 10, false, 20);
+        adicionarEquipaDemo("Japão", "Tóquio", "Japão", "Hajime Moriyasu", "Wataru Endo", "Taça Global", "Grupo A", 8, false, 22);
+        adicionarEquipaDemo("Uruguai", "Montevidéu", "Uruguai", "Marcelo Bielsa", "Federico Valverde", "Mundial de Clubes", "Grupo B", 14, true, 23);
     }
 
     private static void adicionarEquipaDemo(
@@ -104,12 +105,13 @@ public class EquipaService {
             String pais,
             String treinador,
             String capitao,
+            String campeonato,
             String grupo,
             int pontos,
             boolean ativa,
             int totalJogadores
     ) {
-        Equipa equipa = new Equipa(nome, cidade, pais, treinador, capitao, grupo, pontos, ativa);
+        Equipa equipa = new Equipa(nome, cidade, pais, treinador, capitao, campeonato, grupo, pontos, ativa);
         equipa.setTotalJogadores(totalJogadores);
 
         equipas.add(equipa);

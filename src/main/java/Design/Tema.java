@@ -66,6 +66,8 @@ public class Tema {
     public static final Font FONTE_TITULO =
             new Font(FONTE_PADRAO, Font.BOLD, 24);
 
+    public static final Font FONTE_TABELA_TITULO = new Font(FONTE_PADRAO, Font.BOLD, 20);
+
     public static final Font FONTE_SUBTITULO =
             new Font(FONTE_PADRAO, Font.PLAIN, 14);
 
