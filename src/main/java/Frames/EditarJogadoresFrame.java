@@ -57,11 +57,19 @@ public class EditarJogadoresFrame extends JFrame {
 
         JPanel fundo = new JPanel(new BorderLayout());
         fundo.setBackground(Tema.COR_FUNDO);
+        fundo.setFocusable(true);
+        limparFocoAoClicar(fundo);
 
         JScrollPane scroll = new JScrollPane(criarConteudo());
         scroll.setBorder(null);
         scroll.setViewportBorder(null);
         scroll.getViewport().setBackground(Tema.COR_FUNDO);
+        scroll.getViewport().addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mousePressed(java.awt.event.MouseEvent e) {
+                limparFoco();
+            }
+        });
         ModernScrollBarUI.aplicar(scroll);
 
         fundo.add(scroll, BorderLayout.CENTER);
@@ -73,6 +81,8 @@ public class EditarJogadoresFrame extends JFrame {
     private JPanel criarConteudo() {
         JPanel content = new JPanel(new GridBagLayout());
         content.setBackground(Tema.COR_FUNDO);
+        content.setFocusable(true);
+        limparFocoAoClicar(content);
         content.setBorder(new EmptyBorder(34, 82, 40, 82));
 
         GridBagConstraints gbc = new GridBagConstraints();
@@ -101,9 +111,13 @@ public class EditarJogadoresFrame extends JFrame {
     private JPanel criarTopo() {
         JPanel topo = new JPanel(new BorderLayout());
         topo.setOpaque(false);
+        topo.setFocusable(true);
+        limparFocoAoClicar(topo);
 
         JPanel esquerda = new JPanel();
         esquerda.setOpaque(false);
+        esquerda.setFocusable(true);
+        limparFocoAoClicar(esquerda);
         esquerda.setLayout(new BoxLayout(esquerda, BoxLayout.Y_AXIS));
 
         JButton voltar = criarBotao("← Voltar a Equipa", Tema.COR_CARD, Tema.COR_TEXTO_PRINCIPAL, this::guardarEFechar);
@@ -123,10 +137,18 @@ public class EditarJogadoresFrame extends JFrame {
         esquerda.add(subtitulo);
 
         JButton guardar = criarBotao("Guardar Alteracoes", Tema.COR_INFO, Tema.COR_TEXTO_CLARO, this::guardarEFechar);
-        guardar.setPreferredSize(new Dimension(165, 42));
+        guardar.setPreferredSize(new Dimension(150, 38));
+        guardar.setMinimumSize(new Dimension(150, 38));
+        guardar.setMaximumSize(new Dimension(150, 38));
+
+        JPanel acoes = new JPanel(new FlowLayout(FlowLayout.RIGHT, 0, 0));
+        acoes.setOpaque(false);
+        acoes.setFocusable(true);
+        limparFocoAoClicar(acoes);
+        acoes.add(guardar);
 
         topo.add(esquerda, BorderLayout.WEST);
-        topo.add(guardar, BorderLayout.EAST);
+        topo.add(acoes, BorderLayout.EAST);
 
         return topo;
     }
@@ -134,6 +156,8 @@ public class EditarJogadoresFrame extends JFrame {
     private JPanel criarAreaAdicionar() {
         JPanel area = new JPanel(new BorderLayout(30, 0));
         area.setOpaque(false);
+        area.setFocusable(true);
+        limparFocoAoClicar(area);
 
         area.add(criarFormularioAdicionar(), BorderLayout.CENTER);
         area.add(criarRegraCard(), BorderLayout.EAST);
@@ -144,16 +168,21 @@ public class EditarJogadoresFrame extends JFrame {
     private RoundedPanel criarFormularioAdicionar() {
         RoundedPanel card = new RoundedPanel(12, Tema.COR_CARD);
         card.setLayout(new BorderLayout());
-        card.setBorder(new EmptyBorder(22, 22, 12, 22));
-        card.setPreferredSize(new Dimension(820, 250));
+        card.setFocusable(true);
+        limparFocoAoClicar(card);
+        card.setBorder(new EmptyBorder(22, 22, 16, 22));
+        card.setPreferredSize(new Dimension(860, 315));
+        card.setMinimumSize(new Dimension(820, 300));
 
         JLabel titulo = new JLabel("Adicionar Jogador");
         titulo.setFont(Tema.FONTE_TITULO);
         titulo.setForeground(Tema.COR_TEXTO_PRINCIPAL);
 
-        JPanel campos = new JPanel(new GridLayout(3, 3, 34, 10));
+        JPanel campos = new JPanel(new GridBagLayout());
         campos.setOpaque(false);
-        campos.setBorder(new EmptyBorder(16, 0, 16, 0));
+        campos.setFocusable(true);
+        limparFocoAoClicar(campos);
+        campos.setBorder(new EmptyBorder(16, 0, 12, 0));
 
         campoNome = criarCampo("Novo Jogador");
         campoNumero = criarCampo("24");
@@ -162,21 +191,23 @@ public class EditarJogadoresFrame extends JFrame {
         campoAltura = criarCampo("180");
         campoPeDominante = criarCombo(new String[]{"Direito", "Esquerdo", "Ambos"});
         campoDataNascimento = criarCampo("2000-01-20");
-        campoPaisOrigem = criarCampo(equipa.getPais());
-        campoCidadeNascimento = criarCampo(equipa.getCidade());
+        campoPaisOrigem = criarCampo(equipa.getPais() == null || equipa.getPais().trim().isEmpty() ? "Portugal" : equipa.getPais());
+        campoCidadeNascimento = criarCampo(equipa.getCidade() == null || equipa.getCidade().trim().isEmpty() ? "Lisboa" : equipa.getCidade());
 
-        campos.add(criarCampoComLabel("Nome", campoNome));
-        campos.add(criarCampoComLabel("Peso", campoPeso));
-        campos.add(criarCampoComLabel("Data nascimento", campoDataNascimento));
-        campos.add(criarCampoComLabel("Numero", campoNumero));
-        campos.add(criarCampoComLabel("Altura", campoAltura));
-        campos.add(criarCampoComLabel("Pais de origem", campoPaisOrigem));
-        campos.add(criarCampoComLabel("Posicao", campoPosicao));
-        campos.add(criarCampoComLabel("Pe dominante", campoPeDominante));
-        campos.add(criarCampoComLabel("Lugar de nascimento", campoCidadeNascimento));
+        adicionarCampo(campos, "Nome", campoNome, 0, 0);
+        adicionarCampo(campos, "Peso", campoPeso, 1, 0);
+        adicionarCampo(campos, "Data nascimento", campoDataNascimento, 2, 0);
+        adicionarCampo(campos, "Numero", campoNumero, 0, 1);
+        adicionarCampo(campos, "Altura", campoAltura, 1, 1);
+        adicionarCampo(campos, "Pais de origem", campoPaisOrigem, 2, 1);
+        adicionarCampo(campos, "Posicao", campoPosicao, 0, 2);
+        adicionarCampo(campos, "Pe dominante", campoPeDominante, 1, 2);
+        adicionarCampo(campos, "Lugar de nascimento", campoCidadeNascimento, 2, 2);
 
         JPanel rodape = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
         rodape.setOpaque(false);
+        rodape.setFocusable(true);
+        limparFocoAoClicar(rodape);
         JButton adicionar = criarBotao("+ Adicionar", Tema.COR_INFO, Tema.COR_TEXTO_CLARO, this::adicionarJogador);
         adicionar.setPreferredSize(new Dimension(124, 38));
         rodape.add(adicionar);
@@ -192,6 +223,8 @@ public class EditarJogadoresFrame extends JFrame {
         RoundedPanel card = new RoundedPanel(12, Tema.COR_VERDE_SUAVE);
         card.setPreferredSize(new Dimension(255, 250));
         card.setLayout(new BorderLayout());
+        card.setFocusable(true);
+        limparFocoAoClicar(card);
         card.setBorder(new EmptyBorder(24, 22, 24, 22));
 
         JLabel titulo = new JLabel("Regra da equipa");
@@ -220,6 +253,8 @@ public class EditarJogadoresFrame extends JFrame {
     private RoundedPanel criarTabelaCard() {
         RoundedPanel card = new RoundedPanel(12, Tema.COR_CARD);
         card.setLayout(new BorderLayout());
+        card.setFocusable(true);
+        limparFocoAoClicar(card);
         card.setPreferredSize(new Dimension(820, 310));
         card.setBorder(new EmptyBorder(22, 22, 22, 22));
 
@@ -243,6 +278,12 @@ public class EditarJogadoresFrame extends JFrame {
         scroll.setBorder(BorderFactory.createEmptyBorder());
         scroll.setViewportBorder(BorderFactory.createEmptyBorder());
         scroll.getViewport().setBackground(Tema.COR_CARD);
+        scroll.getViewport().addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mousePressed(java.awt.event.MouseEvent e) {
+                limparFoco();
+            }
+        });
         scroll.setBackground(Tema.COR_CARD);
         if (scroll.getColumnHeader() != null) {
             scroll.getColumnHeader().setBorder(BorderFactory.createEmptyBorder());
@@ -368,10 +409,10 @@ public class EditarJogadoresFrame extends JFrame {
         atualizarSubtituloTabela();
     }
 
-    private PlaceholderTextField criarCampo(String valor) {
-        PlaceholderTextField campo = new PlaceholderTextField("");
-        campo.setText(valor == null ? "" : valor);
-        campo.setPreferredSize(new Dimension(210, 30));
+    private PlaceholderTextField criarCampo(String placeholder) {
+        PlaceholderTextField campo = new PlaceholderTextField(placeholder == null ? "" : placeholder);
+        campo.setPreferredSize(new Dimension(235, 36));
+        campo.setMinimumSize(new Dimension(210, 36));
         campo.setFont(Tema.FONTE_TEXTO_PEQUENO);
         campo.setForeground(Tema.COR_TEXTO_PRINCIPAL);
         campo.setBackground(Tema.COR_INPUT);
@@ -386,7 +427,8 @@ public class EditarJogadoresFrame extends JFrame {
 
     private JComboBox<String> criarCombo(String[] opcoes) {
         JComboBox<String> combo = new JComboBox<>(opcoes);
-        combo.setPreferredSize(new Dimension(210, 30));
+        combo.setPreferredSize(new Dimension(235, 36));
+        combo.setMinimumSize(new Dimension(210, 36));
         combo.setFont(Tema.FONTE_TEXTO_PEQUENO);
         combo.setForeground(Tema.COR_TEXTO_PRINCIPAL);
         combo.setBackground(Tema.COR_INPUT);
@@ -396,8 +438,12 @@ public class EditarJogadoresFrame extends JFrame {
     }
 
     private JPanel criarCampoComLabel(String label, JComponent campo) {
-        JPanel painel = new JPanel(new BorderLayout(0, 5));
+        JPanel painel = new JPanel(new BorderLayout(0, 7));
         painel.setOpaque(false);
+        painel.setFocusable(true);
+        limparFocoAoClicar(painel);
+        painel.setPreferredSize(new Dimension(235, 58));
+        painel.setMinimumSize(new Dimension(210, 58));
 
         JLabel lbl = new JLabel(label);
         lbl.setFont(new Font(Tema.FONTE_PADRAO, Font.BOLD, 12));
@@ -407,6 +453,22 @@ public class EditarJogadoresFrame extends JFrame {
         painel.add(campo, BorderLayout.CENTER);
 
         return painel;
+    }
+
+    private void adicionarCampo(JPanel painel,
+                                String label,
+                                JComponent campo,
+                                int coluna,
+                                int linha) {
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = coluna;
+        gbc.gridy = linha;
+        gbc.weightx = 1;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.insets = new Insets(0, coluna == 0 ? 0 : 34, 14, 0);
+
+        painel.add(criarCampoComLabel(label, campo), gbc);
     }
 
     private JButton criarBotao(String texto, Color fundo, Color corTexto, Runnable acao) {
@@ -551,8 +613,9 @@ public class EditarJogadoresFrame extends JFrame {
         campoPeso.setText("");
         campoAltura.setText("");
         campoDataNascimento.setText("");
-        campoPaisOrigem.setText(equipa.getPais());
-        campoCidadeNascimento.setText(equipa.getCidade());
+        campoPaisOrigem.setText("");
+        campoCidadeNascimento.setText("");
+        limparFoco();
     }
 
     private void mostrarErro(String mensagem) {
@@ -566,6 +629,19 @@ public class EditarJogadoresFrame extends JFrame {
 
     private boolean campeonatoIniciado() {
         return false;
+    }
+
+    private void limparFoco() {
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().clearGlobalFocusOwner();
+    }
+
+    private void limparFocoAoClicar(JComponent componente) {
+        componente.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mousePressed(java.awt.event.MouseEvent e) {
+                limparFoco();
+            }
+        });
     }
 
     private class BotaoRemoverRenderer extends RoundedButton implements javax.swing.table.TableCellRenderer {

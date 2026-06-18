@@ -254,7 +254,14 @@ public class JogadorService {
     }
 
     private static String normalizar(String valor) {
-        return valor == null ? "" : valor.trim().toLowerCase(Locale.ROOT);
+        return valor == null
+                ? ""
+                : valor
+                .replace("\uFEFF", "")
+                .replace("\u200B", "")
+                .replace("\u00A0", " ")
+                .trim()
+                .toLowerCase(Locale.ROOT);
     }
 
     private static String escapar(String valor) {
