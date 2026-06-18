@@ -5,6 +5,7 @@ import Frames.SeccaoEquipas.EquipasFrame;
 import Frames.SeccaoFinancas.FinancasFrame;
 import Frames.SeccaoJogadores.JogadoresFrame;
 import Frames.CampeonatosFrame;
+import Frames.SeccaoJogos.JogosFrame;
 
 import javax.swing.*;
 import java.awt.*;
@@ -57,7 +58,10 @@ public class MenuLateral extends JPanel {
             new JogadoresFrame();
         });
 
-        btnJogos.addActionListener(e -> abrirPlaceholder(frame, "Jogos"));
+        btnJogos.addActionListener(e -> {
+            frame.dispose();
+            new JogosFrame();
+        });
 
         btnEstatisticas.addActionListener(e -> {
             frame.dispose();
