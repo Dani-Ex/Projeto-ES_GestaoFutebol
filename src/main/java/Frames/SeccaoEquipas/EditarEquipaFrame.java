@@ -5,6 +5,7 @@ import Design.FormUtils;
 import Design.RoundedButton;
 import Design.RoundedPanel;
 import Design.Tema;
+import GrupoEeleminatoria.CampeonatoRepositorio;
 import Models.Equipa;
 import Models.EquipaService;
 import Models.JogadorService;
@@ -12,6 +13,7 @@ import Models.JogadorService;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.util.List;
 
 public class EditarEquipaFrame extends JFrame {
 
@@ -186,8 +188,16 @@ public class EditarEquipaFrame extends JFrame {
     }
 
     private JComboBox<String> criarComboCampeonato() {
+        List<String> campeonatos = CampeonatoRepositorio.listarNomesCampeonatosGuardados();
+
+        if (equipa.getCampeonato() != null
+                && !equipa.getCampeonato().trim().isEmpty()
+                && !campeonatos.contains(equipa.getCampeonato())) {
+            campeonatos.add(equipa.getCampeonato());
+        }
+
         return FormUtils.criarCombo(
-                equipaService.listarCampeonatos().toArray(new String[0]),
+                campeonatos.toArray(new String[0]),
                 equipa.getCampeonato(),
                 new Dimension(305, 44),
                 12
@@ -212,6 +222,7 @@ public class EditarEquipaFrame extends JFrame {
 
             String novoNome = campoNome.getText().trim();
             String novoCampeonato = String.valueOf(campoCampeonato.getSelectedItem()).trim();
+            validarCampeonatoGuardado(novoCampeonato);
             String nomeAntigo = equipa.getNome();
             String campeonatoAntigo = equipa.getCampeonato();
 
@@ -254,6 +265,14 @@ public class EditarEquipaFrame extends JFrame {
                     e.getMessage(),
                     "Erro de validação",
                     JOptionPane.ERROR_MESSAGE
+            );
+        }
+    }
+
+    private void validarCampeonatoGuardado(String campeonato) {
+        if (CampeonatoRepositorio.procurarPorNome(campeonato) == null) {
+            throw new IllegalArgumentException(
+                    "Escolhe um campeonato existente e guardado antes de atualizar a equipa."
             );
         }
     }

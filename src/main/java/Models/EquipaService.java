@@ -1,5 +1,7 @@
 package Models;
 
+import GrupoEeleminatoria.CampeonatoRepositorio;
+
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -15,6 +17,7 @@ public class EquipaService {
     private static final EquipaService INSTANCE = new EquipaService();
     private final Path ficheiroEquipas;
     private final List<Equipa> equipas = new ArrayList<>();
+    private final boolean validarCampeonatosGuardados;
 
     private EquipaService() {
         this(FICHEIRO_EQUIPAS);
@@ -22,6 +25,7 @@ public class EquipaService {
 
     EquipaService(Path ficheiroEquipas) {
         this.ficheiroEquipas = ficheiroEquipas;
+        this.validarCampeonatosGuardados = FICHEIRO_EQUIPAS.equals(ficheiroEquipas);
         carregarEquipas();
     }
 
@@ -88,6 +92,13 @@ public class EquipaService {
 
         if (equipa.getNome() == null || equipa.getNome().trim().isEmpty()) {
             throw new IllegalArgumentException("O nome da equipa é obrigatório.");
+        }
+
+        if (validarCampeonatosGuardados
+                && CampeonatoRepositorio.procurarPorNome(equipa.getCampeonato()) == null) {
+            throw new IllegalArgumentException(
+                    "A equipa tem de estar associada a um campeonato existente e guardado."
+            );
         }
 
         if (equipaExisteNoCampeonato(equipa.getNome(), equipa.getCampeonato())) {
