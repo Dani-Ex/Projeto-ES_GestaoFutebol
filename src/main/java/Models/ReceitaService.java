@@ -12,13 +12,25 @@ import java.util.List;
 public class ReceitaService {
 
     private static final Path FICHEIRO_RECEITAS = Paths.get("data", "receitas.tsv");
+    private static final ReceitaService INSTANCE = new ReceitaService();
+    private final List<Receita> receitas = new ArrayList<>();
+
+    private ReceitaService() {
+        carregarReceitas();
+    }
+
+    public static ReceitaService getInstance() {
+        return INSTANCE;
+    }
 
     public List<Receita> listarReceitas() {
-        if (!Files.exists(FICHEIRO_RECEITAS)) {
-            return Collections.emptyList();
-        }
+        return Collections.unmodifiableList(receitas);
+    }
 
-        List<Receita> receitas = new ArrayList<>();
+    private void carregarReceitas() {
+        if (!Files.exists(FICHEIRO_RECEITAS)) {
+            return;
+        }
 
         try {
             for (String linha : Files.readAllLines(FICHEIRO_RECEITAS, StandardCharsets.UTF_8)) {
@@ -41,10 +53,8 @@ public class ReceitaService {
                 ));
             }
         } catch (IOException e) {
-            return Collections.emptyList();
+            receitas.clear();
         }
-
-        return receitas;
     }
 
     public boolean existeReceitaParaJogo(String idJogo) {
@@ -80,9 +90,8 @@ public class ReceitaService {
             throw new IllegalArgumentException("Esse jogo j\u00E1 tem uma receita registada.");
         }
 
-        List<Receita> receitas = new ArrayList<>(listarReceitas());
         receitas.add(receita);
-        guardarReceitas(receitas);
+        guardarReceitas();
     }
 
     public void atualizarReceita(Receita receitaAtualizada) {
@@ -90,7 +99,6 @@ public class ReceitaService {
             throw new IllegalArgumentException("A receita n\u00E3o pode ser vazia.");
         }
 
-        List<Receita> receitas = new ArrayList<>(listarReceitas());
         boolean encontrada = false;
 
         for (int i = 0; i < receitas.size(); i++) {
@@ -107,21 +115,20 @@ public class ReceitaService {
             throw new IllegalArgumentException("A receita selecionada j\u00E1 n\u00E3o existe.");
         }
 
-        guardarReceitas(receitas);
+        guardarReceitas();
     }
 
     public void removerReceita(String idJogo) {
-        List<Receita> receitas = new ArrayList<>(listarReceitas());
         boolean removida = receitas.removeIf(receita -> receita.getIdJogo().equalsIgnoreCase(idJogo));
 
         if (!removida) {
             throw new IllegalArgumentException("A receita selecionada j\u00E1 n\u00E3o existe.");
         }
 
-        guardarReceitas(receitas);
+        guardarReceitas();
     }
 
-    private void guardarReceitas(List<Receita> receitas) {
+    private void guardarReceitas() {
         try {
             Files.createDirectories(FICHEIRO_RECEITAS.getParent());
 

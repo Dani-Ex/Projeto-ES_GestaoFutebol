@@ -13,13 +13,26 @@ public class EquipaService {
 
     private static final Path FICHEIRO_EQUIPAS = Paths.get("data", "equipas.tsv");
     private static final List<Equipa> equipas = new ArrayList<>();
+    private static final EquipaService INSTANCE = new EquipaService();
 
     static {
         carregarEquipas();
     }
 
+    private EquipaService() {
+    }
+
+    public static EquipaService getInstance() {
+        return INSTANCE;
+    }
+
     public List<Equipa> listarEquipas() {
         return Collections.unmodifiableList(equipas);
+    }
+
+    public void sincronizarEstatisticasComJogadores() {
+        atualizarEstatisticasComJogadores();
+        guardarEquipas();
     }
 
     public List<String> listarCampeonatos() {
@@ -126,7 +139,7 @@ public class EquipaService {
             return;
         }
 
-        JogadorService jogadorService = new JogadorService();
+        JogadorService jogadorService = JogadorService.getInstance();
         int totalJogadores = jogadorService.contarJogadoresPorEquipa(
                 equipa.getNome(),
                 equipa.getCampeonato()
@@ -153,7 +166,7 @@ public class EquipaService {
     private static void carregarEquipas() {
         if (Files.exists(FICHEIRO_EQUIPAS)) {
             carregarEquipasGuardadas();
-            sincronizarEstatisticasComJogadores();
+            atualizarEstatisticasComJogadores();
         }
     }
 
@@ -241,8 +254,8 @@ public class EquipaService {
         }
     }
 
-    private static void sincronizarEstatisticasComJogadores() {
-        JogadorService jogadorService = new JogadorService();
+    private static void atualizarEstatisticasComJogadores() {
+        JogadorService jogadorService = JogadorService.getInstance();
 
         for (Equipa equipa : equipas) {
             int totalJogadores = jogadorService.contarJogadoresPorEquipa(
@@ -301,6 +314,6 @@ public class EquipaService {
             resultado.append('\\');
         }
 
-        return resultado.toString();
+        return TextUtils.limparCaracteresInvisiveis(resultado.toString());
     }
 }

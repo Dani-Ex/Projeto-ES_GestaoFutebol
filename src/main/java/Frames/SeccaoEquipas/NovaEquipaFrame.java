@@ -15,7 +15,7 @@ import java.awt.*;
 public class NovaEquipaFrame extends JFrame {
 
     private final Runnable onEquipaCriada;
-    private final EquipaService equipaService = new EquipaService();
+    private final EquipaService equipaService = EquipaService.getInstance();
 
     private PlaceholderTextField campoNome;
     private PlaceholderTextField campoCidade;

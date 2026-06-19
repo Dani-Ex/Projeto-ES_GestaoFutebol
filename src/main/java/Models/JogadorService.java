@@ -14,18 +14,33 @@ import java.util.List;
 public class JogadorService {
 
     private static final Path FICHEIRO_JOGADORES = Paths.get("data", "jogadores.tsv");
+
+    private static final JogadorService INSTANCE = new JogadorService();
+
     private static final List<Jogador> jogadores = new ArrayList<>();
 
     static {
-        carregarJogadores();
+        carregarJogadoresDoFicheiro();
+    }
+
+    public static JogadorService getInstance() {
+        return INSTANCE;
+    }
+
+    private JogadorService() {
     }
 
     public List<Jogador> listarJogadores() {
         return Collections.unmodifiableList(jogadores);
     }
 
+    public List<Jogador> getJogadores() {
+        return listarJogadores();
+    }
+
     public List<Jogador> listarPorEquipa(String equipa, String campeonato) {
         List<Jogador> resultado = new ArrayList<>();
+
         String equipaNormalizada = normalizar(equipa);
         String campeonatoNormalizado = normalizar(campeonato);
 
@@ -75,11 +90,12 @@ public class JogadorService {
     }
 
     public void atualizarEquipaDosJogadores(String equipaAntiga,
-                                             String campeonatoAntigo,
-                                             String novaEquipa,
-                                             String novoCampeonato) {
+                                            String campeonatoAntigo,
+                                            String novaEquipa,
+                                            String novoCampeonato) {
         String equipaAntigaNormalizada = normalizar(equipaAntiga);
         String campeonatoAntigoNormalizado = normalizar(campeonatoAntigo);
+
         boolean alterou = false;
 
         for (Jogador jogador : jogadores) {
@@ -98,20 +114,20 @@ public class JogadorService {
 
     public void adicionarJogador(Jogador jogador) {
         if (jogador == null) {
-            throw new IllegalArgumentException("O jogador nao pode ser nulo.");
+            throw new IllegalArgumentException("O jogador não pode ser nulo.");
         }
 
         if (jogador.getNome() == null || jogador.getNome().trim().isEmpty()) {
-            throw new IllegalArgumentException("O nome do jogador e obrigatorio.");
+            throw new IllegalArgumentException("O nome do jogador é obrigatório.");
         }
 
         if (contarJogadoresPorEquipa(jogador.getEquipa(), jogador.getCampeonato()) >= 23
                 && jogador.isAtivo()) {
-            throw new IllegalArgumentException("A equipa ja tem 23 jogadores ativos.");
+            throw new IllegalArgumentException("A equipa já tem 23 jogadores ativos.");
         }
 
         if (numeroAtivoExisteNaEquipa(jogador.getEquipa(), jogador.getCampeonato(), jogador.getNumero())) {
-            throw new IllegalArgumentException("Ja existe um jogador ativo com esse numero nesta equipa.");
+            throw new IllegalArgumentException("Já existe um jogador ativo com esse número nesta equipa.");
         }
 
         jogadores.add(jogador);
@@ -120,7 +136,7 @@ public class JogadorService {
 
     public void removerOuInativarJogador(Jogador jogador, boolean campeonatoIniciado) {
         if (jogador == null) {
-            throw new IllegalArgumentException("O jogador nao pode ser nulo.");
+            throw new IllegalArgumentException("O jogador não pode ser nulo.");
         }
 
         if (campeonatoIniciado) {
@@ -130,16 +146,6 @@ public class JogadorService {
         }
 
         guardarJogadores();
-    }
-
-    private boolean numeroAtivoExisteNaEquipa(String equipa, String campeonato, int numero) {
-        for (Jogador jogador : listarPorEquipa(equipa, campeonato)) {
-            if (jogador.isAtivo() && jogador.getNumero() == numero) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     public void guardarJogadores() {
@@ -176,18 +182,33 @@ public class JogadorService {
             }
 
             Files.write(FICHEIRO_JOGADORES, linhas, StandardCharsets.UTF_8);
+
         } catch (IOException e) {
-            throw new IllegalStateException("Não foi possível guardar os dados dos jogadores.");
+            throw new IllegalStateException("Não foi possível guardar os dados dos jogadores.", e);
         }
     }
 
-    private static void carregarJogadores() {
+    private boolean numeroAtivoExisteNaEquipa(String equipa, String campeonato, int numero) {
+        for (Jogador jogador : listarPorEquipa(equipa, campeonato)) {
+            if (jogador.isAtivo() && jogador.getNumero() == numero) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static void carregarJogadoresDoFicheiro() {
+        jogadores.clear();
+
         if (!Files.exists(FICHEIRO_JOGADORES)) {
             return;
         }
 
         try {
-            for (String linha : Files.readAllLines(FICHEIRO_JOGADORES, StandardCharsets.UTF_8)) {
+            List<String> linhas = Files.readAllLines(FICHEIRO_JOGADORES, StandardCharsets.UTF_8);
+
+            for (String linha : linhas) {
                 if (linha.trim().isEmpty()) {
                     continue;
                 }
@@ -223,6 +244,7 @@ public class JogadorService {
                         Boolean.parseBoolean(campos[21])
                 ));
             }
+
         } catch (IOException e) {
             jogadores.clear();
         }
@@ -246,6 +268,10 @@ public class JogadorService {
 
     private static LocalDate parseData(String valor) {
         try {
+            if (valor == null || valor.trim().isEmpty()) {
+                return null;
+            }
+
             return LocalDate.parse(valor);
         } catch (DateTimeParseException e) {
             return null;
@@ -298,6 +324,6 @@ public class JogadorService {
             resultado.append('\\');
         }
 
-        return resultado.toString();
+        return TextUtils.limparCaracteresInvisiveis(resultado.toString());
     }
 }

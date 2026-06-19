@@ -1,7 +1,13 @@
 package Frames.SeccaoJogadores;
 
+import Design.ModernScrollBarUI;
+import Design.RoundedBorder;
+import Design.RoundedButton;
+import Design.RoundedPanel;
 import Design.Tema;
+import Models.EquipaService;
 import Models.Jogador;
+import Models.JogadorService;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -45,6 +51,7 @@ public class EditarJogadorFrame extends JFrame {
 
         setTitle("Editar Jogador - " + jogador.getNome());
         setSize(1250, 760);
+        setMinimumSize(new Dimension(1080, 660));
         setLocationRelativeTo(null);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
@@ -194,13 +201,14 @@ public class EditarJogadorFrame extends JFrame {
         scroll.setOpaque(false);
         scroll.getViewport().setOpaque(false);
         scroll.getVerticalScrollBar().setUnitIncrement(16);
+        ModernScrollBarUI.aplicar(scroll);
 
         JPanel botoes = new JPanel(new FlowLayout(FlowLayout.RIGHT, 16, 0));
         botoes.setOpaque(false);
 
         JButton cancelar = criarBotao(
                 "Cancelar",
-                new Color(241, 245, 249),
+                Tema.COR_BOTAO_SECUNDARIO,
                 Tema.COR_TEXTO_PRINCIPAL
         );
 
@@ -262,13 +270,14 @@ public class EditarJogadorFrame extends JFrame {
 
         campo.setFont(Tema.FONTE_TEXTO);
         campo.setForeground(Tema.COR_TEXTO_PRINCIPAL);
-        campo.setBackground(Color.WHITE);
+        campo.setBackground(Tema.COR_INPUT);
+        campo.setOpaque(true);
         campo.setCaretColor(Tema.COR_TEXTO_PRINCIPAL);
-        campo.setSelectionColor(new Color(219, 234, 254));
+        campo.setSelectionColor(Tema.COR_AZUL_SUAVE);
         campo.setSelectedTextColor(Tema.COR_TEXTO_PRINCIPAL);
 
         campo.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(Tema.COR_LINHA),
+                new RoundedBorder(Tema.COR_LINHA, 12),
                 new EmptyBorder(8, 12, 8, 12)
         ));
 
@@ -281,8 +290,9 @@ public class EditarJogadorFrame extends JFrame {
         combo.setEnabled(true);
         combo.setFocusable(true);
         combo.setFont(Tema.FONTE_TEXTO);
-        combo.setBackground(Color.WHITE);
+        combo.setBackground(Tema.COR_INPUT);
         combo.setForeground(Tema.COR_TEXTO_PRINCIPAL);
+        combo.setBorder(new RoundedBorder(Tema.COR_LINHA, 12));
 
         if (valorAtual != null) {
             combo.setSelectedItem(valorAtual);
@@ -308,16 +318,8 @@ public class EditarJogadorFrame extends JFrame {
     }
 
     private JButton criarBotao(String texto, Color fundo, Color corTexto) {
-        JButton botao = new JButton(texto);
-
-        botao.setFont(new Font(Tema.FONTE_PADRAO, Font.BOLD, 13));
-        botao.setBackground(fundo);
-        botao.setForeground(corTexto);
-        botao.setFocusPainted(false);
-        botao.setBorderPainted(false);
+        RoundedButton botao = new RoundedButton(texto, fundo, corTexto, 12);
         botao.setPreferredSize(new Dimension(175, 40));
-        botao.setCursor(new Cursor(Cursor.HAND_CURSOR));
-
         return botao;
     }
 
@@ -361,6 +363,9 @@ public class EditarJogadorFrame extends JFrame {
             jogador.setDisciplina(disciplina);
 
             jogador.setAtivo("Ativo".equals(campoEstado.getSelectedItem()));
+
+            JogadorService.getInstance().guardarJogadores();
+            EquipaService.getInstance().sincronizarEstatisticasComJogadores();
 
             if (onGuardar != null) {
                 onGuardar.run();
@@ -425,32 +430,4 @@ public class EditarJogadorFrame extends JFrame {
         }
     }
 
-    private static class RoundedPanel extends JPanel {
-
-        private final int raio;
-        private final Color corFundo;
-
-        public RoundedPanel(int raio, Color corFundo) {
-            this.raio = raio;
-            this.corFundo = corFundo;
-            setOpaque(false);
-        }
-
-        @Override
-        protected void paintComponent(Graphics g) {
-            Graphics2D g2 = (Graphics2D) g.create();
-
-            g2.setRenderingHint(
-                    RenderingHints.KEY_ANTIALIASING,
-                    RenderingHints.VALUE_ANTIALIAS_ON
-            );
-
-            g2.setColor(corFundo);
-            g2.fillRoundRect(0, 0, getWidth(), getHeight(), raio, raio);
-
-            g2.dispose();
-
-            super.paintComponent(g);
-        }
-    }
 }

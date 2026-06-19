@@ -5,7 +5,6 @@ import Frames.SeccaoEquipas.EquipasFrame;
 import Frames.SeccaoFinancas.FinancasFrame;
 import Frames.SeccaoJogadores.JogadoresFrame;
 import Frames.CampeonatosFrame;
-import Frames.SeccaoJogos.JogosFrame;
 
 import javax.swing.*;
 import java.awt.*;
@@ -35,6 +34,7 @@ public class MenuLateral extends JPanel {
         JButton btnJogos = criarBotaoMenu("Jogos");
         JButton btnEstatisticas = criarBotaoMenu("Estatisticas");
         JButton btnFinancas = criarBotaoMenu("Finan\u00E7as");
+        JButton btnEstadios = criarBotaoMenu("Estadios");
         JButton btnBilheteria = criarBotaoMenu("Bilheteria");
         JButton btnRegras = criarBotaoMenu("Regras");
 
@@ -58,10 +58,7 @@ public class MenuLateral extends JPanel {
             new JogadoresFrame();
         });
 
-        btnJogos.addActionListener(e -> {
-            frame.dispose();
-            new JogosFrame();
-        });
+        btnJogos.addActionListener(e -> abrirPlaceholder(frame, "Jogos"));
 
         btnEstatisticas.addActionListener(e -> {
             frame.dispose();
@@ -72,7 +69,7 @@ public class MenuLateral extends JPanel {
             frame.dispose();
             new FinancasFrame();
         });
-
+        btnEstadios.addActionListener(e -> abrirPlaceholder(frame, "Estadios"));
         btnBilheteria.addActionListener(e -> abrirPlaceholder(frame, "Bilheteria"));
 
         btnRegras.addActionListener(e -> {
@@ -96,6 +93,7 @@ public class MenuLateral extends JPanel {
         add(Box.createVerticalStrut(Tema.ESPACAMENTO_PEQUENO));
         add(btnFinancas);
         add(Box.createVerticalStrut(Tema.ESPACAMENTO_PEQUENO));
+        add(btnEstadios);
         add(Box.createVerticalStrut(Tema.ESPACAMENTO_PEQUENO));
         add(btnBilheteria);
         add(Box.createVerticalStrut(Tema.ESPACAMENTO_PEQUENO));

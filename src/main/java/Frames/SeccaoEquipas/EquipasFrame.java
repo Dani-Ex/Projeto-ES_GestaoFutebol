@@ -34,7 +34,7 @@ public class EquipasFrame extends JFrame {
     private PlaceholderTextField campoPesquisa;
 
     private final List<Equipa> equipasVisiveis = new ArrayList<>();
-    private final EquipaService equipaService = new EquipaService();
+    private final EquipaService equipaService = EquipaService.getInstance();
 
     public EquipasFrame() {
         this(null);
@@ -412,6 +412,8 @@ public class EquipasFrame extends JFrame {
         if (modeloEquipas == null) {
             return;
         }
+
+        equipaService.sincronizarEstatisticasComJogadores();
 
         modeloEquipas.setRowCount(0);
         equipasVisiveis.clear();

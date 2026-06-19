@@ -17,7 +17,7 @@ public class EditarEquipaFrame extends JFrame {
 
     private final Equipa equipa;
     private final Runnable onEquipaAtualizada;
-    private final EquipaService equipaService = new EquipaService();
+    private final EquipaService equipaService = EquipaService.getInstance();
 
     private PlaceholderTextField campoNome;
     private PlaceholderTextField campoCidade;
@@ -228,7 +228,7 @@ public class EditarEquipaFrame extends JFrame {
             equipa.setTreinador(campoTreinador.getText().trim());
             equipa.setCapitao(campoCapitao.getText().trim());
 
-            new JogadorService().atualizarEquipaDosJogadores(
+            JogadorService.getInstance().atualizarEquipaDosJogadores(
                     nomeAntigo,
                     campeonatoAntigo,
                     novoNome,
