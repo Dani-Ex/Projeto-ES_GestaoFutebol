@@ -17,12 +17,15 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.text.NumberFormat;
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class DashboardFrame extends JFrame {
 
@@ -214,35 +217,41 @@ public class DashboardFrame extends JFrame {
         ));
         limparSelecaoAoClicar(card);
 
-        JLabel titulo = new JLabel("Lucro por Jogo");
+        JLabel titulo = new JLabel("Lucro por Mes");
         titulo.setFont(Tema.FONTE_TITULO);
         titulo.setForeground(Tema.COR_TEXTO_PRINCIPAL);
 
-        String[] colunas = {"Jogo", "Lucro"};
-        DefaultTableModel model = criarModeloNaoEditavel(colunas);
+        GraficoLucro grafico = new GraficoLucro(criarDadosGrafico(TipoGraficoLucro.MES));
+        limparSelecaoAoClicar(grafico);
 
-        for (ReceitaJogo receita : receitas) {
-            model.addRow(new Object[]{receita.jogo, formatarEuros(receita.lucro())});
-        }
+        JComboBox<TipoGraficoLucro> comboGrafico = new JComboBox<>(TipoGraficoLucro.values());
+        comboGrafico.setSelectedItem(TipoGraficoLucro.MES);
+        comboGrafico.setFont(Tema.FONTE_CARD_TITULO);
+        comboGrafico.setForeground(Tema.COR_TEXTO_PRINCIPAL);
+        comboGrafico.setBackground(Tema.COR_BOTAO_SECUNDARIO);
+        comboGrafico.setFocusable(false);
+        comboGrafico.setPreferredSize(new Dimension(190, 34));
+        comboGrafico.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        comboGrafico.addActionListener(e -> {
+            TipoGraficoLucro tipoSelecionado = (TipoGraficoLucro) comboGrafico.getSelectedItem();
 
-        JTable tabela = new JTable(model);
-        configurarTabela(tabela, 0);
-        tabela.getColumnModel().getColumn(0).setPreferredWidth(260);
-        tabela.getColumnModel().getColumn(1).setPreferredWidth(100);
+            if (tipoSelecionado == null) {
+                return;
+            }
 
-        tabelasDashboard.add(tabela);
-
-        JScrollPane scroll = new JScrollPane(tabela);
-        TableStyle.configurarScrollLimpo(scroll, Tema.COR_CARD);
+            titulo.setText(tipoSelecionado.titulo);
+            grafico.atualizarDados(criarDadosGrafico(tipoSelecionado));
+        });
 
         JPanel topo = new JPanel(new BorderLayout());
         topo.setOpaque(false);
         topo.setBorder(BorderFactory.createEmptyBorder(0, 0, Tema.ESPACAMENTO_PEQUENO, 0));
         limparSelecaoAoClicar(topo);
         topo.add(titulo, BorderLayout.WEST);
+        topo.add(comboGrafico, BorderLayout.EAST);
 
         card.add(topo, BorderLayout.NORTH);
-        card.add(scroll, BorderLayout.CENTER);
+        card.add(grafico, BorderLayout.CENTER);
 
         return card;
     }
@@ -459,12 +468,97 @@ public class DashboardFrame extends JFrame {
 
             receitas.add(new ReceitaJogo(
                     nomeJogo,
+                    obterData(jogo),
+                    obterCampeonato(jogo),
                     receita.getBilhetes(),
                     receita.getBilheteira(),
                     receita.getPatrocinio(),
                     receita.getDireitosTv()
             ));
         }
+    }
+
+    private List<PontoGrafico> criarDadosGrafico(TipoGraficoLucro tipo) {
+        switch (tipo) {
+            case CAMPEONATO:
+                return criarLucrosPorCampeonato();
+            case JOGOS_RECENTES:
+                return criarLucrosJogosRecentes();
+            case MES:
+            default:
+                return criarLucrosMensaisRecentes();
+        }
+    }
+
+    private List<PontoGrafico> criarLucrosMensaisRecentes() {
+        Map<YearMonth, Double> lucroPorMes = new TreeMap<>();
+
+        for (ReceitaJogo receita : receitas) {
+            if (receita.data == null) {
+                continue;
+            }
+
+            lucroPorMes.merge(YearMonth.from(receita.data), receita.lucro(), Double::sum);
+        }
+
+        List<PontoGrafico> lucros = new ArrayList<>();
+
+        for (Map.Entry<YearMonth, Double> entry : lucroPorMes.entrySet()) {
+            String label = entry.getKey().format(DateTimeFormatter.ofPattern("MMM/yy", Locale.forLanguageTag("pt-PT")));
+            lucros.add(new PontoGrafico(label, entry.getValue()));
+        }
+
+        int limiteMeses = 6;
+        if (lucros.size() > limiteMeses) {
+            return new ArrayList<>(lucros.subList(lucros.size() - limiteMeses, lucros.size()));
+        }
+
+        return lucros;
+    }
+
+    private List<PontoGrafico> criarLucrosPorCampeonato() {
+        Map<String, Double> lucroPorCampeonato = new TreeMap<>();
+
+        for (ReceitaJogo receita : receitas) {
+            lucroPorCampeonato.merge(receita.campeonato, receita.lucro(), Double::sum);
+        }
+
+        List<PontoGrafico> lucros = new ArrayList<>();
+
+        for (Map.Entry<String, Double> entry : lucroPorCampeonato.entrySet()) {
+            lucros.add(new PontoGrafico(abreviarLabel(entry.getKey()), entry.getValue()));
+        }
+
+        lucros.sort(Comparator.comparingDouble(PontoGrafico::getValor).reversed());
+
+        int limiteCampeonatos = 6;
+        if (lucros.size() > limiteCampeonatos) {
+            return new ArrayList<>(lucros.subList(0, limiteCampeonatos));
+        }
+
+        return lucros;
+    }
+
+    private List<PontoGrafico> criarLucrosJogosRecentes() {
+        List<ReceitaJogo> receitasComData = new ArrayList<>();
+
+        for (ReceitaJogo receita : receitas) {
+            if (receita.data != null) {
+                receitasComData.add(receita);
+            }
+        }
+
+        receitasComData.sort(Comparator.comparing((ReceitaJogo receita) -> receita.data).reversed());
+
+        List<PontoGrafico> lucros = new ArrayList<>();
+        int limiteJogos = Math.min(6, receitasComData.size());
+
+        for (int i = 0; i < limiteJogos; i++) {
+            ReceitaJogo receita = receitasComData.get(i);
+            lucros.add(new PontoGrafico(formatarData(receita.data.toString()), receita.lucro()));
+        }
+
+        return lucros;
     }
 
     private ResumoFinanceiro calcularResumoFinanceiro() {
@@ -512,6 +606,26 @@ public class DashboardFrame extends JFrame {
         }
     }
 
+    private LocalDate obterData(Jogo jogo) {
+        if (jogo == null) {
+            return null;
+        }
+
+        try {
+            return LocalDate.parse(jogo.getData());
+        } catch (DateTimeParseException e) {
+            return null;
+        }
+    }
+
+    private String obterCampeonato(Jogo jogo) {
+        if (jogo == null || jogo.getCampeonato() == null || jogo.getCampeonato().trim().isEmpty()) {
+            return "Sem campeonato";
+        }
+
+        return jogo.getCampeonato();
+    }
+
     private String formatarEuros(double valor) {
         NumberFormat formato = NumberFormat.getCurrencyInstance(Locale.GERMANY);
         formato.setMaximumFractionDigits(0);
@@ -525,6 +639,15 @@ public class DashboardFrame extends JFrame {
 
     private String valorOuTraco(String valor) {
         return valor == null || valor.trim().isEmpty() ? "-" : valor;
+    }
+
+    private String abreviarLabel(String valor) {
+        if (valor == null || valor.trim().isEmpty()) {
+            return "-";
+        }
+
+        String limpo = valor.trim();
+        return limpo.length() <= 14 ? limpo : limpo.substring(0, 12) + "..";
     }
 
     private void limparSelecaoTabelas() {
@@ -544,6 +667,8 @@ public class DashboardFrame extends JFrame {
 
     private static class ReceitaJogo {
         private final String jogo;
+        private final LocalDate data;
+        private final String campeonato;
         private final int bilhetes;
         private final double bilheteira;
         private final double patrocinio;
@@ -551,12 +676,16 @@ public class DashboardFrame extends JFrame {
 
         private ReceitaJogo(
                 String jogo,
+                LocalDate data,
+                String campeonato,
                 int bilhetes,
                 double bilheteira,
                 double patrocinio,
                 double direitosTv
         ) {
             this.jogo = jogo;
+            this.data = data;
+            this.campeonato = campeonato;
             this.bilhetes = bilhetes;
             this.bilheteira = bilheteira;
             this.patrocinio = patrocinio;
@@ -568,10 +697,187 @@ public class DashboardFrame extends JFrame {
         }
     }
 
+    private static class PontoGrafico {
+        private final String label;
+        private final double valor;
+
+        private PontoGrafico(String label, double valor) {
+            this.label = label;
+            this.valor = valor;
+        }
+
+        private double getValor() {
+            return valor;
+        }
+    }
+
     private static class ResumoFinanceiro {
         private int totalBilhetes;
         private double totalPatrocinios;
         private double totalLucro;
         private double mediaLucroPorJogo;
+    }
+
+    private enum TipoGraficoLucro {
+        MES("Lucro por Mes"),
+        CAMPEONATO("Lucro por Campeonato"),
+        JOGOS_RECENTES("Lucro Jogos Recentes");
+
+        private final String titulo;
+
+        TipoGraficoLucro(String titulo) {
+            this.titulo = titulo;
+        }
+
+        @Override
+        public String toString() {
+            return titulo;
+        }
+    }
+
+    private class GraficoLucro extends JPanel {
+        private static final int PADDING_ESQUERDA = 58;
+        private static final int PADDING_DIREITA = 18;
+        private static final int PADDING_TOPO = 16;
+        private static final int PADDING_BAIXO = 42;
+
+        private List<PontoGrafico> pontos;
+
+        private GraficoLucro(List<PontoGrafico> pontos) {
+            this.pontos = pontos;
+            setOpaque(true);
+            setBackground(Tema.COR_CARD);
+            setBorder(BorderFactory.createLineBorder(Tema.COR_LINHA));
+        }
+
+        private void atualizarDados(List<PontoGrafico> pontos) {
+            this.pontos = pontos;
+            repaint();
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+
+            Graphics2D g2 = (Graphics2D) g.create();
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            g2.setFont(Tema.FONTE_TEXTO_PEQUENO);
+
+            int largura = getWidth();
+            int altura = getHeight();
+            int baseY = altura - PADDING_BAIXO;
+            int topoY = PADDING_TOPO;
+            int graficoLargura = largura - PADDING_ESQUERDA - PADDING_DIREITA;
+            int graficoAltura = baseY - topoY;
+
+            if (pontos.isEmpty() || graficoLargura <= 0 || graficoAltura <= 0) {
+                desenharMensagemSemDados(g2, largura, altura);
+                g2.dispose();
+                return;
+            }
+
+            double maiorLucro = 0;
+            for (PontoGrafico ponto : pontos) {
+                maiorLucro = Math.max(maiorLucro, ponto.valor);
+            }
+
+            if (maiorLucro <= 0) {
+                desenharMensagemSemDados(g2, largura, altura);
+                g2.dispose();
+                return;
+            }
+
+            desenharEixos(g2, baseY, topoY, graficoLargura);
+            desenharEscala(g2, baseY, topoY, maiorLucro);
+            desenharBarras(g2, baseY, graficoLargura, graficoAltura, maiorLucro);
+
+            g2.dispose();
+        }
+
+        private void desenharMensagemSemDados(Graphics2D g2, int largura, int altura) {
+            String mensagem = "Sem dados financeiros por mes";
+            FontMetrics metrics = g2.getFontMetrics();
+
+            g2.setColor(Tema.COR_TEXTO_SECUNDARIO);
+            g2.drawString(
+                    mensagem,
+                    (largura - metrics.stringWidth(mensagem)) / 2,
+                    altura / 2
+            );
+        }
+
+        private void desenharEixos(Graphics2D g2, int baseY, int topoY, int graficoLargura) {
+            g2.setColor(Tema.COR_LINHA);
+            g2.drawLine(PADDING_ESQUERDA, baseY, PADDING_ESQUERDA + graficoLargura, baseY);
+            g2.drawLine(PADDING_ESQUERDA, topoY, PADDING_ESQUERDA, baseY);
+        }
+
+        private void desenharEscala(Graphics2D g2, int baseY, int topoY, double maiorLucro) {
+            int linhas = 3;
+            FontMetrics metrics = g2.getFontMetrics();
+
+            for (int i = 0; i <= linhas; i++) {
+                double valor = maiorLucro * i / linhas;
+                int y = baseY - (int) ((baseY - topoY) * i / (double) linhas);
+
+                g2.setColor(new Color(241, 245, 249));
+                g2.drawLine(PADDING_ESQUERDA, y, getWidth() - PADDING_DIREITA, y);
+
+                String label = formatarValorCurto(valor);
+                g2.setColor(Tema.COR_TEXTO_SECUNDARIO);
+                g2.drawString(label, PADDING_ESQUERDA - metrics.stringWidth(label) - 8, y + 4);
+            }
+        }
+
+        private void desenharBarras(
+                Graphics2D g2,
+                int baseY,
+                int graficoLargura,
+                int graficoAltura,
+                double maiorLucro
+        ) {
+            int quantidade = pontos.size();
+            int espacoPorMes = graficoLargura / quantidade;
+            int larguraBarra = Math.max(24, Math.min(54, espacoPorMes / 2));
+
+            for (int i = 0; i < quantidade; i++) {
+                PontoGrafico ponto = pontos.get(i);
+                int centroX = PADDING_ESQUERDA + (espacoPorMes * i) + (espacoPorMes / 2);
+                int alturaBarra = (int) Math.round((ponto.valor / maiorLucro) * (graficoAltura - 12));
+                int x = centroX - (larguraBarra / 2);
+                int y = baseY - alturaBarra;
+
+                g2.setColor(Tema.CARD_TEXTO_AZUL);
+                g2.fillRoundRect(x, y, larguraBarra, alturaBarra, 10, 10);
+
+                g2.setColor(Tema.CARD_AZUL);
+                g2.drawRoundRect(x, y, larguraBarra, alturaBarra, 10, 10);
+
+                desenharLabelPonto(g2, ponto, centroX, baseY);
+            }
+        }
+
+        private void desenharLabelPonto(Graphics2D g2, PontoGrafico ponto, int centroX, int baseY) {
+            String labelValor = formatarValorCurto(ponto.valor);
+            FontMetrics metrics = g2.getFontMetrics();
+
+            g2.setColor(Tema.COR_TEXTO_PRINCIPAL);
+            g2.drawString(ponto.label, centroX - metrics.stringWidth(ponto.label) / 2, baseY + 18);
+
+            g2.setColor(Tema.COR_TEXTO_SECUNDARIO);
+            g2.drawString(labelValor, centroX - metrics.stringWidth(labelValor) / 2, baseY + 34);
+        }
+
+        private String formatarValorCurto(double valor) {
+            if (valor >= 1_000_000) {
+                return String.format(Locale.GERMANY, "%.1fM", valor / 1_000_000);
+            }
+
+            if (valor >= 1_000) {
+                return String.format(Locale.GERMANY, "%.0fk", valor / 1_000);
+            }
+
+            return String.format(Locale.GERMANY, "%.0f", valor);
+        }
     }
 }
