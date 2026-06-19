@@ -138,14 +138,20 @@ public class Campeonato implements Serializable {
             return false;
         }
 
+        if (gruposGerados) {
+            return false;
+        }
+
         if (equipa == null || equipa.trim().isEmpty()) {
             return false;
         }
 
-        for (String equipaExistente : equipas) {
-            if (equipaExistente.equalsIgnoreCase(equipa.trim())) {
-                return false;
-            }
+        if (equipas.size() >= numeroEquipasNecessarias) {
+            return false;
+        }
+
+        if (existeEquipaComNome(equipa)) {
+            return false;
         }
 
         equipas.add(equipa.trim());
@@ -157,7 +163,27 @@ public class Campeonato implements Serializable {
             return false;
         }
 
+        if (gruposGerados) {
+            return false;
+        }
+
         return equipas.remove(equipa);
+    }
+
+    public boolean existeEquipaComNome(String nome) {
+        if (nome == null) {
+            return false;
+        }
+
+        String nomeNormalizado = nome.trim();
+
+        for (String equipa : equipas) {
+            if (equipa.equalsIgnoreCase(nomeNormalizado)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public Map<String, List<String>> getGrupos() {
@@ -165,7 +191,11 @@ public class Campeonato implements Serializable {
     }
 
     public void setGrupos(Map<String, List<String>> grupos) {
-        this.grupos = grupos;
+        if (grupos == null) {
+            this.grupos = new LinkedHashMap<>();
+        } else {
+            this.grupos = grupos;
+        }
     }
 
     public List<String> getEquipasEliminatorias() {
@@ -173,7 +203,11 @@ public class Campeonato implements Serializable {
     }
 
     public void setEquipasEliminatorias(List<String> equipasEliminatorias) {
-        this.equipasEliminatorias = equipasEliminatorias;
+        if (equipasEliminatorias == null) {
+            this.equipasEliminatorias = new ArrayList<>();
+        } else {
+            this.equipasEliminatorias = equipasEliminatorias;
+        }
     }
 
     public ArrayList<Estadio> getEstadios() {
@@ -185,7 +219,15 @@ public class Campeonato implements Serializable {
             return false;
         }
 
+        if (gruposGerados) {
+            return false;
+        }
+
         if (estadio == null) {
+            return false;
+        }
+
+        if (estadios.size() >= numeroEstadiosNecessarios) {
             return false;
         }
 
@@ -202,6 +244,10 @@ public class Campeonato implements Serializable {
             return false;
         }
 
+        if (gruposGerados) {
+            return false;
+        }
+
         return estadios.remove(estadio);
     }
 
@@ -210,8 +256,10 @@ public class Campeonato implements Serializable {
             return false;
         }
 
+        String nomeNormalizado = nome.trim();
+
         for (Estadio estadio : estadios) {
-            if (estadio.getNome().equalsIgnoreCase(nome.trim())) {
+            if (estadio.getNome().equalsIgnoreCase(nomeNormalizado)) {
                 return true;
             }
         }

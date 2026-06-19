@@ -1,6 +1,7 @@
 package GrupoEeleminatoria;
 
 import Models.Campeonato;
+import Models.Estadio;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -28,8 +29,12 @@ public class CampeonatoRepositorio {
     }
 
     public static Campeonato procurarPorNome(String nome) {
+        if (nome == null) {
+            return null;
+        }
+
         for (Campeonato campeonato : campeonatos) {
-            if (campeonato.getNome().equalsIgnoreCase(nome)) {
+            if (campeonato.getNome().equalsIgnoreCase(nome.trim())) {
                 return campeonato;
             }
         }
@@ -39,6 +44,52 @@ public class CampeonatoRepositorio {
 
     public static boolean existeCampeonatoComNome(String nome) {
         return procurarPorNome(nome) != null;
+    }
+
+    public static List<String> listarEquipasExistentes() {
+        List<String> equipasExistentes = new ArrayList<>();
+
+        for (Campeonato campeonato : campeonatos) {
+            for (String equipa : campeonato.getEquipas()) {
+                boolean jaExiste = false;
+
+                for (String equipaExistente : equipasExistentes) {
+                    if (equipaExistente.equalsIgnoreCase(equipa)) {
+                        jaExiste = true;
+                        break;
+                    }
+                }
+
+                if (!jaExiste) {
+                    equipasExistentes.add(equipa);
+                }
+            }
+        }
+
+        return equipasExistentes;
+    }
+
+    public static List<Estadio> listarEstadiosExistentes() {
+        List<Estadio> estadiosExistentes = new ArrayList<>();
+
+        for (Campeonato campeonato : campeonatos) {
+            for (Estadio estadio : campeonato.getEstadios()) {
+                boolean jaExiste = false;
+
+                for (Estadio estadioExistente : estadiosExistentes) {
+                    if (estadioExistente.getNome().equalsIgnoreCase(estadio.getNome())) {
+                        jaExiste = true;
+                        break;
+                    }
+                }
+
+                if (!jaExiste) {
+                    estadiosExistentes.add(estadio);
+                }
+            }
+        }
+
+        return estadiosExistentes;
     }
 
     public static void salvar() {
@@ -58,6 +109,21 @@ public class CampeonatoRepositorio {
 
         } catch (IOException e) {
             System.out.println("Erro ao guardar campeonatos: " + e.getMessage());
+        }
+    }
+
+    public static void limparTudo() {
+        campeonatos.clear();
+        salvar();
+    }
+
+    public static void apagarFicheiroDados() {
+        campeonatos.clear();
+
+        File ficheiro = new File(FICHEIRO);
+
+        if (ficheiro.exists()) {
+            ficheiro.delete();
         }
     }
 

@@ -198,7 +198,7 @@ public class ConsultaEquipaFrame extends JFrame {
         grid.add(criarMiniInfo("Estado", equipa.getEstadoTexto()));
         grid.add(criarMiniInfo("Treinador", equipa.getTreinador()));
         grid.add(criarMiniInfo("Capitão", equipa.getCapitao()));
-        grid.add(criarMiniInfo("Models.Campeonato", equipa.getCampeonato()));
+        grid.add(criarMiniInfo("Campeonato", equipa.getCampeonato()));
 
         card.add(titulo, BorderLayout.NORTH);
         card.add(grid, BorderLayout.CENTER);

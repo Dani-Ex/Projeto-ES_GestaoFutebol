@@ -7,6 +7,8 @@ import Design.RoundedButton;
 import Design.RoundedPanel;
 import Design.TableStyle;
 import Design.Tema;
+import GrupoEeleminatoria.CampeonatoRepositorio;
+import Models.Campeonato;
 import Models.Equipa;
 import Models.EquipaService;
 
@@ -25,14 +27,23 @@ public class EquipasFrame extends JFrame {
     private MenuLateral menuLateral;
     private boolean menuAberto = false;
 
+    private Campeonato campeonato;
+
     private JTable tabelaEquipas;
     private DefaultTableModel modeloEquipas;
     private PlaceholderTextField campoPesquisa;
+
     private final List<Equipa> equipasVisiveis = new ArrayList<>();
     private final EquipaService equipaService = new EquipaService();
 
     public EquipasFrame() {
-        setTitle("Equipas");
+        this(null);
+    }
+
+    public EquipasFrame(Campeonato campeonato) {
+        this.campeonato = campeonato;
+
+        setTitle(campeonato == null ? "Equipas" : "Equipas - " + campeonato.getNome());
         setSize(1920, 1080);
         setMinimumSize(new Dimension(1280, 760));
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -47,6 +58,7 @@ public class EquipasFrame extends JFrame {
                 Tema.PADDING_JANELA.bottom,
                 Tema.PADDING_JANELA.right
         ));
+
         add(main);
         limparSelecaoAoClicar(main);
 
@@ -64,6 +76,7 @@ public class EquipasFrame extends JFrame {
                 Tema.ESPACAMENTO_GRANDE + Tema.ESPACAMENTO_MEDIO,
                 Tema.ESPACAMENTO_GRANDE + 5
         ));
+
         limparSelecaoAoClicar(content);
 
         content.add(criarCabecalho(), BorderLayout.NORTH);
@@ -130,7 +143,15 @@ public class EquipasFrame extends JFrame {
         titulo.setFont(Tema.FONTE_TITULO_GRANDE);
         titulo.setForeground(Tema.COR_TEXTO_PRINCIPAL);
 
-        JLabel subtitulo = new JLabel("Registo, consulta e validação das equipas participantes.");
+        String textoSubtitulo;
+
+        if (campeonato == null) {
+            textoSubtitulo = "Registo, consulta e validação das equipas participantes.";
+        } else {
+            textoSubtitulo = "Seleciona uma equipa registada e adiciona ao campeonato: " + campeonato.getNome();
+        }
+
+        JLabel subtitulo = new JLabel(textoSubtitulo);
         subtitulo.setFont(Tema.FONTE_SUBTITULO);
         subtitulo.setForeground(Tema.COR_TEXTO_SECUNDARIO);
 
@@ -138,11 +159,27 @@ public class EquipasFrame extends JFrame {
         tituloBox.add(Box.createVerticalStrut(4));
         tituloBox.add(subtitulo);
 
-        JButton btnNova = criarBotaoArredondado("+ Nova Equipa", Tema.COR_INFO, Tema.COR_TEXTO_CLARO);
+        JPanel botoesTopo = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
+        botoesTopo.setOpaque(false);
+
+        JButton btnNova = criarBotaoArredondado("+ Nova Equipa", Tema.COR_INFO, Tema.COR_TEXTO_CLARO, 150);
         btnNova.addActionListener(e -> new NovaEquipaFrame(this::atualizarTabela));
+        botoesTopo.add(btnNova);
+
+        if (campeonato != null) {
+            JButton btnAdicionarCampeonato = criarBotaoArredondado(
+                    "Adicionar ao Campeonato",
+                    new Color(22, 163, 74),
+                    Tema.COR_TEXTO_CLARO,
+                    230
+            );
+
+            btnAdicionarCampeonato.addActionListener(e -> adicionarEquipaSelecionadaAoCampeonato());
+            botoesTopo.add(btnAdicionarCampeonato);
+        }
 
         topo.add(tituloBox, BorderLayout.WEST);
-        topo.add(btnNova, BorderLayout.EAST);
+        topo.add(botoesTopo, BorderLayout.EAST);
 
         return topo;
     }
@@ -190,6 +227,7 @@ public class EquipasFrame extends JFrame {
         campoPesquisa.setForeground(Tema.COR_TEXTO_PRINCIPAL);
         campoPesquisa.setBorder(BorderFactory.createEmptyBorder(0, 15, 0, 15));
         campoPesquisa.setOpaque(false);
+
         campoPesquisa.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
@@ -249,6 +287,7 @@ public class EquipasFrame extends JFrame {
                 Tema.PADDING_CARD.bottom,
                 Tema.PADDING_CARD.right
         ));
+
         limparSelecaoAoClicar(card);
 
         JLabel titulo = new JLabel("Equipas Registadas");
@@ -257,7 +296,7 @@ public class EquipasFrame extends JFrame {
 
         String[] colunas = {
                 "Nome da Equipa",
-                "Models.Campeonato",
+                "Campeonato",
                 "Grupo",
                 "Estado",
                 "Jogadores",
@@ -268,6 +307,7 @@ public class EquipasFrame extends JFrame {
 
         tabelaEquipas = new JTable(modeloEquipas);
         configurarTabelaEquipas(tabelaEquipas);
+
         tabelaEquipas.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -276,6 +316,7 @@ public class EquipasFrame extends JFrame {
                 }
             }
         });
+
         atualizarTabela();
 
         tabelaEquipas.getColumnModel().getColumn(0).setPreferredWidth(170);
@@ -289,12 +330,14 @@ public class EquipasFrame extends JFrame {
         scroll.setBorder(BorderFactory.createEmptyBorder());
         scroll.setViewportBorder(BorderFactory.createEmptyBorder());
         scroll.getViewport().setBackground(Tema.COR_CARD);
-        scroll.getViewport().addMouseListener(new java.awt.event.MouseAdapter() {
+
+        scroll.getViewport().addMouseListener(new MouseAdapter() {
             @Override
-            public void mousePressed(java.awt.event.MouseEvent e) {
+            public void mousePressed(MouseEvent e) {
                 limparSelecao();
             }
         });
+
         scroll.setBackground(Tema.COR_CARD);
         TableStyle.configurarScrollLimpo(scroll, Tema.COR_CARD);
 
@@ -322,6 +365,7 @@ public class EquipasFrame extends JFrame {
                 Tema.ESPACAMENTO_MEDIO + 5,
                 Tema.ESPACAMENTO_MEDIO + 5
         ));
+
         limparSelecaoAoClicar(card);
 
         JLabel titulo = new JLabel("<html>Validação<br>obrigatória</html>");
@@ -341,9 +385,10 @@ public class EquipasFrame extends JFrame {
         texto.setEditable(false);
         texto.setFocusable(false);
         texto.setOpaque(false);
-        texto.addMouseListener(new java.awt.event.MouseAdapter() {
+
+        texto.addMouseListener(new MouseAdapter() {
             @Override
-            public void mousePressed(java.awt.event.MouseEvent e) {
+            public void mousePressed(MouseEvent e) {
                 limparSelecao();
             }
         });
@@ -375,6 +420,7 @@ public class EquipasFrame extends JFrame {
 
         for (Equipa equipa : equipaService.pesquisarEquipas(termoPesquisa)) {
             equipasVisiveis.add(equipa);
+
             modeloEquipas.addRow(new Object[]{
                     equipa.getNome(),
                     equipa.getCampeonato(),
@@ -384,6 +430,96 @@ public class EquipasFrame extends JFrame {
                     equipa.getPontos()
             });
         }
+    }
+
+    private void adicionarEquipaSelecionadaAoCampeonato() {
+        if (campeonato == null) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Abre esta página através de um campeonato para poderes associar equipas.",
+                    "Erro",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            return;
+        }
+
+        if (!campeonato.isEmConfiguracao()) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Não é possível adicionar equipas depois do campeonato iniciado.",
+                    "Erro",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            return;
+        }
+
+        int linha = tabelaEquipas.getSelectedRow();
+
+        if (linha < 0) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Seleciona uma equipa da tabela para adicionar ao campeonato.",
+                    "Erro",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            return;
+        }
+
+        int linhaModelo = tabelaEquipas.convertRowIndexToModel(linha);
+
+        if (linhaModelo < 0 || linhaModelo >= equipasVisiveis.size()) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Não foi possível identificar a equipa selecionada.",
+                    "Erro",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            return;
+        }
+
+        Equipa equipaSelecionada = equipasVisiveis.get(linhaModelo);
+        String nomeEquipa = equipaSelecionada.getNome();
+
+        if (campeonato.existeEquipaComNome(nomeEquipa)) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Essa equipa já está associada a este campeonato.",
+                    "Erro",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            return;
+        }
+
+        if (campeonato.getEquipas().size() >= campeonato.getNumeroEquipasNecessarias()) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Este campeonato já atingiu o número máximo de equipas permitido.",
+                    "Erro",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            return;
+        }
+
+        boolean adicionada = campeonato.adicionarEquipa(nomeEquipa);
+
+        if (!adicionada) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Não foi possível adicionar a equipa ao campeonato.",
+                    "Erro",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            return;
+        }
+
+        CampeonatoRepositorio.salvar();
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Equipa adicionada ao campeonato com sucesso.",
+                "Sucesso",
+                JOptionPane.INFORMATION_MESSAGE
+        );
     }
 
     private void abrirEquipaSelecionada() {
@@ -414,17 +550,17 @@ public class EquipasFrame extends JFrame {
     }
 
     private void limparSelecaoAoClicar(JComponent componente) {
-        componente.addMouseListener(new java.awt.event.MouseAdapter() {
+        componente.addMouseListener(new MouseAdapter() {
             @Override
-            public void mousePressed(java.awt.event.MouseEvent e) {
+            public void mousePressed(MouseEvent e) {
                 limparSelecao();
             }
         });
     }
 
-    private JButton criarBotaoArredondado(String texto, Color fundo, Color corTexto) {
+    private JButton criarBotaoArredondado(String texto, Color fundo, Color corTexto, int largura) {
         JButton botao = new RoundedButton(texto, fundo, corTexto, 14);
-        botao.setPreferredSize(new Dimension(150, 40));
+        botao.setPreferredSize(new Dimension(largura, 40));
         botao.setBorder(BorderFactory.createEmptyBorder(0, 14, 0, 14));
 
         return botao;

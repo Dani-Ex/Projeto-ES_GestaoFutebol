@@ -1,13 +1,39 @@
 package GrupoEeleminatoria;
 
-import javax.swing.*;
-import java.awt.*;
 import Design.MenuLateral;
 import Models.Campeonato;
+
+import javax.swing.*;
+import java.awt.*;
 
 public class EliminatoriasFrame extends JFrame {
 
     public EliminatoriasFrame(Campeonato campeonato) {
+
+        if (!campeonato.isFaseGruposTerminada()) {
+            JOptionPane.showMessageDialog(
+                    null,
+                    "Ainda não podes abrir as eliminatórias.\nPrimeiro tens de terminar a fase de grupos.",
+                    "Erro",
+                    JOptionPane.ERROR_MESSAGE
+            );
+
+            new GruposFrame(campeonato);
+            return;
+        }
+
+        if (campeonato.getEquipasEliminatorias() == null || campeonato.getEquipasEliminatorias().isEmpty()) {
+            JOptionPane.showMessageDialog(
+                    null,
+                    "Ainda não existem equipas classificadas para as eliminatórias.",
+                    "Erro",
+                    JOptionPane.ERROR_MESSAGE
+            );
+
+            new GruposFrame(campeonato);
+            return;
+        }
+
         setTitle("Eliminatórias - " + campeonato.getNome());
         setSize(1250, 780);
         setLocationRelativeTo(null);

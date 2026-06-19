@@ -14,13 +14,14 @@ public class Estadio implements Serializable {
     private int lugaresVip;
     private int lugaresPremium;
 
-    public Estadio(String nome,
-                   String cidade,
-                   String proprietario,
-                   int lugaresNormal,
-                   int lugaresVip,
-                   int lugaresPremium) {
-
+    public Estadio(
+            String nome,
+            String cidade,
+            String proprietario,
+            int lugaresNormal,
+            int lugaresVip,
+            int lugaresPremium
+    ) {
         this.nome = nome;
         this.cidade = cidade;
         this.proprietario = proprietario;
