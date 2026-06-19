@@ -13,9 +13,15 @@ public class ReceitaService {
 
     private static final Path FICHEIRO_RECEITAS = Paths.get("data", "receitas.tsv");
     private static final ReceitaService INSTANCE = new ReceitaService();
+    private final Path ficheiroReceitas;
     private final List<Receita> receitas = new ArrayList<>();
 
     private ReceitaService() {
+        this(FICHEIRO_RECEITAS);
+    }
+
+    ReceitaService(Path ficheiroReceitas) {
+        this.ficheiroReceitas = ficheiroReceitas;
         carregarReceitas();
     }
 
@@ -28,12 +34,12 @@ public class ReceitaService {
     }
 
     private void carregarReceitas() {
-        if (!Files.exists(FICHEIRO_RECEITAS)) {
+        if (!Files.exists(ficheiroReceitas)) {
             return;
         }
 
         try {
-            for (String linha : Files.readAllLines(FICHEIRO_RECEITAS, StandardCharsets.UTF_8)) {
+            for (String linha : Files.readAllLines(ficheiroReceitas, StandardCharsets.UTF_8)) {
                 if (linha.trim().isEmpty()) {
                     continue;
                 }
@@ -130,7 +136,7 @@ public class ReceitaService {
 
     private void guardarReceitas() {
         try {
-            Files.createDirectories(FICHEIRO_RECEITAS.getParent());
+            Files.createDirectories(ficheiroReceitas.getParent());
 
             List<String> linhas = new ArrayList<>();
 
@@ -144,7 +150,7 @@ public class ReceitaService {
                 ));
             }
 
-            Files.write(FICHEIRO_RECEITAS, linhas, StandardCharsets.UTF_8);
+            Files.write(ficheiroReceitas, linhas, StandardCharsets.UTF_8);
         } catch (IOException e) {
             throw new IllegalStateException("N\u00E3o foi poss\u00EDvel guardar os dados da receita.");
         }

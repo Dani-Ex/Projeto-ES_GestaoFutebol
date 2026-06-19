@@ -7,6 +7,7 @@ import Design.Tema;
 import Frames.SeccaoEquipas.ConsultaEquipaFrame;
 import Models.Equipa;
 import Models.EquipaService;
+import Models.DashboardLogic;
 import Models.Jogo;
 import Models.JogoService;
 import Models.Receita;
@@ -585,21 +586,7 @@ public class DashboardFrame extends JFrame {
     }
 
     private List<Equipa> listarEquipasClassificacao(String campeonato, String grupo) {
-        List<Equipa> equipas = new ArrayList<>();
-
-        for (Equipa equipa : equipaService.listarEquipas()) {
-            if (textoIgual(equipa.getCampeonato(), campeonato)
-                    && textoIgual(valorOuTraco(equipa.getGrupo()), grupo)) {
-                equipas.add(equipa);
-            }
-        }
-
-        equipas.sort(Comparator
-                .comparingInt(Equipa::getPontos).reversed()
-                .thenComparing(Comparator.comparingInt(Equipa::getGolos).reversed())
-                .thenComparing(Equipa::getNome));
-
-        return equipas;
+        return DashboardLogic.ordenarClassificacao(equipaService.listarEquipas(), campeonato, grupo);
     }
 
     private String getCampeonatoClassificacaoSelecionado() {
@@ -768,25 +755,7 @@ public class DashboardFrame extends JFrame {
     }
 
     private List<Jogo> listarJogosPorEstado(String estado) {
-        List<Jogo> resultado = new ArrayList<>();
-
-        for (Jogo jogo : jogoService.listarJogos()) {
-            if (jogo.getEstado().equalsIgnoreCase(estado)) {
-                resultado.add(jogo);
-            }
-        }
-
-        resultado.sort(Comparator.comparing(Jogo::getData));
-
-        if ("Realizado".equalsIgnoreCase(estado)) {
-            resultado.sort(Comparator.comparing(Jogo::getData).reversed());
-        }
-
-        if (resultado.size() > 4) {
-            return new ArrayList<>(resultado.subList(0, 4));
-        }
-
-        return resultado;
+        return DashboardLogic.listarJogosPorEstado(jogoService.listarJogos(), estado, 4);
     }
 
     private String formatarData(String data) {
