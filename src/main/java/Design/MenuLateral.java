@@ -22,7 +22,7 @@ public class MenuLateral extends JPanel {
                 Tema.PADDING_MENU.right
         ));
 
-        JLabel titulo = new JLabel("Models.Campeonato");
+        JLabel titulo = new JLabel("Campeonato");
         titulo.setForeground(Tema.COR_TEXTO_CLARO);
         titulo.setFont(Tema.FONTE_MENU_TITULO);
         titulo.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -39,42 +39,38 @@ public class MenuLateral extends JPanel {
         JButton btnRegras = criarBotaoMenu("Regras");
 
         btnDashboard.addActionListener(e -> {
-            frame.dispose();
-            new DashboardFrame();
+            abrirFrame(frame, new DashboardFrame());
         });
 
         btnCampeonatos.addActionListener(e -> {
-            frame.dispose();
-            new CampeonatosFrame();
+            abrirFrame(frame, new CampeonatosFrame());
         });
 
+
         btnEquipas.addActionListener(e -> {
-            frame.dispose();
-            new EquipasFrame();
+            abrirFrame(frame, new EquipasFrame());
         });
 
         btnJogadores.addActionListener(e -> {
-            frame.dispose();
-            new JogadoresFrame();
+            abrirFrame(frame, new JogadoresFrame());
         });
+
 
         btnJogos.addActionListener(e -> abrirPlaceholder(frame, "Jogos"));
 
         btnEstatisticas.addActionListener(e -> {
-            frame.dispose();
-            new EstadisticasFrame();
+            abrirFrame(frame, new EstadisticasFrame());
         });
 
         btnFinancas.addActionListener(e -> {
-            frame.dispose();
-            new FinancasFrame();
+            abrirFrame(frame, new FinancasFrame());
         });
+
         btnEstadios.addActionListener(e -> abrirPlaceholder(frame, "Estadios"));
         btnBilheteria.addActionListener(e -> abrirPlaceholder(frame, "Bilheteria"));
 
         btnRegras.addActionListener(e -> {
-            frame.dispose();
-            new RegrasFrame();
+            abrirFrame(frame, new RegrasFrame());
         });
 
         add(titulo);
@@ -121,5 +117,18 @@ public class MenuLateral extends JPanel {
         btn.setBorder(BorderFactory.createEmptyBorder(10, 15, 10, 15));
 
         return btn;
+    }
+
+    private void abrirFrame(JFrame frameAtual, JFrame novoFrame) {
+        Dimension tamanhoAtual = frameAtual.getSize();
+        Point posicaoAtual = frameAtual.getLocation();
+        int estadoAtual = frameAtual.getExtendedState();
+
+        novoFrame.setSize(tamanhoAtual);
+        novoFrame.setLocation(posicaoAtual);
+        novoFrame.setExtendedState(estadoAtual);
+
+        frameAtual.dispose();
+        novoFrame.setVisible(true);
     }
 }

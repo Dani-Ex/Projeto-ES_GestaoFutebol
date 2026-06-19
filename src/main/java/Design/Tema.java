@@ -56,6 +56,14 @@ public class Tema {
     public static final Color COR_ERRO = new Color(239, 68, 68);
     public static final Color COR_INFO = new Color(59, 130, 246);
 
+/// ========================
+/// CORES DE JOGADOR
+/// ========================
+
+    public static final Color COR_AZUL_SUAVE = new Color(219, 234, 254);
+    public static final Color COR_LARANJA_SUAVE = new Color(255, 237, 213);
+    public static final Color COR_ROXO_FORTE = new Color(124, 58, 237);
+
     // =========================
     // FONTES
     // =========================
