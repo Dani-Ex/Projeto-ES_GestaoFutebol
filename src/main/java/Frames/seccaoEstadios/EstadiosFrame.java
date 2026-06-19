@@ -35,9 +35,9 @@ public class EstadiosFrame extends JFrame {
         this.campeonato = campeonato;
 
         setTitle(campeonato == null ? "Estádios" : "Estádios - " + campeonato.getNome());
-        setSize(1250, 780);
+        setSize(1920, 1080);
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(campeonato == null ? JFrame.EXIT_ON_CLOSE : JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
 
         MenuLateral menuLateral = new MenuLateral(this);
@@ -58,8 +58,10 @@ public class EstadiosFrame extends JFrame {
         pagina.setBackground(BG);
         pagina.setBorder(new EmptyBorder(22, 24, 22, 24));
 
-        JButton botaoMenu = criarBotaoMenu(menuLateral);
-        pagina.add(botaoMenu, BorderLayout.NORTH);
+        JPanel barraSuperior = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        barraSuperior.setOpaque(false);
+        barraSuperior.add(criarBotaoMenu(menuLateral));
+        pagina.add(barraSuperior, BorderLayout.NORTH);
 
         JPanel centro = new JPanel();
         centro.setOpaque(false);
@@ -118,15 +120,7 @@ public class EstadiosFrame extends JFrame {
         btnAdicionarExistente.addActionListener(e -> adicionarEstadioExistente());
         btnRemover.addActionListener(e -> removerEstadioDoCampeonato());
 
-        btnVoltar.addActionListener(e -> {
-            dispose();
-
-            if (campeonato != null) {
-                new GruposFrame(campeonato);
-            } else {
-                new CampeonatosFrame();
-            }
-        });
+        btnVoltar.addActionListener(e -> dispose());
 
         barra.add(btnNovo);
         barra.add(btnAdicionarExistente);
@@ -267,8 +261,7 @@ public class EstadiosFrame extends JFrame {
             return;
         }
 
-        dispose();
-        new NovoEstadioFrame(campeonato);
+        new NovoEstadioFrame(campeonato, this::carregarTabelas);
     }
 
     private void adicionarEstadioExistente() {
@@ -416,7 +409,7 @@ public class EstadiosFrame extends JFrame {
     }
 
     private JButton criarBotaoMenu(JPanel menuLateral) {
-        JButton botao = new JButton("☰");
+        JButton botao = new JButton("=");
         botao.setFocusPainted(false);
         botao.setBorderPainted(false);
         botao.setContentAreaFilled(false);

@@ -16,7 +16,7 @@ public class RegrasFrame extends JFrame {
 
     public RegrasFrame() {
         setTitle("Regras do Torneio");
-        setSize(1280, 760);
+        setSize(1920, 1080);
         setMinimumSize(new Dimension(1180, 700));
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);

@@ -130,7 +130,7 @@ public class NovaEquipaFrame extends JFrame {
         campos.add(criarCampoComLabel("Nome da Equipa", campoNome));
         campos.add(criarCampoComLabel("Cidade", campoCidade));
         campos.add(criarCampoComLabel("Pais", campoPais));
-        campos.add(criarCampoComLabel("Models.Campeonato", campoCampeonato));
+        campos.add(criarCampoComLabel("Campeonato", campoCampeonato));
         campos.add(criarCampoComLabel("Treinador", campoTreinador));
         campos.add(criarCampoComLabel("Capitão", campoCapitao));
 

@@ -12,6 +12,7 @@ import java.awt.*;
 public class NovoEstadioFrame extends JFrame {
 
     private Campeonato campeonato;
+    private Runnable onEstadioCriado;
 
     private JTextField campoNome;
     private JTextField campoCidade;
@@ -27,12 +28,18 @@ public class NovoEstadioFrame extends JFrame {
     private final Color CARD_REGRA = new Color(255, 241, 217);
 
     public NovoEstadioFrame(Campeonato campeonato) {
+        this(campeonato, null);
+    }
+
+    public NovoEstadioFrame(Campeonato campeonato, Runnable onEstadioCriado) {
         this.campeonato = campeonato;
+        this.onEstadioCriado = onEstadioCriado;
 
         setTitle("Novo Estádio - " + campeonato.getNome());
-        setSize(1250, 780);
+        setSize(1260, 760);
+        setMinimumSize(new Dimension(1080, 660));
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
 
         MenuLateral menuLateral = new MenuLateral(this);
@@ -51,8 +58,10 @@ public class NovoEstadioFrame extends JFrame {
         pagina.setBackground(BG);
         pagina.setBorder(new EmptyBorder(22, 24, 22, 24));
 
-        JButton botaoMenu = criarBotaoMenu(menuLateral);
-        pagina.add(botaoMenu, BorderLayout.NORTH);
+        JPanel barraSuperior = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        barraSuperior.setOpaque(false);
+        barraSuperior.add(criarBotaoMenu(menuLateral));
+        pagina.add(barraSuperior, BorderLayout.NORTH);
 
         JPanel centro = new JPanel();
         centro.setOpaque(false);
@@ -132,10 +141,7 @@ public class NovoEstadioFrame extends JFrame {
         JButton btnCancelar = criarBotaoCinza("Cancelar");
         JButton btnGuardar = criarBotaoAzul("Guardar Estádio");
 
-        btnCancelar.addActionListener(e -> {
-            dispose();
-            new EstadiosFrame(campeonato);
-        });
+        btnCancelar.addActionListener(e -> dispose());
 
         btnGuardar.addActionListener(e -> guardarEstadio());
 
@@ -316,8 +322,11 @@ public class NovoEstadioFrame extends JFrame {
                 JOptionPane.INFORMATION_MESSAGE
         );
 
+        if (onEstadioCriado != null) {
+            onEstadioCriado.run();
+        }
+
         dispose();
-        new EstadiosFrame(campeonato);
     }
 
     private JButton criarBotaoMenu(JPanel menuLateral) {

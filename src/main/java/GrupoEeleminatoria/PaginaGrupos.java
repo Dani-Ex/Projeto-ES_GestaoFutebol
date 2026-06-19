@@ -233,7 +233,7 @@ public class PaginaGrupos extends JPanel {
     }
 
     private void criarNovoCampeonato() {
-        JTextField nomeField = new JTextField("Novo Models.Campeonato");
+        JTextField nomeField = new JTextField("Novo Campeonato");
 
         JPanel painel = new JPanel(new BorderLayout(0, 8));
         painel.add(new JLabel("Nome do campeonato:"), BorderLayout.NORTH);
@@ -242,7 +242,7 @@ public class PaginaGrupos extends JPanel {
         int resultado = JOptionPane.showConfirmDialog(
                 this,
                 painel,
-                "Novo Models.Campeonato",
+                "Novo Campeonato",
                 JOptionPane.OK_CANCEL_OPTION,
                 JOptionPane.PLAIN_MESSAGE
         );

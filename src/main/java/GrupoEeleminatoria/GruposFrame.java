@@ -36,7 +36,7 @@ public class GruposFrame extends JFrame {
         setTitle("Campeonato - " + campeonato.getNome());
         setSize(1250, 780);
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
 
         MenuLateral menuLateral = new MenuLateral(this);
@@ -92,6 +92,19 @@ public class GruposFrame extends JFrame {
         return pagina;
     }
 
+    private void atualizarPagina() {
+        getContentPane().removeAll();
+
+        MenuLateral menuLateral = new MenuLateral(this);
+        menuLateral.setVisible(false);
+
+        add(menuLateral, BorderLayout.WEST);
+        add(criarPagina(menuLateral), BorderLayout.CENTER);
+
+        revalidate();
+        repaint();
+    }
+
     private JButton criarBotaoMenu(JPanel menuLateral) {
         JButton botaoMenu = new JButton("☰");
 
@@ -134,10 +147,7 @@ public class GruposFrame extends JFrame {
         textos.add(subtitulo);
 
         JButton btnVoltar = criarBotaoCinza("Voltar aos Campeonatos");
-        btnVoltar.addActionListener(e -> {
-            dispose();
-            new CampeonatosFrame();
-        });
+        btnVoltar.addActionListener(e -> dispose());
 
         cabecalho.add(textos, BorderLayout.WEST);
         cabecalho.add(btnVoltar, BorderLayout.EAST);
@@ -224,10 +234,7 @@ public class GruposFrame extends JFrame {
         btnEquipas.addActionListener(e -> abrirEquipas());
 
         JButton btnEstadios = criarBotaoAzul("Estádios");
-        btnEstadios.addActionListener(e -> {
-            dispose();
-            new EstadiosFrame(campeonato);
-        });
+        btnEstadios.addActionListener(e -> new EstadiosFrame(campeonato));
 
         JButton btnGerarGrupos = criarBotaoRoxo("Gerar Grupos");
         btnGerarGrupos.addActionListener(e -> gerarGrupos());
@@ -521,8 +528,7 @@ public class GruposFrame extends JFrame {
                 JOptionPane.INFORMATION_MESSAGE
         );
 
-        dispose();
-        new GruposFrame(campeonato);
+        atualizarPagina();
     }
 
     private void terminarFaseGrupos() {
@@ -549,8 +555,7 @@ public class GruposFrame extends JFrame {
                 JOptionPane.INFORMATION_MESSAGE
         );
 
-        dispose();
-        new GruposFrame(campeonato);
+        atualizarPagina();
     }
 
     private void gerarEquipasClassificadasParaEliminatorias() {
@@ -686,7 +691,6 @@ public class GruposFrame extends JFrame {
     }
 
     private void abrirEquipas() {
-        dispose();
         new EquipasFrame(campeonato);
     }
 
@@ -706,7 +710,6 @@ public class GruposFrame extends JFrame {
             return;
         }
 
-        dispose();
         new EliminatoriasFrame(campeonato);
     }
 

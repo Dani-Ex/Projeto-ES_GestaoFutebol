@@ -24,7 +24,7 @@ public class CampeonatosFrame extends JFrame {
 
     public CampeonatosFrame() {
         setTitle("Campeonatos");
-        setSize(1250, 780);
+        setSize(1920, 1080);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
@@ -48,7 +48,7 @@ public class CampeonatosFrame extends JFrame {
         JPanel barraSuperior = new JPanel(new BorderLayout());
         barraSuperior.setOpaque(false);
 
-        JButton botaoMenu = new JButton("☰");
+        JButton botaoMenu = new JButton("=");
         botaoMenu.setFocusPainted(false);
         botaoMenu.setBorderPainted(false);
         botaoMenu.setContentAreaFilled(false);
@@ -90,11 +90,8 @@ public class CampeonatosFrame extends JFrame {
         textos.add(Box.createVerticalStrut(4));
         textos.add(subtitulo);
 
-        JButton btnNovo = criarBotaoAzul("+ Novo Models.Campeonato");
-        btnNovo.addActionListener(e -> {
-            dispose();
-            new NovoCampeonatoFrame();
-        });
+        JButton btnNovo = criarBotaoAzul("+ Novo Campeonato");
+        btnNovo.addActionListener(e -> new NovoCampeonatoFrame());
 
         cabecalho.add(textos, BorderLayout.WEST);
         cabecalho.add(btnNovo, BorderLayout.EAST);
@@ -140,7 +137,7 @@ public class CampeonatosFrame extends JFrame {
         titulo.setForeground(TEXT);
 
         String[] colunas = {
-                "Models.Campeonato",
+                "Campeonato",
                 "Início",
                 "Fim",
                 "Equipas",
@@ -188,7 +185,6 @@ public class CampeonatosFrame extends JFrame {
                     Campeonato campeonato = CampeonatoRepositorio.procurarPorNome(nomeCampeonato);
 
                     if (campeonato != null) {
-                        dispose();
                         new GruposFrame(campeonato);
                     }
                 }
@@ -220,7 +216,7 @@ public class CampeonatosFrame extends JFrame {
         texto.setWrapStyleWord(true);
 
         texto.setText("""
-                Regras do Models.Campeonato
+                Regras do Campeonato
 
                 • Equipas divididas por grupos
 
