@@ -1,2 +1,3 @@
-nome	numeroEquipas	numeroEstadios	dataInicio	dataFimGrupos	dataInicioEliminatoria	dataFimCampeonato	estado	gruposGerados	faseGruposTerminada	eliminatoriasGeradas	estadios	equipasEliminatorias
-dada	12	5	2026-07-01	2026-08-01	2026-08-03	2026-09-01	Em configuração	false	false	false	eWF5YQ|eWF5YQ|eWE|200|200|200	
+nome	numeroEquipas	numeroEstadios	dataInicio	dataFimGrupos	dataInicioEliminatoria	dataFimCampeonato	estado	gruposGerados	faseGruposTerminada	eliminatoriasGeradas	equipasEliminatorias
+dada	12	5	2026-07-01	2026-08-01	2026-08-03	2026-09-01	Em configuração	false	false	false	eWF5YQ|eWF5YQ|eWE|200|200|200
+Mundial 2026	4	2	2026-05-01	2026-06-01	2026-06-02	2026-06-20	Em configuração	false	false	false	
