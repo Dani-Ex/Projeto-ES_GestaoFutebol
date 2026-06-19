@@ -12,11 +12,11 @@ Sistema desktop em Java para gestao de campeonatos, equipas, jogadores, jogos, f
 
 ## Divisao de Trabalho
 
-| Contribuidor | Partes desenvolvidas |
-| --- | --- |
-| Daniel Santos | Dashboard, Equipas e Financas |
-| Luis Rodrigues | Jogadores, Estatisticas, Regras e Jogos |
-| Daniel Raimundo | Campeonatos, Estadios e Bilheteria |
+| Contribuidor | Partes desenvolvidas                                                                      |
+| --- |-------------------------------------------------------------------------------------------|
+| Daniel Santos | Dashboard, Equipas, Financas e Criação <br/>Package Design e Classes para Visual do Software   |
+| Luis Rodrigues | Jogadores, Estatisticas, Regras e Jogos                                                   |
+| Daniel Raimundo | Campeonatos, Estadios e Bilheteria                                                        |
 
 ## Estrutura Geral
 
