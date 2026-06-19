@@ -8,7 +8,7 @@ Sistema desktop em Java para gestao de campeonatos, equipas, jogadores, jogos, f
 | --- | --- | --- |
 | Dani-Ex | Daniel Santos | 2024135450 |
 | CalvinEcuaPortu | Luis Rodrigues | 2022113499 |
-| Dh4rku | Daniel Raimundo | ... |
+| Dh4rku | Daniel Raimundo | 2024137447 |
 
 ## Divisao de Trabalho
 
