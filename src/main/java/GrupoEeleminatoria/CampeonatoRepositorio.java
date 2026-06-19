@@ -55,6 +55,50 @@ public class CampeonatoRepositorio {
         return campeonatos;
     }
 
+    public static List<String> listarNomesCampeonatosGuardados() {
+        List<String> nomes = new ArrayList<>();
+
+        for (Campeonato campeonato : campeonatos) {
+            if (campeonato == null
+                    || campeonato.getNome() == null
+                    || campeonato.getNome().trim().isEmpty()) {
+                continue;
+            }
+
+            nomes.add(campeonato.getNome().trim());
+        }
+
+        return nomes;
+    }
+
+    public static List<String> listarNomesCampeonatosIniciados() {
+        List<String> nomes = new ArrayList<>();
+
+        for (Campeonato campeonato : campeonatos) {
+            if (campeonato == null || !campeonato.isIniciado()) {
+                continue;
+            }
+
+            String nome = campeonato.getNome();
+
+            if (nome != null && !nome.trim().isEmpty()) {
+                nomes.add(nome.trim());
+            }
+        }
+
+        return nomes;
+    }
+
+    public static List<String> listarNomesCampeonatosParaClassificacao() {
+        List<String> nomes = listarNomesCampeonatosIniciados();
+
+        if (nomes.isEmpty()) {
+            return listarNomesCampeonatosGuardados();
+        }
+
+        return nomes;
+    }
+
     public static void adicionar(Campeonato campeonato) {
         if (campeonato == null || existeCampeonatoComNome(campeonato.getNome())) {
             return;

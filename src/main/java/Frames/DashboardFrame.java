@@ -5,6 +5,7 @@ import Design.RoundedPanel;
 import Design.TableStyle;
 import Design.Tema;
 import Frames.SeccaoEquipas.ConsultaEquipaFrame;
+import GrupoEeleminatoria.CampeonatoRepositorio;
 import Models.Equipa;
 import Models.EquipaService;
 import Models.DashboardLogic;
@@ -281,7 +282,7 @@ public class DashboardFrame extends JFrame {
         tituloClassificacao.setForeground(Tema.COR_TEXTO_PRINCIPAL);
 
         comboCampeonatoClassificacao = new JComboBox<>(
-                equipaService.listarCampeonatos().toArray(new String[0])
+                CampeonatoRepositorio.listarNomesCampeonatosParaClassificacao().toArray(new String[0])
         );
         comboCampeonatoClassificacao.setFont(Tema.FONTE_CARD_TITULO);
         comboCampeonatoClassificacao.setForeground(Tema.COR_TEXTO_PRINCIPAL);
@@ -592,8 +593,8 @@ public class DashboardFrame extends JFrame {
     private String getCampeonatoClassificacaoSelecionado() {
         if (comboCampeonatoClassificacao == null
                 || comboCampeonatoClassificacao.getSelectedItem() == null) {
-            List<String> campeonatos = equipaService.listarCampeonatos();
-            return campeonatos.isEmpty() ? "Campeonato Principal" : campeonatos.get(0);
+            List<String> campeonatos = CampeonatoRepositorio.listarNomesCampeonatosParaClassificacao();
+            return campeonatos.isEmpty() ? "" : campeonatos.get(0);
         }
 
         return comboCampeonatoClassificacao.getSelectedItem().toString();
