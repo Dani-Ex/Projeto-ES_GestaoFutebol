@@ -15,7 +15,7 @@ public class JogoService {
     private static final JogoService INSTANCE = new JogoService();
     private final Path ficheiroJogos;
 
-    private JogoService() {
+    public JogoService() {
         this(FICHEIRO_JOGOS);
     }
 
@@ -27,7 +27,7 @@ public class JogoService {
         return INSTANCE;
     }
 
-    public List<Jogo> listarJogos() {
+    public synchronized List<Jogo> listarJogos() {
         if (!Files.exists(ficheiroJogos)) {
             return Collections.emptyList();
         }
@@ -40,7 +40,7 @@ public class JogoService {
                     continue;
                 }
 
-                String[] campos = linha.split("\t", -1);
+                String[] campos = linha.split("\\t", -1);
 
                 if (campos.length < 9) {
                     continue;
@@ -60,13 +60,13 @@ public class JogoService {
                 ));
             }
         } catch (IOException e) {
-            return Collections.emptyList();
+            throw new IllegalStateException("Não foi possível ler os jogos.", e);
         }
 
         return jogos;
     }
 
-    public Jogo procurarPorId(String id) {
+    public synchronized Jogo procurarPorId(String id) {
         for (Jogo jogo : listarJogos()) {
             if (jogo.getId().equalsIgnoreCase(id)) {
                 return jogo;
@@ -74,5 +74,98 @@ public class JogoService {
         }
 
         return null;
+    }
+
+    public synchronized void adicionarJogo(Jogo jogo) {
+        if (jogo == null) {
+            throw new IllegalArgumentException("O jogo não pode ser vazio.");
+        }
+
+        if (procurarPorId(jogo.getId()) != null) {
+            throw new IllegalArgumentException("Já existe um jogo com esse identificador.");
+        }
+
+        List<Jogo> jogos = new ArrayList<>(listarJogos());
+        jogos.add(jogo);
+
+        guardarJogos(jogos);
+    }
+
+    public synchronized void atualizarJogo(Jogo jogoAtualizado) {
+        if (jogoAtualizado == null) {
+            throw new IllegalArgumentException("O jogo não pode ser vazio.");
+        }
+
+        List<Jogo> jogos = new ArrayList<>(listarJogos());
+        boolean encontrado = false;
+
+        for (int i = 0; i < jogos.size(); i++) {
+            if (jogos.get(i).getId().equalsIgnoreCase(jogoAtualizado.getId())) {
+                jogos.set(i, jogoAtualizado);
+                encontrado = true;
+                break;
+            }
+        }
+
+        if (!encontrado) {
+            throw new IllegalArgumentException("O jogo selecionado já não existe.");
+        }
+
+        guardarJogos(jogos);
+    }
+
+    public synchronized String gerarNovoId() {
+        int maior = 0;
+
+        for (Jogo jogo : listarJogos()) {
+            String id = jogo.getId();
+            String numeros = id == null ? "" : id.replaceAll("\\D", "");
+
+            try {
+                maior = Math.max(maior, Integer.parseInt(numeros));
+            } catch (NumberFormatException ignored) {
+            }
+        }
+
+        return String.format("J%03d", maior + 1);
+    }
+
+    private void guardarJogos(List<Jogo> jogos) {
+        try {
+            Files.createDirectories(FICHEIRO_JOGOS.getParent());
+
+            List<String> linhas = new ArrayList<>();
+
+            for (Jogo jogo : jogos) {
+                linhas.add(String.join("\t",
+                        limpar(jogo.getId()),
+                        limpar(jogo.getData()),
+                        limpar(jogo.getHora()),
+                        limpar(jogo.getEquipaA()),
+                        limpar(jogo.getEquipaB()),
+                        limpar(jogo.getEstadio()),
+                        limpar(jogo.getFaseGrupo()),
+                        limpar(jogo.getEstado()),
+                        limpar(jogo.getResultado()),
+                        limpar(jogo.getCampeonato())
+                ));
+            }
+
+            Files.write(FICHEIRO_JOGOS, linhas, StandardCharsets.UTF_8);
+
+        } catch (IOException e) {
+            throw new IllegalStateException("Não foi possível guardar os jogos.", e);
+        }
+    }
+
+    private String limpar(String valor) {
+        if (valor == null) {
+            return "";
+        }
+
+        return valor
+                .replace("\t", " ")
+                .replace("\n", " ")
+                .replace("\r", " ");
     }
 }
