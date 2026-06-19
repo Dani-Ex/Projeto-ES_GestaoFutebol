@@ -30,6 +30,11 @@ public class EquipaService {
         return Collections.unmodifiableList(equipas);
     }
 
+    public void sincronizarEstatisticasComJogadores() {
+        atualizarEstatisticasComJogadores();
+        guardarEquipas();
+    }
+
     public List<String> listarCampeonatos() {
         List<String> campeonatos = new ArrayList<>();
 
@@ -161,7 +166,7 @@ public class EquipaService {
     private static void carregarEquipas() {
         if (Files.exists(FICHEIRO_EQUIPAS)) {
             carregarEquipasGuardadas();
-            sincronizarEstatisticasComJogadores();
+            atualizarEstatisticasComJogadores();
         }
     }
 
@@ -249,7 +254,7 @@ public class EquipaService {
         }
     }
 
-    private static void sincronizarEstatisticasComJogadores() {
+    private static void atualizarEstatisticasComJogadores() {
         JogadorService jogadorService = JogadorService.getInstance();
 
         for (Equipa equipa : equipas) {

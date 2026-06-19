@@ -5,6 +5,7 @@ import Design.RoundedBorder;
 import Design.RoundedButton;
 import Design.RoundedPanel;
 import Design.Tema;
+import Models.EquipaService;
 import Models.Jogador;
 import Models.JogadorService;
 
@@ -364,6 +365,7 @@ public class EditarJogadorFrame extends JFrame {
             jogador.setAtivo("Ativo".equals(campoEstado.getSelectedItem()));
 
             JogadorService.getInstance().guardarJogadores();
+            EquipaService.getInstance().sincronizarEstatisticasComJogadores();
 
             if (onGuardar != null) {
                 onGuardar.run();

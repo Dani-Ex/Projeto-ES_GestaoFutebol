@@ -368,6 +368,8 @@ public class EquipasFrame extends JFrame {
             return;
         }
 
+        equipaService.sincronizarEstatisticasComJogadores();
+
         modeloEquipas.setRowCount(0);
         equipasVisiveis.clear();
 

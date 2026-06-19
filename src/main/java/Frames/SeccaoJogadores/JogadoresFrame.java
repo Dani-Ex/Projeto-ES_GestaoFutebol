@@ -7,6 +7,7 @@ import Design.TableStyle;
 import Design.Tema;
 import Models.Jogador;
 import Models.JogadorService;
+import Models.EquipaService;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -496,6 +497,7 @@ public class JogadoresFrame extends JFrame {
 
     private void guardarEAtualizar() {
         jogadorService.guardarJogadores();
+        EquipaService.getInstance().sincronizarEstatisticasComJogadores();
         atualizarFiltros();
         atualizarTabela();
     }

@@ -6,6 +6,7 @@ import Design.TableStyle;
 import Design.Tema;
 import Models.Jogador;
 import Models.JogadorService;
+import Models.EquipaService;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -446,6 +447,7 @@ public class PerfilJogadorFrame extends JFrame {
     private void alternarEstado() {
         jogador.alternarEstado();
         JogadorService.getInstance().guardarJogadores();
+        EquipaService.getInstance().sincronizarEstatisticasComJogadores();
 
         if (onEstadoAlterado != null) {
             onEstadoAlterado.run();
