@@ -28,8 +28,8 @@ public class EditarJogadoresFrame extends JFrame {
 
     private final Equipa equipa;
     private final Runnable onGuardar;
-    private final JogadorService jogadorService = new JogadorService();
-    private final EquipaService equipaService = new EquipaService();
+    private final JogadorService jogadorService = JogadorService.getInstance();
+    private final EquipaService equipaService = EquipaService.getInstance();
 
     private List<Jogador> jogadoresEquipa = new ArrayList<>();
     private DefaultTableModel modeloTabela;

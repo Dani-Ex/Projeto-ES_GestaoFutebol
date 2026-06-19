@@ -20,8 +20,8 @@ import java.util.List;
 public class NovaReceitaFrame extends JFrame {
 
     private final Runnable onReceitaCriada;
-    private final JogoService jogoService = new JogoService();
-    private final ReceitaService receitaService = new ReceitaService();
+    private final JogoService jogoService = JogoService.getInstance();
+    private final ReceitaService receitaService = ReceitaService.getInstance();
     private final List<JogoOpcao> jogosDisponiveis = new ArrayList<>();
 
     private JComboBox<JogoOpcao> campoJogo;

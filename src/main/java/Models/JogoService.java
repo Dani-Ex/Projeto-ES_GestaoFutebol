@@ -12,6 +12,14 @@ import java.util.List;
 public class JogoService {
 
     private static final Path FICHEIRO_JOGOS = Paths.get("data", "jogos.tsv");
+    private static final JogoService INSTANCE = new JogoService();
+
+    private JogoService() {
+    }
+
+    public static JogoService getInstance() {
+        return INSTANCE;
+    }
 
     public List<Jogo> listarJogos() {
         if (!Files.exists(FICHEIRO_JOGOS)) {

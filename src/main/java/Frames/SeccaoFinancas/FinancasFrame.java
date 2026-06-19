@@ -29,8 +29,8 @@ public class FinancasFrame extends JFrame {
     private static final int LARGURA_AREA_FINANCAS = (LARGURA_CARD_RESUMO * 6) + (ESPACAMENTO_CARDS * 5);
 
     private final List<ReceitaJogo> receitas = new ArrayList<>();
-    private final JogoService jogoService = new JogoService();
-    private final ReceitaService receitaService = new ReceitaService();
+    private final JogoService jogoService = JogoService.getInstance();
+    private final ReceitaService receitaService = ReceitaService.getInstance();
 
     private MenuLateral menuLateral;
     private boolean menuAberto = false;

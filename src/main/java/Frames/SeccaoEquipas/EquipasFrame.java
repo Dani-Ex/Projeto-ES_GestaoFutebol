@@ -34,7 +34,7 @@ public class EquipasFrame extends JFrame {
     private PlaceholderTextField campoPesquisa;
 
     private final List<Equipa> equipasVisiveis = new ArrayList<>();
-    private final EquipaService equipaService = new EquipaService();
+    private final EquipaService equipaService = EquipaService.getInstance();
 
     public EquipasFrame() {
         this(null);
