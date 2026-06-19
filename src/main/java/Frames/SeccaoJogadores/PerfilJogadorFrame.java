@@ -1,7 +1,11 @@
 package Frames.SeccaoJogadores;
 
+import Design.ModernScrollBarUI;
 import Design.RoundedPanel;
+import Design.TableStyle;
+import Design.Tema;
 import Models.Jogador;
+import Models.JogadorService;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -16,15 +20,15 @@ public class PerfilJogadorFrame extends JFrame {
     private final Jogador jogador;
     private final Runnable onEstadoAlterado;
 
-    private final Color BACKGROUND = new Color(245, 247, 251);
-    private final Color CARD = Color.WHITE;
-    private final Color TEXT = new Color(15, 23, 42);
-    private final Color MUTED = new Color(100, 116, 139);
-    private final Color BLUE = new Color(37, 99, 235);
-    private final Color RED = new Color(220, 38, 38);
-    private final Color GREEN = new Color(22, 163, 74);
-    private final Color ORANGE = new Color(249, 115, 22);
-    private final Color PURPLE = new Color(124, 58, 237);
+    private final Color BACKGROUND = Tema.COR_FUNDO;
+    private final Color CARD = Tema.COR_CARD;
+    private final Color TEXT = Tema.COR_TEXTO_PRINCIPAL;
+    private final Color MUTED = Tema.COR_TEXTO_SECUNDARIO;
+    private final Color BLUE = Tema.COR_INFO;
+    private final Color RED = Tema.COR_ERRO;
+    private final Color GREEN = Tema.COR_SUCESSO;
+    private final Color ORANGE = Tema.CARD_TEXTO_LARANJA;
+    private final Color PURPLE = Tema.COR_ROXO_FORTE;
 
     private JLabel labelEstadoCard;
 
@@ -35,7 +39,7 @@ public class PerfilJogadorFrame extends JFrame {
         setTitle("Perfil do Jogador - " + jogador.getNome());
         setSize(1250, 760);
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
 
         JPanel fundo = new JPanel(new BorderLayout());
         fundo.setBackground(BACKGROUND);
@@ -45,6 +49,7 @@ public class PerfilJogadorFrame extends JFrame {
         scroll.getViewport().setBackground(BACKGROUND);
         scroll.getVerticalScrollBar().setUnitIncrement(18);
         scroll.getHorizontalScrollBar().setUnitIncrement(18);
+        ModernScrollBarUI.aplicar(scroll);
 
         fundo.add(scroll, BorderLayout.CENTER);
         setContentPane(fundo);
@@ -76,7 +81,7 @@ public class PerfilJogadorFrame extends JFrame {
         topo.setOpaque(false);
         topo.setMaximumSize(new Dimension(Integer.MAX_VALUE, 55));
 
-        JPanel voltar = criarBotaoPainel("← Voltar a Jogadores", BLUE, Color.WHITE, this::dispose);
+        JPanel voltar = criarBotaoPainel("← Voltar a Jogadores", BLUE, Color.WHITE, this::voltarParaJogadores);
         JPanel editar = criarBotaoPainel("Editar Jogador", CARD, BLUE, this::editarJogador);
 
         String textoEstado = jogador.isAtivo() ? "Inativar Jogador" : "Ativar Jogador";
@@ -102,11 +107,11 @@ public class PerfilJogadorFrame extends JFrame {
         painel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         JLabel titulo = new JLabel(jogador.getNome());
-        titulo.setFont(new Font("Segoe UI", Font.BOLD, 34));
+        titulo.setFont(Tema.FONTE_TITULO_GRANDE);
         titulo.setForeground(TEXT);
 
         JLabel sub = new JLabel("Perfil completo do jogador, dados pessoais, equipa atual e desempenho no campeonato.");
-        sub.setFont(new Font("Segoe UI", Font.PLAIN, 15));
+        sub.setFont(Tema.FONTE_SUBTITULO);
         sub.setForeground(MUTED);
 
         painel.add(titulo);
@@ -128,7 +133,7 @@ public class PerfilJogadorFrame extends JFrame {
     }
 
     private JPanel criarCardPerfil() {
-        RoundedPanel card = new RoundedPanel(8, CARD);
+        RoundedPanel card = new RoundedPanel(Tema.RAIO_CARD, CARD);
         card.setLayout(new BorderLayout());
         card.setBorder(new EmptyBorder(24, 24, 24, 24));
 
@@ -137,9 +142,9 @@ public class PerfilJogadorFrame extends JFrame {
 
         JLabel avatar = new JLabel(obterIniciais(jogador.getNome()), SwingConstants.CENTER);
         avatar.setOpaque(true);
-        avatar.setBackground(new Color(219, 234, 254));
+        avatar.setBackground(Tema.COR_AZUL_SUAVE);
         avatar.setForeground(BLUE);
-        avatar.setFont(new Font("Segoe UI", Font.BOLD, 30));
+        avatar.setFont(Tema.FONTE_TITULO_GRANDE);
         avatar.setPreferredSize(new Dimension(105, 105));
 
         JPanel info = new JPanel();
@@ -147,16 +152,16 @@ public class PerfilJogadorFrame extends JFrame {
         info.setOpaque(false);
 
         JLabel nome = new JLabel(jogador.getNome());
-        nome.setFont(new Font("Segoe UI", Font.BOLD, 26));
+        nome.setFont(Tema.FONTE_TITULO);
         nome.setForeground(TEXT);
 
         JLabel posicao = new JLabel(jogador.getPosicao() + " • Nº " + jogador.getNumero());
-        posicao.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        posicao.setFont(Tema.FONTE_CARD_TITULO);
         posicao.setForeground(MUTED);
 
         labelEstadoCard = new JLabel(jogador.getEstadoTexto(), SwingConstants.CENTER);
         labelEstadoCard.setOpaque(true);
-        labelEstadoCard.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        labelEstadoCard.setFont(Tema.FONTE_CARD_TITULO);
         labelEstadoCard.setBorder(new EmptyBorder(8, 30, 8, 30));
         atualizarEstadoCard();
 
@@ -174,7 +179,7 @@ public class PerfilJogadorFrame extends JFrame {
         detalhes.setBorder(new EmptyBorder(28, 0, 0, 0));
 
         detalhes.add(criarMiniInfo("Equipa", jogador.getEquipa()));
-        detalhes.add(criarMiniInfo("Models.Campeonato", jogador.getCampeonato()));
+        detalhes.add(criarMiniInfo("Campeonato", jogador.getCampeonato()));
         detalhes.add(criarMiniInfo("Grupo", jogador.getGrupo()));
         detalhes.add(criarMiniInfo("Ranking", jogador.getRanking()));
 
@@ -185,12 +190,12 @@ public class PerfilJogadorFrame extends JFrame {
     }
 
     private JPanel criarCardDadosPessoais() {
-        RoundedPanel card = new RoundedPanel(8, CARD);
+        RoundedPanel card = new RoundedPanel(Tema.RAIO_CARD, CARD);
         card.setLayout(new BorderLayout());
         card.setBorder(new EmptyBorder(24, 24, 24, 24));
 
         JLabel titulo = new JLabel("Dados Pessoais");
-        titulo.setFont(new Font("Segoe UI", Font.BOLD, 22));
+        titulo.setFont(Tema.FONTE_TITULO);
         titulo.setForeground(TEXT);
 
         JPanel grid = new JPanel(new GridLayout(3, 3, 25, 18));
@@ -230,7 +235,7 @@ public class PerfilJogadorFrame extends JFrame {
     }
 
     private JPanel criarStatCard(String valor, String label, Color cor) {
-        RoundedPanel card = new RoundedPanel(8, CARD);
+        RoundedPanel card = new RoundedPanel(Tema.RAIO_CARD, CARD);
         card.setLayout(new BorderLayout());
         card.setBorder(new EmptyBorder(20, 22, 20, 22));
 
@@ -238,15 +243,15 @@ public class PerfilJogadorFrame extends JFrame {
         topo.setOpaque(false);
 
         JLabel numero = new JLabel(valor);
-        numero.setFont(new Font("Segoe UI", Font.BOLD, 28));
+        numero.setFont(Tema.FONTE_CARD_VALOR_GRANDE);
         numero.setForeground(TEXT);
 
         JLabel ponto = new JLabel("●");
-        ponto.setFont(new Font("Segoe UI", Font.BOLD, 20));
+        ponto.setFont(new Font(Tema.FONTE_PADRAO, Font.BOLD, 20));
         ponto.setForeground(cor);
 
         JLabel texto = new JLabel(label);
-        texto.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        texto.setFont(Tema.FONTE_TEXTO);
         texto.setForeground(MUTED);
 
         topo.add(numero, BorderLayout.WEST);
@@ -270,7 +275,7 @@ public class PerfilJogadorFrame extends JFrame {
     }
 
     private JPanel criarCardDesempenho() {
-        RoundedPanel card = new RoundedPanel(8, CARD);
+        RoundedPanel card = new RoundedPanel(Tema.RAIO_CARD, CARD);
         card.setLayout(new BorderLayout());
         card.setBorder(new EmptyBorder(24, 24, 24, 24));
 
@@ -279,11 +284,11 @@ public class PerfilJogadorFrame extends JFrame {
         header.setOpaque(false);
 
         JLabel titulo = new JLabel("Desempenho do Jogador");
-        titulo.setFont(new Font("Segoe UI", Font.BOLD, 22));
+        titulo.setFont(Tema.FONTE_TITULO);
         titulo.setForeground(TEXT);
 
         JLabel sub = new JLabel("Indicadores principais no campeonato atual.");
-        sub.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        sub.setFont(Tema.FONTE_SUBTITULO);
         sub.setForeground(MUTED);
 
         header.add(titulo);
@@ -315,18 +320,18 @@ public class PerfilJogadorFrame extends JFrame {
         topo.setOpaque(false);
 
         JLabel label = new JLabel(nome);
-        label.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        label.setFont(Tema.FONTE_CARD_TITULO);
         label.setForeground(TEXT);
 
         JLabel percent = new JLabel(valor + "%");
-        percent.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        percent.setFont(Tema.FONTE_CARD_TITULO);
         percent.setForeground(MUTED);
 
         JProgressBar barra = new JProgressBar(0, 100);
         barra.setValue(valor);
         barra.setStringPainted(false);
         barra.setForeground(cor);
-        barra.setBackground(new Color(229, 231, 235));
+        barra.setBackground(Tema.COR_LINHA);
         barra.setPreferredSize(new Dimension(100, 12));
 
         topo.add(label, BorderLayout.WEST);
@@ -339,12 +344,12 @@ public class PerfilJogadorFrame extends JFrame {
     }
 
     private JPanel criarCardUltimosJogos() {
-        RoundedPanel card = new RoundedPanel(8, CARD);
+        RoundedPanel card = new RoundedPanel(Tema.RAIO_CARD, CARD);
         card.setLayout(new BorderLayout());
         card.setBorder(new EmptyBorder(24, 24, 24, 24));
 
         JLabel titulo = new JLabel("Últimos Jogos");
-        titulo.setFont(new Font("Segoe UI", Font.BOLD, 22));
+        titulo.setFont(Tema.FONTE_TITULO);
         titulo.setForeground(TEXT);
 
         String[] colunas = {"Jogo", "Golos", "Assist.", "Nota"};
@@ -362,14 +367,11 @@ public class PerfilJogadorFrame extends JFrame {
         modelo.addRow(new Object[]{jogador.getEquipa() + " vs Benfica", jogador.getGolos() > 4 ? 1 : 0, 0, "8,1"});
 
         JTable tabela = new JTable(modelo);
-        tabela.setRowHeight(34);
-        tabela.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-        tabela.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 13));
-        tabela.setGridColor(new Color(226, 232, 240));
-        tabela.setShowVerticalLines(false);
+        TableStyle.aplicarTabelaLimpa(tabela, 0);
+        tabela.setRowHeight(36);
 
         JScrollPane scroll = new JScrollPane(tabela);
-        scroll.getViewport().setBackground(Color.WHITE);
+        TableStyle.configurarScrollLimpo(scroll, Tema.COR_CARD);
         scroll.setBorder(BorderFactory.createEmptyBorder(16, 0, 0, 0));
 
         card.add(titulo, BorderLayout.NORTH);
@@ -384,11 +386,11 @@ public class PerfilJogadorFrame extends JFrame {
         panel.setOpaque(false);
 
         JLabel l = new JLabel(label);
-        l.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        l.setFont(Tema.FONTE_CARD_TITULO);
         l.setForeground(MUTED);
 
         JLabel v = new JLabel(valor);
-        v.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        v.setFont(new Font(Tema.FONTE_PADRAO, Font.BOLD, 14));
         v.setForeground(TEXT);
 
         panel.add(l);
@@ -399,13 +401,13 @@ public class PerfilJogadorFrame extends JFrame {
     }
 
     private JPanel criarBotaoPainel(String texto, Color fundo, Color corTexto, Runnable acao) {
-        RoundedPanel botao = new RoundedPanel(8, fundo);
+        RoundedPanel botao = new RoundedPanel(12, fundo);
         botao.setLayout(new BorderLayout());
         botao.setBorder(new EmptyBorder(10, 18, 10, 18));
         botao.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
         JLabel label = new JLabel(texto, SwingConstants.CENTER);
-        label.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        label.setFont(Tema.FONTE_CARD_TITULO);
         label.setForeground(corTexto);
 
         botao.add(label, BorderLayout.CENTER);
@@ -434,13 +436,13 @@ public class PerfilJogadorFrame extends JFrame {
 
     private void alternarEstado() {
         jogador.alternarEstado();
+        new JogadorService().guardarJogadores();
 
         if (onEstadoAlterado != null) {
             onEstadoAlterado.run();
         }
 
-        dispose();
-        new PerfilJogadorFrame(jogador, onEstadoAlterado);
+        abrirNaMesmaJanela(new PerfilJogadorFrame(jogador, onEstadoAlterado));
     }
 
     private void atualizarEstadoCard() {
@@ -451,23 +453,34 @@ public class PerfilJogadorFrame extends JFrame {
         labelEstadoCard.setText(jogador.getEstadoTexto());
 
         if (jogador.isAtivo()) {
-            labelEstadoCard.setBackground(new Color(220, 252, 231));
+            labelEstadoCard.setBackground(Tema.COR_VERDE_SUAVE);
             labelEstadoCard.setForeground(GREEN);
         } else {
-            labelEstadoCard.setBackground(new Color(254, 226, 226));
+            labelEstadoCard.setBackground(Tema.COR_ERRO_SUAVE);
             labelEstadoCard.setForeground(RED);
         }
     }
 
     private void editarJogador() {
-        new EditarJogadorFrame(jogador, () -> {
-            if (onEstadoAlterado != null) {
-                onEstadoAlterado.run();
-            }
+        abrirNaMesmaJanela(new EditarJogadorFrame(jogador, onEstadoAlterado));
+    }
 
-            dispose();
-            new PerfilJogadorFrame(jogador, onEstadoAlterado);
-        });
+    private void voltarParaJogadores() {
+        abrirNaMesmaJanela(new JogadoresFrame());
+    }
+
+    private void abrirNaMesmaJanela(JFrame novoFrame) {
+        Dimension tamanhoAtual = getSize();
+        Point posicaoAtual = getLocation();
+        int estadoAtual = getExtendedState();
+
+        novoFrame.setSize(tamanhoAtual);
+        novoFrame.setMinimumSize(new Dimension(1180, 700));
+        novoFrame.setLocation(posicaoAtual);
+        novoFrame.setExtendedState(estadoAtual);
+
+        dispose();
+        novoFrame.setVisible(true);
     }
 
     private String obterIniciais(String nome) {

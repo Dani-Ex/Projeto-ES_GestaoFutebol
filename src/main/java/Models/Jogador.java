@@ -65,7 +65,7 @@ public class Jogador {
                 paisOrigem,
                 cidadeNascimento,
                 equipa,
-                "Models.Campeonato Principal",
+                "Campeonato Principal",
                 grupo,
                 ranking,
                 jogos,
