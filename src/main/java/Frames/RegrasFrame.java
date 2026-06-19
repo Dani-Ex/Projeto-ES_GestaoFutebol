@@ -1,6 +1,8 @@
 package Frames;
 
 import Design.MenuLateral;
+import Design.ModernScrollBarUI;
+import Design.RoundedPanel;
 import Design.Tema;
 
 import javax.swing.*;
@@ -15,6 +17,7 @@ public class RegrasFrame extends JFrame {
     public RegrasFrame() {
         setTitle("Regras do Torneio");
         setSize(1280, 760);
+        setMinimumSize(new Dimension(1180, 700));
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
@@ -39,9 +42,9 @@ public class RegrasFrame extends JFrame {
         content.setBorder(new EmptyBorder(0, 25, 0, 25));
 
         content.add(criarTopo(main));
-        content.add(Box.createVerticalStrut(35));
+        content.add(Box.createVerticalStrut(Tema.ESPACAMENTO_GRANDE));
         content.add(criarCardRegras());
-        content.add(Box.createVerticalStrut(28));
+        content.add(Box.createVerticalStrut(Tema.ESPACAMENTO_MEDIO));
         content.add(criarObservacao());
 
         main.add(content, BorderLayout.CENTER);
@@ -52,10 +55,10 @@ public class RegrasFrame extends JFrame {
     private JPanel criarTopo(JPanel main) {
         JPanel topo = new JPanel(new BorderLayout());
         topo.setOpaque(false);
-        topo.setMaximumSize(new Dimension(Integer.MAX_VALUE, 60));
+        topo.setMaximumSize(new Dimension(Integer.MAX_VALUE, 64));
 
-        JButton btnMenu = new JButton("☰");
-        btnMenu.setFont(new Font(Tema.FONTE_PADRAO, Font.BOLD, 22));
+        JButton btnMenu = new JButton("=");
+        btnMenu.setFont(Tema.FONTE_BOTAO_MENU);
         btnMenu.setFocusPainted(false);
         btnMenu.setBorderPainted(false);
         btnMenu.setContentAreaFilled(false);
@@ -78,7 +81,7 @@ public class RegrasFrame extends JFrame {
         titulo.setFont(Tema.FONTE_TITULO_GRANDE);
         titulo.setForeground(Tema.COR_TEXTO_PRINCIPAL);
 
-        JLabel subtitulo = new JLabel("Regras funcionais e operacionais definidas pelo utilizador.");
+        JLabel subtitulo = new JLabel("Regras funcionais e operacionais definidas para validar o sistema.");
         subtitulo.setFont(Tema.FONTE_SUBTITULO);
         subtitulo.setForeground(Tema.COR_TEXTO_SECUNDARIO);
 
@@ -99,15 +102,19 @@ public class RegrasFrame extends JFrame {
     private JPanel criarCardRegras() {
         RoundedPanel card = new RoundedPanel(Tema.RAIO_CARD, Tema.COR_CARD);
         card.setLayout(new BorderLayout());
-        card.setBorder(new EmptyBorder(26, 32, 26, 32));
+        card.setBorder(new EmptyBorder(
+                Tema.PADDING_CARD.top + 8,
+                Tema.PADDING_CARD.left + 14,
+                Tema.PADDING_CARD.bottom + 8,
+                Tema.PADDING_CARD.right + 14
+        ));
         card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 520));
 
         JLabel titulo = new JLabel("Regras configuradas");
-        titulo.setFont(new Font(Tema.FONTE_PADRAO, Font.BOLD, 18));
+        titulo.setFont(Tema.FONTE_TITULO);
         titulo.setForeground(Tema.COR_TEXTO_PRINCIPAL);
 
-        JTextArea regras = new JTextArea();
-        regras.setText(
+        JTextArea regras = new JTextArea(
                 "1. Cada equipa deve possuir exatamente 23 jogadores antes do início do campeonato.\n\n" +
                         "2. Não é permitido remover jogadores após o início do campeonato.\n\n" +
                         "3. Jogadores apenas podem ser inativados após o término do campeonato.\n\n" +
@@ -129,23 +136,30 @@ public class RegrasFrame extends JFrame {
         regras.setForeground(Tema.COR_TEXTO_PRINCIPAL);
         regras.setLineWrap(true);
         regras.setWrapStyleWord(true);
-        regras.setBorder(new EmptyBorder(22, 4, 0, 4));
+        regras.setBorder(new EmptyBorder(20, 4, 0, 10));
+
+        JScrollPane scroll = new JScrollPane(regras);
+        scroll.setBorder(null);
+        scroll.setViewportBorder(null);
+        scroll.setOpaque(false);
+        scroll.getViewport().setOpaque(false);
+        ModernScrollBarUI.aplicar(scroll);
 
         card.add(titulo, BorderLayout.NORTH);
-        card.add(regras, BorderLayout.CENTER);
+        card.add(scroll, BorderLayout.CENTER);
 
         return card;
     }
 
     private JPanel criarObservacao() {
-        RoundedPanel obs = new RoundedPanel(Tema.RAIO_CARD, new Color(219, 234, 254));
+        RoundedPanel obs = new RoundedPanel(Tema.RAIO_CARD, Tema.COR_AZUL_SUAVE);
         obs.setLayout(new BorderLayout());
         obs.setBorder(new EmptyBorder(18, 22, 18, 22));
-        obs.setMaximumSize(new Dimension(Integer.MAX_VALUE, 80));
+        obs.setMaximumSize(new Dimension(Integer.MAX_VALUE, 90));
 
         JLabel titulo = new JLabel("Observação");
         titulo.setFont(new Font(Tema.FONTE_PADRAO, Font.BOLD, 18));
-        titulo.setForeground(new Color(37, 99, 235));
+        titulo.setForeground(Tema.CARD_TEXTO_AZUL);
 
         JLabel texto = new JLabel("Estas regras servem como base de validação do sistema e como apoio visual no protótipo.");
         texto.setFont(Tema.FONTE_TEXTO);
@@ -162,34 +176,5 @@ public class RegrasFrame extends JFrame {
         obs.add(box, BorderLayout.CENTER);
 
         return obs;
-    }
-
-    private static class RoundedPanel extends JPanel {
-
-        private final int raio;
-        private final Color corFundo;
-
-        public RoundedPanel(int raio, Color corFundo) {
-            this.raio = raio;
-            this.corFundo = corFundo;
-            setOpaque(false);
-        }
-
-        @Override
-        protected void paintComponent(Graphics g) {
-            Graphics2D g2 = (Graphics2D) g.create();
-
-            g2.setRenderingHint(
-                    RenderingHints.KEY_ANTIALIASING,
-                    RenderingHints.VALUE_ANTIALIAS_ON
-            );
-
-            g2.setColor(corFundo);
-            g2.fillRoundRect(0, 0, getWidth(), getHeight(), raio, raio);
-
-            g2.dispose();
-
-            super.paintComponent(g);
-        }
     }
 }
