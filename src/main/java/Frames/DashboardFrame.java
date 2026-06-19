@@ -225,15 +225,15 @@ public class DashboardFrame extends JFrame {
         ));
         limparSelecaoAoClicar(card);
 
-        JLabel titulo = new JLabel("Lucro por Mes");
+        JLabel titulo = new JLabel(TipoGraficoLucro.JOGOS_RECENTES.titulo);
         titulo.setFont(Tema.FONTE_TITULO);
         titulo.setForeground(Tema.COR_TEXTO_PRINCIPAL);
 
-        GraficoLucro grafico = new GraficoLucro(criarDadosGrafico(TipoGraficoLucro.MES));
+        GraficoLucro grafico = new GraficoLucro(criarDadosGrafico(TipoGraficoLucro.JOGOS_RECENTES));
         limparSelecaoAoClicar(grafico);
 
         JComboBox<TipoGraficoLucro> comboGrafico = new JComboBox<>(TipoGraficoLucro.values());
-        comboGrafico.setSelectedItem(TipoGraficoLucro.MES);
+        comboGrafico.setSelectedItem(TipoGraficoLucro.JOGOS_RECENTES);
         comboGrafico.setFont(Tema.FONTE_CARD_TITULO);
         comboGrafico.setForeground(Tema.COR_TEXTO_PRINCIPAL);
         comboGrafico.setBackground(Tema.COR_BOTAO_SECUNDARIO);
