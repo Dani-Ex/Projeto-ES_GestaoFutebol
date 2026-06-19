@@ -6,12 +6,20 @@ import java.awt.*;
 public class RoundedPanel extends JPanel {
 
     private final int radius;
-    private final Color backgroundColor;
+    private Color backgroundColor;
 
     public RoundedPanel(int radius, Color backgroundColor) {
         this.radius = radius;
         this.backgroundColor = backgroundColor;
+        setBackground(backgroundColor);
         setOpaque(false);
+    }
+
+    @Override
+    public void setBackground(Color bg) {
+        super.setBackground(bg);
+        this.backgroundColor = bg;
+        repaint();
     }
 
     @Override

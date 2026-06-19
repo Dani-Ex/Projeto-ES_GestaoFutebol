@@ -32,6 +32,8 @@ public class PerfilJogadorFrame extends JFrame {
     private final Color PURPLE = Tema.COR_ROXO_FORTE;
 
     private JLabel labelEstadoCard;
+    private RoundedPanel botaoEstadoJogador;
+    private JLabel labelBotaoEstadoJogador;
 
     public PerfilJogadorFrame(Jogador jogador, Runnable onEstadoAlterado) {
         this.jogador = jogador;
@@ -86,15 +88,14 @@ public class PerfilJogadorFrame extends JFrame {
         JPanel voltar = criarBotaoPainel("← Voltar", BLUE, Color.WHITE, this::voltarParaJogadores);
         JPanel editar = criarBotaoPainel("Editar Jogador", CARD, BLUE, this::editarJogador);
 
-        String textoEstado = jogador.isAtivo() ? "Inativar Jogador" : "Ativar Jogador";
-        Color corEstado = jogador.isAtivo() ? RED : BLUE;
-
-        JPanel estado = criarBotaoPainel(textoEstado, corEstado, Color.WHITE, this::alternarEstado);
+        botaoEstadoJogador = criarBotaoPainel("", RED, Color.WHITE, this::alternarEstado);
+        labelBotaoEstadoJogador = (JLabel) botaoEstadoJogador.getComponent(0);
+        atualizarBotaoEstado();
 
         JPanel botoesDireita = new JPanel(new FlowLayout(FlowLayout.RIGHT, 14, 0));
         botoesDireita.setOpaque(false);
         botoesDireita.add(editar);
-        botoesDireita.add(estado);
+        botoesDireita.add(botaoEstadoJogador);
 
         topo.add(voltar, BorderLayout.WEST);
         topo.add(botoesDireita, BorderLayout.EAST);
@@ -410,7 +411,7 @@ public class PerfilJogadorFrame extends JFrame {
         return panel;
     }
 
-    private JPanel criarBotaoPainel(String texto, Color fundo, Color corTexto, Runnable acao) {
+    private RoundedPanel criarBotaoPainel(String texto, Color fundo, Color corTexto, Runnable acao) {
         RoundedPanel botao = new RoundedPanel(12, fundo);
         botao.setLayout(new BorderLayout());
         botao.setBorder(new EmptyBorder(10, 18, 10, 18));
@@ -454,6 +455,7 @@ public class PerfilJogadorFrame extends JFrame {
         }
 
         atualizarEstadoCard();
+        atualizarBotaoEstado();
     }
 
     private void atualizarEstadoCard() {
@@ -472,10 +474,21 @@ public class PerfilJogadorFrame extends JFrame {
         }
     }
 
+    private void atualizarBotaoEstado() {
+        if (botaoEstadoJogador == null || labelBotaoEstadoJogador == null) {
+            return;
+        }
+
+        labelBotaoEstadoJogador.setText(jogador.isAtivo() ? "Inativar Jogador" : "Ativar Jogador");
+        botaoEstadoJogador.setBackground(jogador.isAtivo() ? RED : BLUE);
+        botaoEstadoJogador.repaint();
+    }
+
     private void editarJogador() {
         new EditarJogadorFrame(jogador, () -> {
             setTitle("Perfil do Jogador - " + jogador.getNome());
             atualizarEstadoCard();
+            atualizarBotaoEstado();
             repaint();
 
             if (onEstadoAlterado != null) {
