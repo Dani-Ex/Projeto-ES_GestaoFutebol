@@ -3,7 +3,6 @@ package Frames.seccaoEstadios;
 import Design.MenuLateral;
 import Frames.CampeonatosFrame;
 import GrupoEeleminatoria.CampeonatoRepositorio;
-import GrupoEeleminatoria.GruposFrame;
 import Models.Campeonato;
 import Models.Estadio;
 
@@ -11,30 +10,37 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class EstadiosFrame extends JFrame {
 
-    private Campeonato campeonato;
+    private JTable tabelaEstadios;
 
-    private JTable tabelaEstadiosCampeonato;
-    private JTable tabelaEstadiosExistentes;
+    private final List<AssociacaoEstadio> associacoesVisiveis = new ArrayList<>();
 
     private final Color BG = new Color(245, 247, 251);
     private final Color TEXT = new Color(30, 41, 59);
     private final Color MUTED = new Color(100, 116, 139);
+
     private final Color BLUE = new Color(37, 99, 235);
     private final Color GREEN = new Color(22, 163, 74);
     private final Color RED = new Color(220, 38, 38);
 
     public EstadiosFrame() {
-        this(null);
+        inicializar();
     }
 
-    public EstadiosFrame(Campeonato campeonato) {
-        this.campeonato = campeonato;
+    /*
+     * Mantém compatibilidade caso exista código antigo a chamar:
+     * new EstadiosFrame(campeonato)
+     */
+    public EstadiosFrame(Campeonato campeonatoIgnorado) {
+        inicializar();
+    }
 
-        setTitle(campeonato == null ? "Estádios" : "Estádios - " + campeonato.getNome());
+    private void inicializar() {
+        setTitle("Estádios");
         setSize(1250, 780);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -43,12 +49,10 @@ public class EstadiosFrame extends JFrame {
         MenuLateral menuLateral = new MenuLateral(this);
         menuLateral.setVisible(false);
 
-        JPanel pagina = criarPagina(menuLateral);
-
         add(menuLateral, BorderLayout.WEST);
-        add(pagina, BorderLayout.CENTER);
+        add(criarPagina(menuLateral), BorderLayout.CENTER);
 
-        carregarTabelas();
+        carregarTabela();
 
         setVisible(true);
     }
@@ -58,134 +62,130 @@ public class EstadiosFrame extends JFrame {
         pagina.setBackground(BG);
         pagina.setBorder(new EmptyBorder(22, 24, 22, 24));
 
-        JButton botaoMenu = criarBotaoMenu(menuLateral);
-        pagina.add(botaoMenu, BorderLayout.NORTH);
+        pagina.add(criarTopo(menuLateral), BorderLayout.NORTH);
+        pagina.add(criarConteudo(), BorderLayout.CENTER);
 
-        JPanel centro = new JPanel();
-        centro.setOpaque(false);
-        centro.setLayout(new BoxLayout(centro, BoxLayout.Y_AXIS));
-        centro.setBorder(new EmptyBorder(15, 70, 20, 70));
+        return pagina;
+    }
+
+    private JPanel criarTopo(JPanel menuLateral) {
+        JPanel topo = new JPanel(new BorderLayout());
+        topo.setOpaque(false);
+
+        JButton btnMenu = new JButton("☰");
+        btnMenu.setFocusPainted(false);
+        btnMenu.setBorderPainted(false);
+        btnMenu.setContentAreaFilled(false);
+        btnMenu.setFont(new Font("Segoe UI", Font.BOLD, 24));
+        btnMenu.setForeground(TEXT);
+        btnMenu.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+        btnMenu.addActionListener(e -> {
+            menuLateral.setVisible(!menuLateral.isVisible());
+            revalidate();
+            repaint();
+        });
+
+        JPanel textos = new JPanel();
+        textos.setOpaque(false);
+        textos.setLayout(new BoxLayout(textos, BoxLayout.Y_AXIS));
 
         JLabel titulo = new JLabel("Estádios");
         titulo.setFont(new Font("Segoe UI", Font.BOLD, 30));
         titulo.setForeground(TEXT);
-        titulo.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        String textoSubtitulo = campeonato == null
-                ? "Consulta os estádios existentes no sistema."
-                : "Associa estádios ao campeonato: " + campeonato.getNome();
-
-        JLabel subtitulo = new JLabel(textoSubtitulo);
+        JLabel subtitulo = new JLabel(
+                "Consulta os estádios criados e os campeonatos aos quais estão associados."
+        );
         subtitulo.setFont(new Font("Segoe UI", Font.PLAIN, 15));
         subtitulo.setForeground(MUTED);
-        subtitulo.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        centro.add(titulo);
-        centro.add(Box.createVerticalStrut(4));
-        centro.add(subtitulo);
-        centro.add(Box.createVerticalStrut(22));
+        textos.add(titulo);
+        textos.add(Box.createVerticalStrut(4));
+        textos.add(subtitulo);
+
+        JButton btnVoltar = criarBotaoCinza("Campeonatos");
+        btnVoltar.addActionListener(e -> {
+            dispose();
+            new CampeonatosFrame();
+        });
+
+        topo.add(btnMenu, BorderLayout.WEST);
+        topo.add(textos, BorderLayout.CENTER);
+        topo.add(btnVoltar, BorderLayout.EAST);
+
+        return topo;
+    }
+
+    private JPanel criarConteudo() {
+        JPanel centro = new JPanel();
+        centro.setOpaque(false);
+        centro.setLayout(new BoxLayout(centro, BoxLayout.Y_AXIS));
+        centro.setBorder(new EmptyBorder(28, 70, 20, 70));
 
         centro.add(criarBarraAcoes());
-        centro.add(Box.createVerticalStrut(22));
+        centro.add(Box.createVerticalStrut(20));
+        centro.add(criarCardTabela());
 
-        JPanel conteudo = new JPanel(new GridLayout(1, 2, 24, 0));
-        conteudo.setOpaque(false);
-        conteudo.setAlignmentX(Component.LEFT_ALIGNMENT);
-        conteudo.setMaximumSize(new Dimension(Integer.MAX_VALUE, 480));
-
-        conteudo.add(criarCardEstadiosCampeonato());
-        conteudo.add(criarCardEstadiosExistentes());
-
-        centro.add(conteudo);
-
-        pagina.add(centro, BorderLayout.CENTER);
-
-        return pagina;
+        return centro;
     }
 
     private JPanel criarBarraAcoes() {
         JPanel barra = new JPanel(new FlowLayout(FlowLayout.LEFT, 12, 0));
         barra.setOpaque(false);
         barra.setAlignmentX(Component.LEFT_ALIGNMENT);
-        barra.setMaximumSize(new Dimension(Integer.MAX_VALUE, 60));
+        barra.setMaximumSize(new Dimension(Integer.MAX_VALUE, 50));
 
         JButton btnNovo = criarBotaoAzul("Novo Estádio");
-        JButton btnAdicionarExistente = criarBotaoVerde("Adicionar Existente");
-        JButton btnRemover = criarBotaoVermelho("Remover do Campeonato");
-        JButton btnVoltar = criarBotaoCinza("Voltar");
+        JButton btnAssociar = criarBotaoVerde("Associar Existente");
+        JButton btnAtualizar = criarBotaoCinza("Atualizar");
 
         btnNovo.addActionListener(e -> abrirNovoEstadio());
-        btnAdicionarExistente.addActionListener(e -> adicionarEstadioExistente());
-        btnRemover.addActionListener(e -> removerEstadioDoCampeonato());
-
-        btnVoltar.addActionListener(e -> {
-            dispose();
-
-            if (campeonato != null) {
-                new GruposFrame(campeonato);
-            } else {
-                new CampeonatosFrame();
-            }
-        });
+        btnAssociar.addActionListener(e -> associarEstadioExistente());
+        btnAtualizar.addActionListener(e -> carregarTabela());
 
         barra.add(btnNovo);
-        barra.add(btnAdicionarExistente);
-        barra.add(btnRemover);
-        barra.add(btnVoltar);
+        barra.add(btnAssociar);
+        barra.add(btnAtualizar);
 
         return barra;
     }
 
-    private JPanel criarCardEstadiosCampeonato() {
-        JPanel card = criarCard("Estádios do Campeonato");
-
-        tabelaEstadiosCampeonato = criarTabela();
-        JScrollPane scroll = new JScrollPane(tabelaEstadiosCampeonato);
-        scroll.setBorder(null);
-        scroll.getViewport().setBackground(Color.WHITE);
-
-        card.add(scroll, BorderLayout.CENTER);
-
-        return card;
-    }
-
-    private JPanel criarCardEstadiosExistentes() {
-        JPanel card = criarCard("Estádios Existentes");
-
-        tabelaEstadiosExistentes = criarTabela();
-        JScrollPane scroll = new JScrollPane(tabelaEstadiosExistentes);
-        scroll.setBorder(null);
-        scroll.getViewport().setBackground(Color.WHITE);
-
-        card.add(scroll, BorderLayout.CENTER);
-
-        return card;
-    }
-
-    private JPanel criarCard(String tituloTexto) {
+    private JPanel criarCardTabela() {
         JPanel card = new PainelArredondado(18, Color.WHITE);
         card.setLayout(new BorderLayout());
         card.setBorder(new EmptyBorder(20, 20, 20, 20));
+        card.setAlignmentX(Component.LEFT_ALIGNMENT);
+        card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 540));
 
-        JLabel titulo = new JLabel(tituloTexto);
+        JLabel titulo = new JLabel("Estádios e Associações");
         titulo.setFont(new Font("Segoe UI", Font.BOLD, 20));
         titulo.setForeground(TEXT);
-        titulo.setBorder(new EmptyBorder(0, 0, 15, 0));
+        titulo.setBorder(new EmptyBorder(0, 0, 16, 0));
+
+        tabelaEstadios = criarTabela();
+
+        JScrollPane scroll = new JScrollPane(tabelaEstadios);
+        scroll.setBorder(null);
+        scroll.getViewport().setBackground(Color.WHITE);
 
         card.add(titulo, BorderLayout.NORTH);
+        card.add(scroll, BorderLayout.CENTER);
 
         return card;
     }
 
     private JTable criarTabela() {
         String[] colunas = {
-                "Nome",
+                "Estádio",
                 "Cidade",
                 "Proprietário",
                 "Normal",
                 "VIP",
                 "Premium",
-                "Total"
+                "Total",
+                "Campeonato",
+                "Estado"
         };
 
         DefaultTableModel modelo = new DefaultTableModel(colunas, 0) {
@@ -196,6 +196,7 @@ public class EstadiosFrame extends JFrame {
         };
 
         JTable tabela = new JTable(modelo);
+
         tabela.setRowHeight(34);
         tabela.setFont(new Font("Segoe UI", Font.PLAIN, 13));
         tabela.setForeground(TEXT);
@@ -209,201 +210,225 @@ public class EstadiosFrame extends JFrame {
         tabela.getTableHeader().setBackground(Color.WHITE);
         tabela.getTableHeader().setReorderingAllowed(false);
 
+        tabela.getColumnModel().getColumn(0).setPreferredWidth(160);
+        tabela.getColumnModel().getColumn(1).setPreferredWidth(110);
+        tabela.getColumnModel().getColumn(2).setPreferredWidth(130);
+        tabela.getColumnModel().getColumn(3).setPreferredWidth(65);
+        tabela.getColumnModel().getColumn(4).setPreferredWidth(55);
+        tabela.getColumnModel().getColumn(5).setPreferredWidth(75);
+        tabela.getColumnModel().getColumn(6).setPreferredWidth(70);
+        tabela.getColumnModel().getColumn(7).setPreferredWidth(170);
+        tabela.getColumnModel().getColumn(8).setPreferredWidth(105);
+
         return tabela;
     }
 
-    private void carregarTabelas() {
-        carregarEstadiosCampeonato();
-        carregarEstadiosExistentes();
-    }
-
-    private void carregarEstadiosCampeonato() {
-        DefaultTableModel modelo = (DefaultTableModel) tabelaEstadiosCampeonato.getModel();
-        modelo.setRowCount(0);
-
-        if (campeonato == null) {
+    private void carregarTabela() {
+        if (tabelaEstadios == null) {
             return;
         }
 
-        for (Estadio estadio : campeonato.getEstadios()) {
-            modelo.addRow(new Object[]{
-                    estadio.getNome(),
-                    estadio.getCidade(),
-                    estadio.getProprietario(),
-                    estadio.getLugaresNormal(),
-                    estadio.getLugaresVip(),
-                    estadio.getLugaresPremium(),
-                    estadio.getCapacidadeTotal()
-            });
-        }
-    }
+        DefaultTableModel modelo =
+                (DefaultTableModel) tabelaEstadios.getModel();
 
-    private void carregarEstadiosExistentes() {
-        DefaultTableModel modelo = (DefaultTableModel) tabelaEstadiosExistentes.getModel();
         modelo.setRowCount(0);
+        associacoesVisiveis.clear();
 
-        List<Estadio> estadiosExistentes = CampeonatoRepositorio.listarEstadiosExistentes();
+        for (Campeonato campeonato : CampeonatoRepositorio.listar()) {
+            for (Estadio estadio : campeonato.getEstadios()) {
+                associacoesVisiveis.add(
+                        new AssociacaoEstadio(campeonato, estadio)
+                );
 
-        for (Estadio estadio : estadiosExistentes) {
-            modelo.addRow(new Object[]{
-                    estadio.getNome(),
-                    estadio.getCidade(),
-                    estadio.getProprietario(),
-                    estadio.getLugaresNormal(),
-                    estadio.getLugaresVip(),
-                    estadio.getLugaresPremium(),
-                    estadio.getCapacidadeTotal()
-            });
+                modelo.addRow(new Object[]{
+                        estadio.getNome(),
+                        estadio.getCidade(),
+                        estadio.getProprietario(),
+                        estadio.getLugaresNormal(),
+                        estadio.getLugaresVip(),
+                        estadio.getLugaresPremium(),
+                        estadio.getCapacidadeTotal(),
+                        campeonato.getNome(),
+                        campeonato.getEstado()
+                });
+            }
         }
     }
 
     private void abrirNovoEstadio() {
-        if (!validarCampeonatoAberto()) {
-            return;
-        }
-
-        if (campeonato.getEstadios().size() >= campeonato.getNumeroEstadiosNecessarios()) {
-            mostrarErro("Este campeonato já atingiu o número máximo de estádios permitido.");
+        if (CampeonatoRepositorio.listar().isEmpty()) {
+            mostrarErro("Ainda não existe nenhum campeonato criado.");
             return;
         }
 
         dispose();
-        new NovoEstadioFrame(campeonato);
+        new NovoEstadioFrame();
     }
 
-    private void adicionarEstadioExistente() {
-        if (!validarCampeonatoAberto()) {
-            return;
-        }
-
-        if (campeonato.getEstadios().size() >= campeonato.getNumeroEstadiosNecessarios()) {
-            mostrarErro("Este campeonato já atingiu o número máximo de estádios permitido.");
-            return;
-        }
-
-        int linha = tabelaEstadiosExistentes.getSelectedRow();
+    private void associarEstadioExistente() {
+        int linha = tabelaEstadios.getSelectedRow();
 
         if (linha == -1) {
-            mostrarErro("Seleciona um estádio existente na tabela da direita.");
+            mostrarErro("Seleciona primeiro um estádio na tabela.");
             return;
         }
 
-        String nomeEstadio = tabelaEstadiosExistentes.getValueAt(linha, 0).toString();
+        AssociacaoEstadio associacao =
+                associacoesVisiveis.get(linha);
 
-        if (campeonato.existeEstadioComNome(nomeEstadio)) {
-            mostrarErro("Esse estádio já está associado a este campeonato.");
+        Campeonato campeonatoDestino = escolherCampeonato();
+
+        if (campeonatoDestino == null) {
             return;
         }
 
-        Estadio estadioEscolhido = procurarEstadioExistentePorNome(nomeEstadio);
-
-        if (estadioEscolhido == null) {
-            mostrarErro("Não foi possível encontrar o estádio selecionado.");
+        if (!validarCampeonatoParaEstadio(campeonatoDestino)) {
             return;
         }
 
-        Estadio copia = new Estadio(
-                estadioEscolhido.getNome(),
-                estadioEscolhido.getCidade(),
-                estadioEscolhido.getProprietario(),
-                estadioEscolhido.getLugaresNormal(),
-                estadioEscolhido.getLugaresVip(),
-                estadioEscolhido.getLugaresPremium()
-        );
+        if (campeonatoDestino.existeEstadioComNome(
+                associacao.estadio.getNome()
+        )) {
+            mostrarErro(
+                    "Este estádio já está associado ao campeonato selecionado."
+            );
+            return;
+        }
 
-        boolean adicionado = campeonato.adicionarEstadio(copia);
+        Estadio copia = copiarEstadio(associacao.estadio);
+
+        boolean adicionado = campeonatoDestino.adicionarEstadio(copia);
 
         if (!adicionado) {
-            mostrarErro("Não foi possível adicionar o estádio ao campeonato.");
+            mostrarErro(
+                    "Não foi possível associar o estádio ao campeonato."
+            );
             return;
         }
 
         CampeonatoRepositorio.salvar();
-        carregarTabelas();
+        carregarTabela();
 
         JOptionPane.showMessageDialog(
                 this,
-                "Estádio existente adicionado ao campeonato.",
+                "Estádio associado ao campeonato "
+                        + campeonatoDestino.getNome()
+                        + " com sucesso.",
                 "Sucesso",
                 JOptionPane.INFORMATION_MESSAGE
         );
     }
 
-    private Estadio procurarEstadioExistentePorNome(String nome) {
-        List<Estadio> estadiosExistentes = CampeonatoRepositorio.listarEstadiosExistentes();
+    private Campeonato escolherCampeonato() {
+        List<Campeonato> campeonatos = CampeonatoRepositorio.listar();
 
-        for (Estadio estadio : estadiosExistentes) {
-            if (estadio.getNome().equalsIgnoreCase(nome)) {
-                return estadio;
+        if (campeonatos.isEmpty()) {
+            mostrarErro("Ainda não existe nenhum campeonato criado.");
+            return null;
+        }
+
+        JComboBox<Campeonato> combo = new JComboBox<>();
+
+        for (Campeonato campeonato : campeonatos) {
+            combo.addItem(campeonato);
+        }
+
+        combo.setRenderer(new DefaultListCellRenderer() {
+            @Override
+            public Component getListCellRendererComponent(
+                    JList<?> list,
+                    Object value,
+                    int index,
+                    boolean isSelected,
+                    boolean cellHasFocus
+            ) {
+                JLabel label = (JLabel) super.getListCellRendererComponent(
+                        list,
+                        value,
+                        index,
+                        isSelected,
+                        cellHasFocus
+                );
+
+                if (value instanceof Campeonato campeonato) {
+                    label.setText(
+                            campeonato.getNome()
+                                    + "  |  "
+                                    + campeonato.getEstadios().size()
+                                    + "/"
+                                    + campeonato.getNumeroEstadiosNecessarios()
+                                    + " estádios"
+                    );
+                }
+
+                return label;
             }
-        }
+        });
 
-        return null;
-    }
-
-    private void removerEstadioDoCampeonato() {
-        if (!validarCampeonatoAberto()) {
-            return;
-        }
-
-        int linha = tabelaEstadiosCampeonato.getSelectedRow();
-
-        if (linha == -1) {
-            mostrarErro("Seleciona um estádio do campeonato para remover.");
-            return;
-        }
-
-        String nomeEstadio = tabelaEstadiosCampeonato.getValueAt(linha, 0).toString();
-
-        Estadio estadioParaRemover = null;
-
-        for (Estadio estadio : campeonato.getEstadios()) {
-            if (estadio.getNome().equalsIgnoreCase(nomeEstadio)) {
-                estadioParaRemover = estadio;
-                break;
-            }
-        }
-
-        if (estadioParaRemover == null) {
-            mostrarErro("Não foi possível encontrar o estádio selecionado.");
-            return;
-        }
-
-        boolean removido = campeonato.removerEstadio(estadioParaRemover);
-
-        if (!removido) {
-            mostrarErro("Não foi possível remover o estádio.\nVerifica se o campeonato ainda está em configuração.");
-            return;
-        }
-
-        CampeonatoRepositorio.salvar();
-        carregarTabelas();
-
-        JOptionPane.showMessageDialog(
-                this,
-                "Estádio removido do campeonato.",
-                "Sucesso",
-                JOptionPane.INFORMATION_MESSAGE
+        JPanel painel = new JPanel(new BorderLayout(0, 8));
+        painel.add(
+                new JLabel("Seleciona o campeonato para associar o estádio:"),
+                BorderLayout.NORTH
         );
+        painel.add(combo, BorderLayout.CENTER);
+
+        int resultado = JOptionPane.showConfirmDialog(
+                this,
+                painel,
+                "Associar Estádio",
+                JOptionPane.OK_CANCEL_OPTION,
+                JOptionPane.PLAIN_MESSAGE
+        );
+
+        if (resultado != JOptionPane.OK_OPTION) {
+            return null;
+        }
+
+        return (Campeonato) combo.getSelectedItem();
     }
 
-    private boolean validarCampeonatoAberto() {
+    private boolean validarCampeonatoParaEstadio(Campeonato campeonato) {
         if (campeonato == null) {
-            mostrarErro("Abre esta página através de um campeonato para poderes associar estádios.");
+            mostrarErro("Seleciona um campeonato válido.");
             return false;
         }
 
         if (!campeonato.isEmConfiguracao()) {
-            mostrarErro("Não é possível alterar estádios depois do campeonato iniciado.");
+            mostrarErro(
+                    "Não é possível alterar estádios num campeonato já iniciado."
+            );
             return false;
         }
 
         if (campeonato.isGruposGerados()) {
-            mostrarErro("Não é possível alterar estádios depois dos grupos serem gerados.");
+            mostrarErro(
+                    "Não é possível alterar estádios depois dos grupos serem gerados."
+            );
+            return false;
+        }
+
+        if (campeonato.getEstadios().size()
+                >= campeonato.getNumeroEstadiosNecessarios()) {
+            mostrarErro(
+                    "O campeonato "
+                            + campeonato.getNome()
+                            + " já atingiu o máximo de estádios."
+            );
             return false;
         }
 
         return true;
+    }
+
+    private Estadio copiarEstadio(Estadio estadio) {
+        return new Estadio(
+                estadio.getNome(),
+                estadio.getCidade(),
+                estadio.getProprietario(),
+                estadio.getLugaresNormal(),
+                estadio.getLugaresVip(),
+                estadio.getLugaresPremium()
+        );
     }
 
     private void mostrarErro(String mensagem) {
@@ -415,24 +440,6 @@ public class EstadiosFrame extends JFrame {
         );
     }
 
-    private JButton criarBotaoMenu(JPanel menuLateral) {
-        JButton botao = new JButton("☰");
-        botao.setFocusPainted(false);
-        botao.setBorderPainted(false);
-        botao.setContentAreaFilled(false);
-        botao.setFont(new Font("Segoe UI", Font.BOLD, 24));
-        botao.setForeground(TEXT);
-        botao.setCursor(new Cursor(Cursor.HAND_CURSOR));
-
-        botao.addActionListener(e -> {
-            menuLateral.setVisible(!menuLateral.isVisible());
-            revalidate();
-            repaint();
-        });
-
-        return botao;
-    }
-
     private JButton criarBotaoAzul(String texto) {
         return criarBotao(texto, BLUE, Color.WHITE);
     }
@@ -441,15 +448,15 @@ public class EstadiosFrame extends JFrame {
         return criarBotao(texto, GREEN, Color.WHITE);
     }
 
-    private JButton criarBotaoVermelho(String texto) {
-        return criarBotao(texto, RED, Color.WHITE);
-    }
-
     private JButton criarBotaoCinza(String texto) {
         return criarBotao(texto, new Color(241, 245, 249), TEXT);
     }
 
-    private JButton criarBotao(String texto, Color fundo, Color corTexto) {
+    private JButton criarBotao(
+            String texto,
+            Color fundo,
+            Color corTexto
+    ) {
         JButton botao = new JButton(texto);
 
         botao.setFocusPainted(false);
@@ -461,6 +468,19 @@ public class EstadiosFrame extends JFrame {
         botao.setBorder(new EmptyBorder(10, 16, 10, 16));
 
         return botao;
+    }
+
+    private static class AssociacaoEstadio {
+        private final Campeonato campeonato;
+        private final Estadio estadio;
+
+        public AssociacaoEstadio(
+                Campeonato campeonato,
+                Estadio estadio
+        ) {
+            this.campeonato = campeonato;
+            this.estadio = estadio;
+        }
     }
 
     static class PainelArredondado extends JPanel {
@@ -484,10 +504,24 @@ public class EstadiosFrame extends JFrame {
             );
 
             desenho.setColor(new Color(0, 0, 0, 14));
-            desenho.fillRoundRect(4, 6, getWidth() - 8, getHeight() - 8, raio, raio);
+            desenho.fillRoundRect(
+                    4,
+                    6,
+                    getWidth() - 8,
+                    getHeight() - 8,
+                    raio,
+                    raio
+            );
 
             desenho.setColor(corFundo);
-            desenho.fillRoundRect(0, 0, getWidth() - 8, getHeight() - 8, raio, raio);
+            desenho.fillRoundRect(
+                    0,
+                    0,
+                    getWidth() - 8,
+                    getHeight() - 8,
+                    raio,
+                    raio
+            );
 
             desenho.dispose();
 

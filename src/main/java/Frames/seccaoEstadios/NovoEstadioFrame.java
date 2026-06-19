@@ -8,29 +8,27 @@ import Models.Estadio;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.util.List;
 
 public class NovoEstadioFrame extends JFrame {
-
-    private Campeonato campeonato;
 
     private JTextField campoNome;
     private JTextField campoCidade;
     private JTextField campoProprietario;
-    private JTextField campoNormal;
-    private JTextField campoVip;
-    private JTextField campoPremium;
+    private JTextField campoLugaresNormal;
+    private JTextField campoLugaresVip;
+    private JTextField campoLugaresPremium;
+
+    private JComboBox<Campeonato> comboCampeonatos;
 
     private final Color BG = new Color(245, 247, 251);
     private final Color TEXT = new Color(30, 41, 59);
     private final Color MUTED = new Color(100, 116, 139);
     private final Color BLUE = new Color(37, 99, 235);
-    private final Color CARD_REGRA = new Color(255, 241, 217);
 
-    public NovoEstadioFrame(Campeonato campeonato) {
-        this.campeonato = campeonato;
-
-        setTitle("Novo Estádio - " + campeonato.getNome());
-        setSize(1250, 780);
+    public NovoEstadioFrame() {
+        setTitle("Novo Estádio");
+        setSize(1050, 700);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
@@ -38,10 +36,8 @@ public class NovoEstadioFrame extends JFrame {
         MenuLateral menuLateral = new MenuLateral(this);
         menuLateral.setVisible(false);
 
-        JPanel pagina = criarPagina(menuLateral);
-
         add(menuLateral, BorderLayout.WEST);
-        add(pagina, BorderLayout.CENTER);
+        add(criarPagina(menuLateral), BorderLayout.CENTER);
 
         setVisible(true);
     }
@@ -51,176 +47,261 @@ public class NovoEstadioFrame extends JFrame {
         pagina.setBackground(BG);
         pagina.setBorder(new EmptyBorder(22, 24, 22, 24));
 
-        JButton botaoMenu = criarBotaoMenu(menuLateral);
-        pagina.add(botaoMenu, BorderLayout.NORTH);
+        JPanel topo = new JPanel(new BorderLayout());
+        topo.setOpaque(false);
+
+        JButton btnMenu = new JButton("☰");
+        btnMenu.setFocusPainted(false);
+        btnMenu.setBorderPainted(false);
+        btnMenu.setContentAreaFilled(false);
+        btnMenu.setFont(new Font("Segoe UI", Font.BOLD, 24));
+        btnMenu.setForeground(TEXT);
+        btnMenu.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+        btnMenu.addActionListener(e -> {
+            menuLateral.setVisible(!menuLateral.isVisible());
+            revalidate();
+            repaint();
+        });
+
+        topo.add(btnMenu, BorderLayout.WEST);
+        pagina.add(topo, BorderLayout.NORTH);
 
         JPanel centro = new JPanel();
         centro.setOpaque(false);
         centro.setLayout(new BoxLayout(centro, BoxLayout.Y_AXIS));
-        centro.setBorder(new EmptyBorder(20, 90, 20, 90));
+        centro.setBorder(new EmptyBorder(15, 120, 20, 120));
 
         JLabel titulo = new JLabel("Novo Estádio");
-        titulo.setFont(new Font("Segoe UI", Font.BOLD, 28));
+        titulo.setFont(new Font("Segoe UI", Font.BOLD, 30));
         titulo.setForeground(TEXT);
         titulo.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        JLabel subtitulo = new JLabel("Registo de estádio associado ao campeonato: " + campeonato.getNome());
-        subtitulo.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        JLabel subtitulo = new JLabel(
+                "Cria um estádio e associa-o a um campeonato já existente."
+        );
+        subtitulo.setFont(new Font("Segoe UI", Font.PLAIN, 15));
         subtitulo.setForeground(MUTED);
         subtitulo.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         centro.add(titulo);
         centro.add(Box.createVerticalStrut(4));
         centro.add(subtitulo);
-        centro.add(Box.createVerticalStrut(35));
-
-        JPanel conteudo = new JPanel(new BorderLayout(35, 0));
-        conteudo.setOpaque(false);
-        conteudo.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-        conteudo.add(criarCardFormulario(), BorderLayout.CENTER);
-        conteudo.add(criarCardRegra(), BorderLayout.EAST);
-
-        centro.add(conteudo);
+        centro.add(Box.createVerticalStrut(28));
+        centro.add(criarFormulario());
 
         pagina.add(centro, BorderLayout.CENTER);
 
         return pagina;
     }
 
-    private JPanel criarCardFormulario() {
+    private JPanel criarFormulario() {
         JPanel card = new PainelArredondado(18, Color.WHITE);
         card.setLayout(new BorderLayout());
-        card.setBorder(new EmptyBorder(26, 26, 20, 26));
-        card.setPreferredSize(new Dimension(720, 460));
+        card.setBorder(new EmptyBorder(28, 28, 20, 28));
+        card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 500));
+        card.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        JPanel container = new JPanel();
-        container.setOpaque(false);
-        container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
+        JLabel tituloCard = new JLabel("Informações do Estádio");
+        tituloCard.setFont(new Font("Segoe UI", Font.BOLD, 22));
+        tituloCard.setForeground(TEXT);
 
-        JLabel titulo = new JLabel("Dados do Estádio");
-        titulo.setFont(new Font("Segoe UI", Font.BOLD, 22));
-        titulo.setForeground(TEXT);
-        titulo.setAlignmentX(Component.LEFT_ALIGNMENT);
+        JPanel formulario = new JPanel(new GridBagLayout());
+        formulario.setOpaque(false);
 
-        container.add(titulo);
-        container.add(Box.createVerticalStrut(22));
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 0, 10, 28);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.weightx = 1;
 
-        JPanel grid = new JPanel(new GridLayout(3, 2, 30, 18));
-        grid.setOpaque(false);
-        grid.setAlignmentX(Component.LEFT_ALIGNMENT);
+        campoNome = criarCampoTexto();
+        campoCidade = criarCampoTexto();
+        campoProprietario = criarCampoTexto();
+        campoLugaresNormal = criarCampoTexto();
+        campoLugaresVip = criarCampoTexto();
+        campoLugaresPremium = criarCampoTexto();
 
-        campoNome = criarCampo("Ex: Estádio da Luz");
-        campoCidade = criarCampo("Ex: Lisboa");
-        campoProprietario = criarCampo("Ex: SL Benfica");
-        campoNormal = criarCampo("Ex: 50000");
-        campoVip = criarCampo("Ex: 10000");
-        campoPremium = criarCampo("Ex: 5000");
+        comboCampeonatos = criarComboCampeonatos();
 
-        grid.add(criarCampoComLabel("Nome do estádio", campoNome));
-        grid.add(criarCampoComLabel("Cidade", campoCidade));
-        grid.add(criarCampoComLabel("Proprietário", campoProprietario));
-        grid.add(criarCampoComLabel("Lugares Normal", campoNormal));
-        grid.add(criarCampoComLabel("Lugares VIP", campoVip));
-        grid.add(criarCampoComLabel("Lugares Premium", campoPremium));
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 2;
+        formulario.add(
+                criarCampoComLabel("Campeonato a associar", comboCampeonatos),
+                gbc
+        );
 
-        container.add(grid);
+        gbc.gridwidth = 1;
+
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        formulario.add(
+                criarCampoComLabel("Nome do Estádio", campoNome),
+                gbc
+        );
+
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        formulario.add(
+                criarCampoComLabel("Cidade", campoCidade),
+                gbc
+        );
+
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        formulario.add(
+                criarCampoComLabel("Proprietário", campoProprietario),
+                gbc
+        );
+
+        gbc.gridx = 1;
+        gbc.gridy = 2;
+        formulario.add(
+                criarCampoComLabel("Lugares Normais", campoLugaresNormal),
+                gbc
+        );
+
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        formulario.add(
+                criarCampoComLabel("Lugares VIP", campoLugaresVip),
+                gbc
+        );
+
+        gbc.gridx = 1;
+        gbc.gridy = 3;
+        formulario.add(
+                criarCampoComLabel("Lugares Premium", campoLugaresPremium),
+                gbc
+        );
 
         JPanel botoes = new JPanel(new FlowLayout(FlowLayout.RIGHT, 12, 0));
         botoes.setOpaque(false);
 
         JButton btnCancelar = criarBotaoCinza("Cancelar");
-        JButton btnGuardar = criarBotaoAzul("Guardar Estádio");
+        JButton btnCriar = criarBotaoAzul("Criar Estádio");
 
         btnCancelar.addActionListener(e -> {
             dispose();
-            new EstadiosFrame(campeonato);
+            new EstadiosFrame();
         });
 
-        btnGuardar.addActionListener(e -> guardarEstadio());
+        btnCriar.addActionListener(e -> criarEstadio());
 
         botoes.add(btnCancelar);
-        botoes.add(btnGuardar);
+        botoes.add(btnCriar);
 
-        card.add(container, BorderLayout.CENTER);
+        card.add(tituloCard, BorderLayout.NORTH);
+        card.add(formulario, BorderLayout.CENTER);
         card.add(botoes, BorderLayout.SOUTH);
 
         return card;
     }
 
-    private JPanel criarCampoComLabel(String label, JTextField campo) {
-        JPanel painel = new JPanel();
+    private JComboBox<Campeonato> criarComboCampeonatos() {
+        JComboBox<Campeonato> combo = new JComboBox<>();
+
+        List<Campeonato> campeonatos = CampeonatoRepositorio.listar();
+
+        for (Campeonato campeonato : campeonatos) {
+            combo.addItem(campeonato);
+        }
+
+        combo.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+
+        combo.setRenderer(new DefaultListCellRenderer() {
+            @Override
+            public Component getListCellRendererComponent(
+                    JList<?> list,
+                    Object value,
+                    int index,
+                    boolean isSelected,
+                    boolean cellHasFocus
+            ) {
+                JLabel label = (JLabel) super.getListCellRendererComponent(
+                        list,
+                        value,
+                        index,
+                        isSelected,
+                        cellHasFocus
+                );
+
+                if (value instanceof Campeonato campeonato) {
+                    label.setText(
+                            campeonato.getNome()
+                                    + "  |  "
+                                    + campeonato.getEstadios().size()
+                                    + "/"
+                                    + campeonato.getNumeroEstadiosNecessarios()
+                                    + " estádios"
+                    );
+                }
+
+                return label;
+            }
+        });
+
+        return combo;
+    }
+
+    private JPanel criarCampoComLabel(
+            String textoLabel,
+            JComponent componente
+    ) {
+        JPanel painel = new JPanel(new BorderLayout(0, 8));
         painel.setOpaque(false);
-        painel.setLayout(new BoxLayout(painel, BoxLayout.Y_AXIS));
 
-        JLabel texto = new JLabel(label);
-        texto.setFont(new Font("Segoe UI", Font.BOLD, 13));
-        texto.setForeground(TEXT);
+        JLabel label = new JLabel(textoLabel);
+        label.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        label.setForeground(TEXT);
 
-        painel.add(texto);
-        painel.add(Box.createVerticalStrut(8));
-        painel.add(campo);
+        painel.add(label, BorderLayout.NORTH);
+        painel.add(componente, BorderLayout.CENTER);
 
         return painel;
     }
 
-    private JTextField criarCampo(String placeholder) {
+    private JTextField criarCampoTexto() {
         JTextField campo = new JTextField();
 
-        campo.setPreferredSize(new Dimension(260, 38));
-        campo.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        campo.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         campo.setForeground(TEXT);
-        campo.setToolTipText(placeholder);
 
         campo.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(new Color(226, 232, 240)),
-                new EmptyBorder(8, 12, 8, 12)
+                BorderFactory.createLineBorder(new Color(203, 213, 225)),
+                new EmptyBorder(10, 12, 10, 12)
         ));
 
         return campo;
     }
 
-    private JPanel criarCardRegra() {
-        JPanel card = new PainelArredondado(18, CARD_REGRA);
-        card.setPreferredSize(new Dimension(250, 460));
-        card.setLayout(new BorderLayout());
-        card.setBorder(new EmptyBorder(24, 20, 20, 20));
+    private void criarEstadio() {
+        Campeonato campeonato =
+                (Campeonato) comboCampeonatos.getSelectedItem();
 
-        JTextArea texto = new JTextArea();
-        texto.setEditable(false);
-        texto.setOpaque(false);
-        texto.setLineWrap(true);
-        texto.setWrapStyleWord(true);
-        texto.setFont(new Font("Segoe UI", Font.PLAIN, 15));
-        texto.setForeground(TEXT);
+        if (campeonato == null) {
+            mostrarErro("Seleciona um campeonato.");
+            return;
+        }
 
-        texto.setText("""
-                Regra dos Estádios
-
-                Só podes adicionar estádios
-                enquanto o campeonato estiver
-                em configuração.
-
-                O nome do estádio não pode
-                repetir dentro do mesmo
-                campeonato.
-
-                Os lugares devem ser
-                valores positivos.
-                """);
-
-        card.add(texto, BorderLayout.CENTER);
-
-        return card;
-    }
-
-    private void guardarEstadio() {
         if (!campeonato.isEmConfiguracao()) {
-            JOptionPane.showMessageDialog(
-                    this,
-                    "Não é possível adicionar estádios depois do campeonato iniciado.",
-                    "Erro",
-                    JOptionPane.ERROR_MESSAGE
+            mostrarErro(
+                    "Não é possível adicionar estádios num campeonato já iniciado."
+            );
+            return;
+        }
+
+        if (campeonato.isGruposGerados()) {
+            mostrarErro(
+                    "Não é possível adicionar estádios depois dos grupos serem gerados."
+            );
+            return;
+        }
+
+        if (campeonato.getEstadios().size()
+                >= campeonato.getNumeroEstadiosNecessarios()) {
+            mostrarErro(
+                    "Este campeonato já atingiu o número máximo de estádios."
             );
             return;
         }
@@ -228,60 +309,61 @@ public class NovoEstadioFrame extends JFrame {
         String nome = campoNome.getText().trim();
         String cidade = campoCidade.getText().trim();
         String proprietario = campoProprietario.getText().trim();
-        String normalTxt = campoNormal.getText().trim();
-        String vipTxt = campoVip.getText().trim();
-        String premiumTxt = campoPremium.getText().trim();
 
-        if (nome.isEmpty()
-                || cidade.isEmpty()
-                || proprietario.isEmpty()
-                || normalTxt.isEmpty()
-                || vipTxt.isEmpty()
-                || premiumTxt.isEmpty()) {
-
-            JOptionPane.showMessageDialog(
-                    this,
-                    "Faltam campos por preencher do estadio",
-                    "Erro",
-                    JOptionPane.ERROR_MESSAGE
+        if (nome.isEmpty() || cidade.isEmpty() || proprietario.isEmpty()) {
+            mostrarErro(
+                    "Nome, cidade e proprietário do estádio são obrigatórios."
             );
+            return;
+        }
+
+        int lugaresNormal;
+        int lugaresVip;
+        int lugaresPremium;
+
+        try {
+            lugaresNormal = Integer.parseInt(
+                    campoLugaresNormal.getText().trim()
+            );
+
+            lugaresVip = Integer.parseInt(
+                    campoLugaresVip.getText().trim()
+            );
+
+            lugaresPremium = Integer.parseInt(
+                    campoLugaresPremium.getText().trim()
+            );
+
+        } catch (NumberFormatException e) {
+            mostrarErro(
+                    "Os lugares Normal, VIP e Premium devem ser números inteiros."
+            );
+            return;
+        }
+
+        if (lugaresNormal < 0
+                || lugaresVip < 0
+                || lugaresPremium < 0) {
+            mostrarErro("Os lugares não podem ter valores negativos.");
+            return;
+        }
+
+        if (lugaresNormal + lugaresVip + lugaresPremium <= 0) {
+            mostrarErro("O estádio deve ter pelo menos um lugar disponível.");
             return;
         }
 
         if (campeonato.existeEstadioComNome(nome)) {
-            JOptionPane.showMessageDialog(
-                    this,
-                    "Não é permitido estadio repetidos no mesmo campeonato",
-                    "Erro",
-                    JOptionPane.ERROR_MESSAGE
+            mostrarErro(
+                    "Este estádio já está associado ao campeonato selecionado."
             );
             return;
         }
 
-        int normal;
-        int vip;
-        int premium;
-
-        try {
-            normal = Integer.parseInt(normalTxt);
-            vip = Integer.parseInt(vipTxt);
-            premium = Integer.parseInt(premiumTxt);
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(
-                    this,
-                    "Os lugares devem ser números válidos.",
-                    "Erro",
-                    JOptionPane.ERROR_MESSAGE
-            );
-            return;
-        }
-
-        if (normal < 0 || vip < 0 || premium < 0) {
-            JOptionPane.showMessageDialog(
-                    this,
-                    "Não é permitido valores negativos nos lugares.",
-                    "Erro",
-                    JOptionPane.ERROR_MESSAGE
+        if (existeEstadioNoSistema(nome)) {
+            mostrarErro(
+                    "Já existe um estádio com esse nome no sistema.\n"
+                            + "Usa o botão \"Associar Existente\" para o ligar a outro campeonato."
             );
             return;
         }
@@ -290,20 +372,15 @@ public class NovoEstadioFrame extends JFrame {
                 nome,
                 cidade,
                 proprietario,
-                normal,
-                vip,
-                premium
+                lugaresNormal,
+                lugaresVip,
+                lugaresPremium
         );
 
         boolean adicionado = campeonato.adicionarEstadio(estadio);
 
         if (!adicionado) {
-            JOptionPane.showMessageDialog(
-                    this,
-                    "Não foi possível adicionar o estádio.\nVerifica se o campeonato ainda está em configuração.",
-                    "Erro",
-                    JOptionPane.ERROR_MESSAGE
-            );
+            mostrarErro("Não foi possível criar o estádio.");
             return;
         }
 
@@ -311,58 +388,58 @@ public class NovoEstadioFrame extends JFrame {
 
         JOptionPane.showMessageDialog(
                 this,
-                "Estádio adicionado com sucesso ao campeonato " + campeonato.getNome() + ".",
+                "Estádio criado e associado ao campeonato "
+                        + campeonato.getNome()
+                        + ".",
                 "Sucesso",
                 JOptionPane.INFORMATION_MESSAGE
         );
 
         dispose();
-        new EstadiosFrame(campeonato);
+        new EstadiosFrame();
     }
 
-    private JButton criarBotaoMenu(JPanel menuLateral) {
-        JButton botaoMenu = new JButton("☰");
+    private boolean existeEstadioNoSistema(String nome) {
+        for (Estadio estadio : CampeonatoRepositorio.listarEstadiosExistentes()) {
+            if (estadio.getNome().equalsIgnoreCase(nome.trim())) {
+                return true;
+            }
+        }
 
-        botaoMenu.setFocusPainted(false);
-        botaoMenu.setBorderPainted(false);
-        botaoMenu.setContentAreaFilled(false);
-        botaoMenu.setFont(new Font("Segoe UI", Font.BOLD, 24));
-        botaoMenu.setForeground(TEXT);
-        botaoMenu.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        return false;
+    }
 
-        botaoMenu.addActionListener(e -> {
-            menuLateral.setVisible(!menuLateral.isVisible());
-            revalidate();
-            repaint();
-        });
-
-        return botaoMenu;
+    private void mostrarErro(String mensagem) {
+        JOptionPane.showMessageDialog(
+                this,
+                mensagem,
+                "Erro",
+                JOptionPane.ERROR_MESSAGE
+        );
     }
 
     private JButton criarBotaoAzul(String texto) {
-        JButton botao = new JButton(texto);
-
-        botao.setFocusPainted(false);
-        botao.setBorderPainted(false);
-        botao.setBackground(BLUE);
-        botao.setForeground(Color.WHITE);
-        botao.setFont(new Font("Segoe UI", Font.BOLD, 13));
-        botao.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        botao.setBorder(new EmptyBorder(11, 20, 11, 20));
-
-        return botao;
+        return criarBotao(texto, BLUE, Color.WHITE);
     }
 
     private JButton criarBotaoCinza(String texto) {
+        return criarBotao(texto, new Color(241, 245, 249), TEXT);
+    }
+
+    private JButton criarBotao(
+            String texto,
+            Color fundo,
+            Color corTexto
+    ) {
         JButton botao = new JButton(texto);
 
         botao.setFocusPainted(false);
         botao.setBorderPainted(false);
-        botao.setBackground(new Color(241, 245, 249));
-        botao.setForeground(TEXT);
+        botao.setBackground(fundo);
+        botao.setForeground(corTexto);
         botao.setFont(new Font("Segoe UI", Font.BOLD, 13));
         botao.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        botao.setBorder(new EmptyBorder(11, 20, 11, 20));
+        botao.setBorder(new EmptyBorder(11, 18, 11, 18));
 
         return botao;
     }
@@ -388,10 +465,24 @@ public class NovoEstadioFrame extends JFrame {
             );
 
             desenho.setColor(new Color(0, 0, 0, 14));
-            desenho.fillRoundRect(4, 6, getWidth() - 8, getHeight() - 8, raio, raio);
+            desenho.fillRoundRect(
+                    4,
+                    6,
+                    getWidth() - 8,
+                    getHeight() - 8,
+                    raio,
+                    raio
+            );
 
             desenho.setColor(corFundo);
-            desenho.fillRoundRect(0, 0, getWidth() - 8, getHeight() - 8, raio, raio);
+            desenho.fillRoundRect(
+                    0,
+                    0,
+                    getWidth() - 8,
+                    getHeight() - 8,
+                    raio,
+                    raio
+            );
 
             desenho.dispose();
 

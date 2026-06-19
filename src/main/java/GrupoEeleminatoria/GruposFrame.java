@@ -2,8 +2,6 @@ package GrupoEeleminatoria;
 
 import Design.MenuLateral;
 import Frames.CampeonatosFrame;
-import Frames.SeccaoEquipas.EquipasFrame;
-import Frames.seccaoEstadios.EstadiosFrame;
 import Models.Campeonato;
 import Models.CalendarioJogosService;
 import Models.Jogo;
@@ -68,8 +66,7 @@ public class GruposFrame extends JFrame {
         centro.setLayout(new BoxLayout(centro, BoxLayout.Y_AXIS));
         centro.setBorder(new EmptyBorder(10, 70, 20, 70));
 
-        JPanel cabecalho = criarCabecalho();
-        centro.add(cabecalho);
+        centro.add(criarCabecalho());
         centro.add(Box.createVerticalStrut(20));
 
         centro.add(criarCardsResumo());
@@ -220,15 +217,6 @@ public class GruposFrame extends JFrame {
         barra.setAlignmentX(Component.LEFT_ALIGNMENT);
         barra.setMaximumSize(new Dimension(Integer.MAX_VALUE, 48));
 
-        JButton btnEquipas = criarBotaoAzul("Equipas");
-        btnEquipas.addActionListener(e -> abrirEquipas());
-
-        JButton btnEstadios = criarBotaoAzul("Estádios");
-        btnEstadios.addActionListener(e -> {
-            dispose();
-            new EstadiosFrame(campeonato);
-        });
-
         JButton btnGerarGrupos = criarBotaoRoxo("Gerar Grupos");
         btnGerarGrupos.addActionListener(e -> gerarGrupos());
 
@@ -238,8 +226,6 @@ public class GruposFrame extends JFrame {
         JButton btnEliminatorias = criarBotaoCinza("Eliminatórias");
         btnEliminatorias.addActionListener(e -> abrirEliminatorias());
 
-        barra.add(btnEquipas);
-        barra.add(btnEstadios);
         barra.add(btnGerarGrupos);
         barra.add(btnTerminarGrupos);
         barra.add(btnEliminatorias);
@@ -271,12 +257,12 @@ public class GruposFrame extends JFrame {
             vazio.setText("""
                     Ainda não existem grupos gerados.
 
-                    Para começar o campeonato:
-                    1. Adiciona as equipas necessárias.
-                    2. Adiciona os estádios necessários.
-                    3. Clica em "Gerar Grupos".
+                    Antes de gerar os grupos, confirma que o campeonato já possui:
+                    • O número exato de equipas necessário.
+                    • O número exato de estádios necessário.
+                    • Um número de equipas múltiplo de 4.
 
-                    Ao gerar grupos, o campeonato passa automaticamente para o estado "Iniciado".
+                    Depois clica em "Gerar Grupos".
                     """);
 
             card.add(vazio, BorderLayout.CENTER);
@@ -326,7 +312,8 @@ public class GruposFrame extends JFrame {
             }
         };
 
-        List<EstatisticaEquipa> estatisticas = calcularEstatisticasDoGrupo(nomeGrupo, equipas);
+        List<EstatisticaEquipa> estatisticas =
+                calcularEstatisticasDoGrupo(nomeGrupo, equipas);
 
         for (EstatisticaEquipa estatistica : estatisticas) {
             modelo.addRow(new Object[]{
@@ -388,7 +375,18 @@ public class GruposFrame extends JFrame {
         texto.setText("""
                 Fase de Grupos
 
-                A tabela mostra:
+                Esta página não permite
+                adicionar equipas nem
+                estádios.
+
+                Antes de gerar grupos,
+                o sistema valida:
+
+                • Equipas suficientes
+                • Número exato de equipas
+                • Estádios suficientes
+                • Número exato de estádios
+                • Equipas múltiplo de 4
 
                 J   - Jogos
                 V   - Vitórias
@@ -396,16 +394,6 @@ public class GruposFrame extends JFrame {
                 D   - Derrotas
                 DG  - Diferença de golos
                 Pts - Pontos
-
-                Pontuação:
-                • Vitória = 3 pontos
-                • Empate = 1 ponto
-                • Derrota = 0 pontos
-
-                A diferença de golos é
-                calculada internamente
-                através dos golos marcados
-                e sofridos.
                 """);
 
         card.add(texto, BorderLayout.CENTER);
@@ -414,6 +402,8 @@ public class GruposFrame extends JFrame {
     }
 
     private void gerarGrupos() {
+
+        CampeonatoRepositorio.sincronizarEquipasDoTsv(campeonato);
         if (!campeonato.isEmConfiguracao()) {
             mostrarErro("Não é possível gerar grupos depois do campeonato iniciado.");
             return;
@@ -447,21 +437,29 @@ public class GruposFrame extends JFrame {
         }
 
         if (campeonato.getEquipas().size() != campeonato.getNumeroEquipasNecessarias()) {
-            mostrarErro("O número de equipas tem de ser exatamente "
-                    + campeonato.getNumeroEquipasNecessarias()
-                    + ".");
+            mostrarErro(
+                    "O campeonato tem de ter exatamente "
+                            + campeonato.getNumeroEquipasNecessarias()
+                            + " equipas.\nAtualmente possui "
+                            + campeonato.getEquipas().size()
+                            + "."
+            );
             return;
         }
 
         if (campeonato.getEstadios().size() != campeonato.getNumeroEstadiosNecessarios()) {
-            mostrarErro("O número de estádios tem de ser exatamente "
-                    + campeonato.getNumeroEstadiosNecessarios()
-                    + ".");
+            mostrarErro(
+                    "O campeonato tem de ter exatamente "
+                            + campeonato.getNumeroEstadiosNecessarios()
+                            + " estádios.\nAtualmente possui "
+                            + campeonato.getEstadios().size()
+                            + "."
+            );
             return;
         }
 
         if (campeonato.getEquipas().size() % 4 != 0) {
-            mostrarErro("Não é possível gerar grupos. O número de equipas tem de ser múltiplo de 4.");
+            mostrarErro("O número de equipas tem de ser múltiplo de 4.");
             return;
         }
 
@@ -489,7 +487,9 @@ public class GruposFrame extends JFrame {
         campeonato.setGruposGerados(true);
 
         try {
-            campeonato.setJogos(CalendarioJogosService.gerarJogosFaseGrupos(campeonato));
+            campeonato.setJogos(
+                    CalendarioJogosService.gerarJogosFaseGrupos(campeonato)
+            );
         } catch (IllegalArgumentException ex) {
             campeonato.setGruposGerados(false);
             campeonato.getGrupos().clear();
@@ -560,7 +560,8 @@ public class GruposFrame extends JFrame {
             String nomeGrupo = entrada.getKey();
             List<String> equipasDoGrupo = entrada.getValue();
 
-            List<EstatisticaEquipa> estatisticas = calcularEstatisticasDoGrupo(nomeGrupo, equipasDoGrupo);
+            List<EstatisticaEquipa> estatisticas =
+                    calcularEstatisticasDoGrupo(nomeGrupo, equipasDoGrupo);
 
             if (estatisticas.size() >= 1) {
                 classificadas.add(estatisticas.get(0).nomeEquipa);
@@ -574,12 +575,14 @@ public class GruposFrame extends JFrame {
         campeonato.setEquipasEliminatorias(classificadas);
     }
 
-    private List<EstatisticaEquipa> calcularEstatisticasDoGrupo(String nomeGrupo, List<String> equipas) {
+    private List<EstatisticaEquipa> calcularEstatisticasDoGrupo(
+            String nomeGrupo,
+            List<String> equipas
+    ) {
         List<EstatisticaEquipa> estatisticas = new ArrayList<>();
 
         for (String equipa : equipas) {
-            EstatisticaEquipa estatistica = calcularEstatisticaEquipa(nomeGrupo, equipa);
-            estatisticas.add(estatistica);
+            estatisticas.add(calcularEstatisticaEquipa(nomeGrupo, equipa));
         }
 
         estatisticas.sort((a, b) -> {
@@ -588,7 +591,10 @@ public class GruposFrame extends JFrame {
             }
 
             if (b.getDiferencaGolos() != a.getDiferencaGolos()) {
-                return Integer.compare(b.getDiferencaGolos(), a.getDiferencaGolos());
+                return Integer.compare(
+                        b.getDiferencaGolos(),
+                        a.getDiferencaGolos()
+                );
             }
 
             if (b.golosMarcados != a.golosMarcados) {
@@ -601,7 +607,10 @@ public class GruposFrame extends JFrame {
         return estatisticas;
     }
 
-    private EstatisticaEquipa calcularEstatisticaEquipa(String nomeGrupo, String nomeEquipa) {
+    private EstatisticaEquipa calcularEstatisticaEquipa(
+            String nomeGrupo,
+            String nomeEquipa
+    ) {
         EstatisticaEquipa estatistica = new EstatisticaEquipa(nomeEquipa);
 
         if (campeonato.getJogos() == null) {
@@ -632,13 +641,10 @@ public class GruposFrame extends JFrame {
                 continue;
             }
 
-            int golosA = golos[0];
-            int golosB = golos[1];
-
             if (equipaA) {
-                aplicarResultado(estatistica, golosA, golosB);
+                aplicarResultado(estatistica, golos[0], golos[1]);
             } else {
-                aplicarResultado(estatistica, golosB, golosA);
+                aplicarResultado(estatistica, golos[1], golos[0]);
             }
         }
 
@@ -648,7 +654,6 @@ public class GruposFrame extends JFrame {
     private int[] obterGolosDoResultado(String resultado) {
         try {
             String texto = resultado.trim().replace(" ", "");
-
             String[] partes = texto.split("-");
 
             if (partes.length != 2) {
@@ -669,7 +674,11 @@ public class GruposFrame extends JFrame {
         }
     }
 
-    private void aplicarResultado(EstatisticaEquipa estatistica, int golosMarcados, int golosSofridos) {
+    private void aplicarResultado(
+            EstatisticaEquipa estatistica,
+            int golosMarcados,
+            int golosSofridos
+    ) {
         estatistica.jogos++;
         estatistica.golosMarcados += golosMarcados;
         estatistica.golosSofridos += golosSofridos;
@@ -677,17 +686,14 @@ public class GruposFrame extends JFrame {
         if (golosMarcados > golosSofridos) {
             estatistica.vitorias++;
             estatistica.pontos += 3;
+
         } else if (golosMarcados == golosSofridos) {
             estatistica.empates++;
             estatistica.pontos += 1;
+
         } else {
             estatistica.derrotas++;
         }
-    }
-
-    private void abrirEquipas() {
-        dispose();
-        new EquipasFrame(campeonato);
     }
 
     private void abrirEliminatorias() {
@@ -701,7 +707,8 @@ public class GruposFrame extends JFrame {
             return;
         }
 
-        if (campeonato.getEquipasEliminatorias() == null || campeonato.getEquipasEliminatorias().isEmpty()) {
+        if (campeonato.getEquipasEliminatorias() == null
+                || campeonato.getEquipasEliminatorias().isEmpty()) {
             mostrarErro("Ainda não existem equipas classificadas para as eliminatórias.");
             return;
         }
@@ -719,55 +726,25 @@ public class GruposFrame extends JFrame {
         );
     }
 
-    private JButton criarBotaoAzul(String texto) {
-        JButton botao = new JButton(texto);
-
-        botao.setFocusPainted(false);
-        botao.setBorderPainted(false);
-        botao.setBackground(BLUE);
-        botao.setForeground(Color.WHITE);
-        botao.setFont(new Font("Segoe UI", Font.BOLD, 13));
-        botao.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        botao.setBorder(new EmptyBorder(10, 18, 10, 18));
-
-        return botao;
-    }
-
     private JButton criarBotaoRoxo(String texto) {
-        JButton botao = new JButton(texto);
-
-        botao.setFocusPainted(false);
-        botao.setBorderPainted(false);
-        botao.setBackground(PURPLE);
-        botao.setForeground(Color.WHITE);
-        botao.setFont(new Font("Segoe UI", Font.BOLD, 13));
-        botao.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        botao.setBorder(new EmptyBorder(10, 18, 10, 18));
-
-        return botao;
+        return criarBotao(texto, PURPLE, Color.WHITE);
     }
 
     private JButton criarBotaoVerde(String texto) {
-        JButton botao = new JButton(texto);
-
-        botao.setFocusPainted(false);
-        botao.setBorderPainted(false);
-        botao.setBackground(GREEN);
-        botao.setForeground(Color.WHITE);
-        botao.setFont(new Font("Segoe UI", Font.BOLD, 13));
-        botao.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        botao.setBorder(new EmptyBorder(10, 18, 10, 18));
-
-        return botao;
+        return criarBotao(texto, GREEN, Color.WHITE);
     }
 
     private JButton criarBotaoCinza(String texto) {
+        return criarBotao(texto, new Color(241, 245, 249), TEXT);
+    }
+
+    private JButton criarBotao(String texto, Color fundo, Color corTexto) {
         JButton botao = new JButton(texto);
 
         botao.setFocusPainted(false);
         botao.setBorderPainted(false);
-        botao.setBackground(new Color(241, 245, 249));
-        botao.setForeground(TEXT);
+        botao.setBackground(fundo);
+        botao.setForeground(corTexto);
         botao.setFont(new Font("Segoe UI", Font.BOLD, 13));
         botao.setCursor(new Cursor(Cursor.HAND_CURSOR));
         botao.setBorder(new EmptyBorder(10, 18, 10, 18));

@@ -4,8 +4,8 @@ import Frames.*;
 import Frames.SeccaoEquipas.EquipasFrame;
 import Frames.SeccaoFinancas.FinancasFrame;
 import Frames.SeccaoJogadores.JogadoresFrame;
-import Frames.CampeonatosFrame;
 import Frames.SeccaoJogos.JogosFrame;
+import Frames.seccaoEstadios.EstadiosFrame;
 
 import javax.swing.*;
 import java.awt.*;
@@ -23,7 +23,7 @@ public class MenuLateral extends JPanel {
                 Tema.PADDING_MENU.right
         ));
 
-        JLabel titulo = new JLabel("Models.Campeonato");
+        JLabel titulo = new JLabel("Campeonato");
         titulo.setForeground(Tema.COR_TEXTO_CLARO);
         titulo.setFont(Tema.FONTE_MENU_TITULO);
         titulo.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -32,9 +32,10 @@ public class MenuLateral extends JPanel {
         JButton btnCampeonatos = criarBotaoMenu("Campeonatos");
         JButton btnEquipas = criarBotaoMenu("Equipas");
         JButton btnJogadores = criarBotaoMenu("Jogadores");
+        JButton btnEstadios = criarBotaoMenu("Estádios");
         JButton btnJogos = criarBotaoMenu("Jogos");
-        JButton btnEstatisticas = criarBotaoMenu("Estatisticas");
-        JButton btnFinancas = criarBotaoMenu("Finan\u00E7as");
+        JButton btnEstatisticas = criarBotaoMenu("Estatísticas");
+        JButton btnFinancas = criarBotaoMenu("Finanças");
         JButton btnBilheteria = criarBotaoMenu("Bilheteria");
         JButton btnRegras = criarBotaoMenu("Regras");
 
@@ -58,6 +59,11 @@ public class MenuLateral extends JPanel {
             new JogadoresFrame();
         });
 
+        btnEstadios.addActionListener(e -> {
+            frame.dispose();
+            new EstadiosFrame();
+        });
+
         btnJogos.addActionListener(e -> {
             frame.dispose();
             new JogosFrame();
@@ -73,7 +79,9 @@ public class MenuLateral extends JPanel {
             new FinancasFrame();
         });
 
-        btnBilheteria.addActionListener(e -> abrirPlaceholder(frame, "Bilheteria"));
+        btnBilheteria.addActionListener(e ->
+                abrirPlaceholder(frame, "Bilheteria")
+        );
 
         btnRegras.addActionListener(e -> {
             frame.dispose();
@@ -82,23 +90,34 @@ public class MenuLateral extends JPanel {
 
         add(titulo);
         add(Box.createVerticalStrut(Tema.ESPACAMENTO_GRANDE));
+
         add(btnDashboard);
         add(Box.createVerticalStrut(Tema.ESPACAMENTO_PEQUENO));
+
         add(btnCampeonatos);
         add(Box.createVerticalStrut(Tema.ESPACAMENTO_PEQUENO));
+
         add(btnEquipas);
         add(Box.createVerticalStrut(Tema.ESPACAMENTO_PEQUENO));
+
         add(btnJogadores);
         add(Box.createVerticalStrut(Tema.ESPACAMENTO_PEQUENO));
+
+        add(btnEstadios);
+        add(Box.createVerticalStrut(Tema.ESPACAMENTO_PEQUENO));
+
         add(btnJogos);
         add(Box.createVerticalStrut(Tema.ESPACAMENTO_GRANDE));
+
         add(btnEstatisticas);
         add(Box.createVerticalStrut(Tema.ESPACAMENTO_PEQUENO));
+
         add(btnFinancas);
         add(Box.createVerticalStrut(Tema.ESPACAMENTO_PEQUENO));
-        add(Box.createVerticalStrut(Tema.ESPACAMENTO_PEQUENO));
+
         add(btnBilheteria);
         add(Box.createVerticalStrut(Tema.ESPACAMENTO_PEQUENO));
+
         add(btnRegras);
     }
 
