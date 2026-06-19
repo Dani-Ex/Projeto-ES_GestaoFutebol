@@ -50,8 +50,9 @@ public class EditarJogadorFrame extends JFrame {
 
         setTitle("Editar Jogador - " + jogador.getNome());
         setSize(1250, 760);
+        setMinimumSize(new Dimension(1080, 660));
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
         JPanel fundo = new JPanel(new BorderLayout());
         fundo.setBackground(Tema.COR_FUNDO);
@@ -216,7 +217,7 @@ public class EditarJogadorFrame extends JFrame {
                 Color.WHITE
         );
 
-        cancelar.addActionListener(e -> voltarParaPerfil());
+        cancelar.addActionListener(e -> dispose());
         guardar.addActionListener(e -> guardarAlteracoes());
 
         botoes.add(cancelar);
@@ -375,7 +376,7 @@ public class EditarJogadorFrame extends JFrame {
                     JOptionPane.INFORMATION_MESSAGE
             );
 
-            voltarParaPerfil();
+            dispose();
 
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(
@@ -401,24 +402,6 @@ public class EditarJogadorFrame extends JFrame {
                     JOptionPane.ERROR_MESSAGE
             );
         }
-    }
-
-    private void voltarParaPerfil() {
-        abrirNaMesmaJanela(new PerfilJogadorFrame(jogador, onGuardar));
-    }
-
-    private void abrirNaMesmaJanela(JFrame novoFrame) {
-        Dimension tamanhoAtual = getSize();
-        Point posicaoAtual = getLocation();
-        int estadoAtual = getExtendedState();
-
-        novoFrame.setSize(tamanhoAtual);
-        novoFrame.setMinimumSize(new Dimension(1180, 700));
-        novoFrame.setLocation(posicaoAtual);
-        novoFrame.setExtendedState(estadoAtual);
-
-        dispose();
-        novoFrame.setVisible(true);
     }
 
     private void validarCamposObrigatorios() {

@@ -37,9 +37,10 @@ public class PerfilJogadorFrame extends JFrame {
         this.onEstadoAlterado = onEstadoAlterado;
 
         setTitle("Perfil do Jogador - " + jogador.getNome());
-        setSize(1250, 760);
+        setSize(1680, 1050);
+        setMinimumSize(new Dimension(1080, 660));
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
         JPanel fundo = new JPanel(new BorderLayout());
         fundo.setBackground(BACKGROUND);
@@ -81,7 +82,7 @@ public class PerfilJogadorFrame extends JFrame {
         topo.setOpaque(false);
         topo.setMaximumSize(new Dimension(Integer.MAX_VALUE, 55));
 
-        JPanel voltar = criarBotaoPainel("← Voltar a Jogadores", BLUE, Color.WHITE, this::voltarParaJogadores);
+        JPanel voltar = criarBotaoPainel("← Voltar", BLUE, Color.WHITE, this::voltarParaJogadores);
         JPanel editar = criarBotaoPainel("Editar Jogador", CARD, BLUE, this::editarJogador);
 
         String textoEstado = jogador.isAtivo() ? "Inativar Jogador" : "Ativar Jogador";
@@ -124,7 +125,7 @@ public class PerfilJogadorFrame extends JFrame {
     private JPanel criarCardsPrincipais() {
         JPanel linha = new JPanel(new GridLayout(1, 2, 28, 0));
         linha.setOpaque(false);
-        linha.setMaximumSize(new Dimension(Integer.MAX_VALUE, 260));
+        linha.setMaximumSize(new Dimension(Integer.MAX_VALUE, 285));
 
         linha.add(criarCardPerfil());
         linha.add(criarCardDadosPessoais());
@@ -198,7 +199,7 @@ public class PerfilJogadorFrame extends JFrame {
         titulo.setFont(Tema.FONTE_TITULO);
         titulo.setForeground(TEXT);
 
-        JPanel grid = new JPanel(new GridLayout(3, 3, 25, 18));
+        JPanel grid = new JPanel(new GridLayout(3, 3, 25, 24));
         grid.setOpaque(false);
         grid.setBorder(new EmptyBorder(28, 0, 0, 0));
 
@@ -384,17 +385,25 @@ public class PerfilJogadorFrame extends JFrame {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setOpaque(false);
+        panel.setPreferredSize(new Dimension(150, 48));
+        panel.setMinimumSize(new Dimension(120, 48));
 
         JLabel l = new JLabel(label);
         l.setFont(Tema.FONTE_CARD_TITULO);
         l.setForeground(MUTED);
+        l.setPreferredSize(new Dimension(150, 18));
+        l.setMinimumSize(new Dimension(120, 18));
+        l.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         JLabel v = new JLabel(valor);
         v.setFont(new Font(Tema.FONTE_PADRAO, Font.BOLD, 14));
         v.setForeground(TEXT);
+        v.setPreferredSize(new Dimension(150, 20));
+        v.setMinimumSize(new Dimension(120, 20));
+        v.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         panel.add(l);
-        panel.add(Box.createVerticalStrut(5));
+        panel.add(Box.createVerticalStrut(7));
         panel.add(v);
 
         return panel;
@@ -442,7 +451,7 @@ public class PerfilJogadorFrame extends JFrame {
             onEstadoAlterado.run();
         }
 
-        abrirNaMesmaJanela(new PerfilJogadorFrame(jogador, onEstadoAlterado));
+        atualizarEstadoCard();
     }
 
     private void atualizarEstadoCard() {
@@ -462,25 +471,19 @@ public class PerfilJogadorFrame extends JFrame {
     }
 
     private void editarJogador() {
-        abrirNaMesmaJanela(new EditarJogadorFrame(jogador, onEstadoAlterado));
+        new EditarJogadorFrame(jogador, () -> {
+            setTitle("Perfil do Jogador - " + jogador.getNome());
+            atualizarEstadoCard();
+            repaint();
+
+            if (onEstadoAlterado != null) {
+                onEstadoAlterado.run();
+            }
+        });
     }
 
     private void voltarParaJogadores() {
-        abrirNaMesmaJanela(new JogadoresFrame());
-    }
-
-    private void abrirNaMesmaJanela(JFrame novoFrame) {
-        Dimension tamanhoAtual = getSize();
-        Point posicaoAtual = getLocation();
-        int estadoAtual = getExtendedState();
-
-        novoFrame.setSize(tamanhoAtual);
-        novoFrame.setMinimumSize(new Dimension(1180, 700));
-        novoFrame.setLocation(posicaoAtual);
-        novoFrame.setExtendedState(estadoAtual);
-
         dispose();
-        novoFrame.setVisible(true);
     }
 
     private String obterIniciais(String nome) {

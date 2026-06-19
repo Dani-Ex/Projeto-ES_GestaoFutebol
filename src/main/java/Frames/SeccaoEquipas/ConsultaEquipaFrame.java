@@ -36,7 +36,7 @@ public class ConsultaEquipaFrame extends JFrame {
         );
 
         setTitle("Consulta de Equipa - " + equipa.getNome());
-        setSize(1280, 760);
+        setSize(1680, 1050);
         setMinimumSize(new Dimension(1120, 700));
         setLocationRelativeTo(null);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);

@@ -479,8 +479,7 @@ public class JogadoresFrame extends JFrame {
         Jogador jogador = jogadorSelecionado();
 
         if (jogador != null) {
-            PerfilJogadorFrame perfilFrame = new PerfilJogadorFrame(jogador, this::guardarEAtualizar);
-            abrirNaMesmaJanela(perfilFrame);
+            new PerfilJogadorFrame(jogador, this::guardarEAtualizar);
         }
     }
 
@@ -499,20 +498,6 @@ public class JogadoresFrame extends JFrame {
         jogadorService.guardarJogadores();
         atualizarFiltros();
         atualizarTabela();
-    }
-
-    private void abrirNaMesmaJanela(JFrame novoFrame) {
-        Dimension tamanhoAtual = getSize();
-        Point posicaoAtual = getLocation();
-        int estadoAtual = getExtendedState();
-
-        novoFrame.setSize(tamanhoAtual);
-        novoFrame.setMinimumSize(new Dimension(1180, 700));
-        novoFrame.setLocation(posicaoAtual);
-        novoFrame.setExtendedState(estadoAtual);
-
-        dispose();
-        novoFrame.setVisible(true);
     }
 
     private void limparSelecaoTabelas() {
