@@ -362,7 +362,7 @@ public class EditarJogadorFrame extends JFrame {
 
             jogador.setAtivo("Ativo".equals(campoEstado.getSelectedItem()));
 
-            new JogadorService().guardarJogadores();
+            JogadorService.getInstance().guardarJogadores();
 
             if (onGuardar != null) {
                 onGuardar.run();

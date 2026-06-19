@@ -40,7 +40,7 @@ public class JogadoresFrame extends JFrame {
     private JComboBox<String> filtroEstados;
 
     public JogadoresFrame() {
-        jogadorService = new JogadorService();
+        jogadorService = JogadorService.getInstance();
         jogadoresFiltrados = new ArrayList<>();
 
         setTitle("Jogadores");

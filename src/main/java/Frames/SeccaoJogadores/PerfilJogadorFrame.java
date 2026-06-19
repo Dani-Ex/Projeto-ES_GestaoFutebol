@@ -436,7 +436,7 @@ public class PerfilJogadorFrame extends JFrame {
 
     private void alternarEstado() {
         jogador.alternarEstado();
-        new JogadorService().guardarJogadores();
+        JogadorService.getInstance().guardarJogadores();
 
         if (onEstadoAlterado != null) {
             onEstadoAlterado.run();

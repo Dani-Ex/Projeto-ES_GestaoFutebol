@@ -309,6 +309,6 @@ public class EquipaService {
             resultado.append('\\');
         }
 
-        return resultado.toString();
+        return TextUtils.limparCaracteresInvisiveis(resultado.toString());
     }
 }

@@ -27,7 +27,7 @@ public class JogadorService {
         return INSTANCE;
     }
 
-    public JogadorService() {
+    private JogadorService() {
     }
 
     public List<Jogador> listarJogadores() {
@@ -279,11 +279,7 @@ public class JogadorService {
     }
 
     private static String normalizar(String valor) {
-        if (valor == null) {
-            return "";
-        }
-
-        return valor.trim().toLowerCase();
+        return TextUtils.normalizar(valor);
     }
 
     private static String escapar(String valor) {
@@ -328,6 +324,6 @@ public class JogadorService {
             resultado.append('\\');
         }
 
-        return resultado.toString();
+        return TextUtils.limparCaracteresInvisiveis(resultado.toString());
     }
 }
