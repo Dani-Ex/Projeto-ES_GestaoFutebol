@@ -4,6 +4,7 @@ import Design.MenuLateral;
 import Design.RoundedPanel;
 import Design.TableStyle;
 import Design.Tema;
+import Frames.SeccaoEquipas.ConsultaEquipaFrame;
 import Models.Equipa;
 import Models.EquipaService;
 import Models.Jogo;
@@ -37,6 +38,13 @@ public class DashboardFrame extends JFrame {
 
     private MenuLateral menuLateral;
     private boolean menuAberto = false;
+    private JLabel tituloClassificacao;
+    private JComboBox<String> comboCampeonatoClassificacao;
+    private DefaultTableModel modeloClassificacao;
+    private JTable tabelaClassificacao;
+    private final List<Equipa> equipasClassificacaoVisiveis = new ArrayList<>();
+    private List<String> gruposClassificacao = new ArrayList<>();
+    private int indiceGrupoClassificacao = 0;
 
     public DashboardFrame() {
         setTitle("Dashboard do Campeonato");
@@ -267,50 +275,95 @@ public class DashboardFrame extends JFrame {
         ));
         limparSelecaoAoClicar(card);
 
-        JLabel titulo = new JLabel("Classificacao");
-        titulo.setFont(Tema.FONTE_TITULO);
-        titulo.setForeground(Tema.COR_TEXTO_PRINCIPAL);
+        tituloClassificacao = new JLabel("Classificacao");
+        tituloClassificacao.setFont(Tema.FONTE_TITULO);
+        tituloClassificacao.setForeground(Tema.COR_TEXTO_PRINCIPAL);
 
-        String[] colunas = {"#", "Equipa", "Grupo", "Golos", "Jog.", "Pts"};
-        DefaultTableModel model = criarModeloNaoEditavel(colunas);
+        comboCampeonatoClassificacao = new JComboBox<>(
+                equipaService.listarCampeonatos().toArray(new String[0])
+        );
+        comboCampeonatoClassificacao.setFont(Tema.FONTE_CARD_TITULO);
+        comboCampeonatoClassificacao.setForeground(Tema.COR_TEXTO_PRINCIPAL);
+        comboCampeonatoClassificacao.setBackground(Tema.COR_BOTAO_SECUNDARIO);
+        comboCampeonatoClassificacao.setFocusable(false);
+        comboCampeonatoClassificacao.setPreferredSize(new Dimension(190, 34));
+        comboCampeonatoClassificacao.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        comboCampeonatoClassificacao.addActionListener(e -> selecionarCampeonatoClassificacao());
 
-        List<Equipa> equipas = new ArrayList<>(equipaService.listarEquipas());
-        equipas.sort(Comparator
-                .comparingInt(Equipa::getPontos).reversed()
-                .thenComparing(Comparator.comparingInt(Equipa::getGolos).reversed())
-                .thenComparing(Equipa::getNome));
+        JPanel topo = new JPanel(new BorderLayout());
+        topo.setOpaque(false);
+        topo.setBorder(BorderFactory.createEmptyBorder(0, 0, Tema.ESPACAMENTO_PEQUENO, 0));
+        limparSelecaoAoClicar(topo);
+        topo.add(tituloClassificacao, BorderLayout.WEST);
+        topo.add(comboCampeonatoClassificacao, BorderLayout.EAST);
 
-        int limite = Math.min(4, equipas.size());
-        for (int i = 0; i < limite; i++) {
-            Equipa equipa = equipas.get(i);
-            model.addRow(new Object[]{
-                    String.valueOf(i + 1),
-                    equipa.getNome(),
-                    valorOuTraco(equipa.getGrupo()),
-                    String.valueOf(equipa.getGolos()),
-                    String.valueOf(equipa.getTotalJogadores()),
-                    String.valueOf(equipa.getPontos())
-            });
-        }
+        String[] colunas = {"#", "Equipa", "Golos", "Jog.", "Pts"};
+        modeloClassificacao = criarModeloNaoEditavel(colunas);
 
-        JTable tabela = new JTable(model);
-        configurarTabelaGrupo(tabela);
-        tabelasDashboard.add(tabela);
+        tabelaClassificacao = new JTable(modeloClassificacao);
+        configurarTabelaGrupo(tabelaClassificacao);
+        tabelaClassificacao.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent e) {
+                if (e.getClickCount() == 2) {
+                    abrirEquipaClassificacaoSelecionada();
+                }
+            }
+        });
+        tabelasDashboard.add(tabelaClassificacao);
 
-        tabela.getColumnModel().getColumn(0).setPreferredWidth(35);
-        tabela.getColumnModel().getColumn(1).setPreferredWidth(170);
-        tabela.getColumnModel().getColumn(2).setPreferredWidth(95);
-        tabela.getColumnModel().getColumn(3).setPreferredWidth(55);
-        tabela.getColumnModel().getColumn(4).setPreferredWidth(55);
-        tabela.getColumnModel().getColumn(5).setPreferredWidth(55);
+        tabelaClassificacao.getColumnModel().getColumn(0).setPreferredWidth(35);
+        tabelaClassificacao.getColumnModel().getColumn(1).setPreferredWidth(190);
+        tabelaClassificacao.getColumnModel().getColumn(2).setPreferredWidth(60);
+        tabelaClassificacao.getColumnModel().getColumn(3).setPreferredWidth(55);
+        tabelaClassificacao.getColumnModel().getColumn(4).setPreferredWidth(55);
 
-        JScrollPane scroll = new JScrollPane(tabela);
+        JScrollPane scroll = new JScrollPane(tabelaClassificacao);
         TableStyle.configurarScrollLimpo(scroll, Tema.COR_CARD);
 
-        card.add(titulo, BorderLayout.NORTH);
+        JPanel navegacao = criarNavegacaoGrupos();
+
+        atualizarGruposClassificacao();
+        atualizarClassificacao();
+
+        card.add(topo, BorderLayout.NORTH);
         card.add(scroll, BorderLayout.CENTER);
+        card.add(navegacao, BorderLayout.SOUTH);
 
         return card;
+    }
+
+    private JPanel criarNavegacaoGrupos() {
+        JPanel painel = new JPanel(new FlowLayout(FlowLayout.CENTER, 12, 0));
+        painel.setOpaque(false);
+        painel.setBorder(BorderFactory.createEmptyBorder(Tema.ESPACAMENTO_PEQUENO, 0, 0, 0));
+        limparSelecaoAoClicar(painel);
+
+        JButton btnAnterior = criarBotaoSetaGrupo("<");
+        JButton btnSeguinte = criarBotaoSetaGrupo(">");
+
+        btnAnterior.addActionListener(e -> navegarGrupoClassificacao(-1));
+        btnSeguinte.addActionListener(e -> navegarGrupoClassificacao(1));
+
+        painel.add(btnAnterior);
+        painel.add(btnSeguinte);
+
+        return painel;
+    }
+
+    private JButton criarBotaoSetaGrupo(String texto) {
+        JButton botao = new JButton(texto);
+        botao.setFont(Tema.FONTE_BOTAO_MENU);
+        botao.setFocusPainted(false);
+        botao.setBorderPainted(false);
+        botao.setBackground(Tema.COR_BOTAO_SECUNDARIO);
+        botao.setForeground(Tema.COR_TEXTO_PRINCIPAL);
+        botao.setPreferredSize(new Dimension(52, 30));
+        botao.setMinimumSize(new Dimension(52, 30));
+        botao.setMaximumSize(new Dimension(52, 30));
+        botao.setMargin(new Insets(0, 0, 0, 0));
+        botao.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        return botao;
     }
 
     private JPanel criarSecaoInferior() {
@@ -447,6 +500,145 @@ public class DashboardFrame extends JFrame {
 
         for (int i = 0; i < tabela.getColumnCount(); i++) {
             tabela.getColumnModel().getColumn(i).setCellRenderer(renderer);
+        }
+    }
+
+    private void selecionarCampeonatoClassificacao() {
+        indiceGrupoClassificacao = 0;
+        atualizarGruposClassificacao();
+        atualizarClassificacao();
+    }
+
+    private void navegarGrupoClassificacao(int direcao) {
+        if (gruposClassificacao.isEmpty()) {
+            return;
+        }
+
+        indiceGrupoClassificacao += direcao;
+
+        if (indiceGrupoClassificacao < 0) {
+            indiceGrupoClassificacao = gruposClassificacao.size() - 1;
+        } else if (indiceGrupoClassificacao >= gruposClassificacao.size()) {
+            indiceGrupoClassificacao = 0;
+        }
+
+        atualizarClassificacao();
+    }
+
+    private void atualizarGruposClassificacao() {
+        gruposClassificacao = listarGruposDoCampeonato(getCampeonatoClassificacaoSelecionado());
+
+        if (gruposClassificacao.isEmpty()) {
+            gruposClassificacao.add("Sem grupo");
+        }
+
+        if (indiceGrupoClassificacao >= gruposClassificacao.size()) {
+            indiceGrupoClassificacao = 0;
+        }
+    }
+
+    private void atualizarClassificacao() {
+        if (modeloClassificacao == null) {
+            return;
+        }
+
+        modeloClassificacao.setRowCount(0);
+        equipasClassificacaoVisiveis.clear();
+
+        String campeonato = getCampeonatoClassificacaoSelecionado();
+        String grupo = getGrupoClassificacaoSelecionado();
+
+        tituloClassificacao.setText("Classificacao Grupo " + valorOuTraco(grupo));
+
+        List<Equipa> equipas = listarEquipasClassificacao(campeonato, grupo);
+        equipasClassificacaoVisiveis.addAll(equipas);
+
+        for (int i = 0; i < equipas.size(); i++) {
+            Equipa equipa = equipas.get(i);
+            modeloClassificacao.addRow(new Object[]{
+                    String.valueOf(i + 1),
+                    equipa.getNome(),
+                    String.valueOf(equipa.getGolos()),
+                    String.valueOf(equipa.getTotalJogadores()),
+                    String.valueOf(equipa.getPontos())
+            });
+        }
+    }
+
+    private List<String> listarGruposDoCampeonato(String campeonato) {
+        List<String> grupos = new ArrayList<>();
+
+        for (Equipa equipa : equipaService.listarEquipas()) {
+            if (!textoIgual(equipa.getCampeonato(), campeonato)) {
+                continue;
+            }
+
+            String grupo = valorOuTraco(equipa.getGrupo());
+
+            if (!grupos.contains(grupo)) {
+                grupos.add(grupo);
+            }
+        }
+
+        grupos.sort(String.CASE_INSENSITIVE_ORDER);
+        return grupos;
+    }
+
+    private List<Equipa> listarEquipasClassificacao(String campeonato, String grupo) {
+        List<Equipa> equipas = new ArrayList<>();
+
+        for (Equipa equipa : equipaService.listarEquipas()) {
+            if (textoIgual(equipa.getCampeonato(), campeonato)
+                    && textoIgual(valorOuTraco(equipa.getGrupo()), grupo)) {
+                equipas.add(equipa);
+            }
+        }
+
+        equipas.sort(Comparator
+                .comparingInt(Equipa::getPontos).reversed()
+                .thenComparing(Comparator.comparingInt(Equipa::getGolos).reversed())
+                .thenComparing(Equipa::getNome));
+
+        return equipas;
+    }
+
+    private String getCampeonatoClassificacaoSelecionado() {
+        if (comboCampeonatoClassificacao == null
+                || comboCampeonatoClassificacao.getSelectedItem() == null) {
+            List<String> campeonatos = equipaService.listarCampeonatos();
+            return campeonatos.isEmpty() ? "Campeonato Principal" : campeonatos.get(0);
+        }
+
+        return comboCampeonatoClassificacao.getSelectedItem().toString();
+    }
+
+    private String getGrupoClassificacaoSelecionado() {
+        if (gruposClassificacao.isEmpty()) {
+            return "Sem grupo";
+        }
+
+        return gruposClassificacao.get(indiceGrupoClassificacao);
+    }
+
+    private boolean textoIgual(String valor, String esperado) {
+        return valorOuTraco(valor).equalsIgnoreCase(valorOuTraco(esperado));
+    }
+
+    private void abrirEquipaClassificacaoSelecionada() {
+        if (tabelaClassificacao == null) {
+            return;
+        }
+
+        int linha = tabelaClassificacao.getSelectedRow();
+
+        if (linha < 0) {
+            return;
+        }
+
+        int linhaModelo = tabelaClassificacao.convertRowIndexToModel(linha);
+
+        if (linhaModelo >= 0 && linhaModelo < equipasClassificacaoVisiveis.size()) {
+            new ConsultaEquipaFrame(equipasClassificacaoVisiveis.get(linhaModelo), this::atualizarClassificacao);
         }
     }
 
