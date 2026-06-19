@@ -31,9 +31,10 @@ public class NovoCampeonatoFrame extends JFrame {
 
     public NovoCampeonatoFrame() {
         setTitle("Novo Campeonato");
-        setSize(1250, 780);
+        setSize(1260, 760);
+        setMinimumSize(new Dimension(1080, 660));
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
 
         MenuLateral menuLateral = new MenuLateral(this);
@@ -168,10 +169,7 @@ public class NovoCampeonatoFrame extends JFrame {
         botoes.setOpaque(false);
 
         JButton cancelar = criarBotaoCinza("Cancelar");
-        cancelar.addActionListener(e -> {
-            dispose();
-            new CampeonatosFrame();
-        });
+        cancelar.addActionListener(e -> dispose());
 
         JButton criar = criarBotaoAzul("Criar Campeonato");
         criar.addActionListener(e -> criarCampeonato());

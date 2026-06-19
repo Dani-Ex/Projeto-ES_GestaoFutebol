@@ -27,7 +27,7 @@ public class Equipa {
                   String pais,
                   String treinador,
                   String capitao) {
-        this(nome, cidade, pais, treinador, capitao, "Models.Campeonato Principal", "Sem grupo", 0, true);
+        this(nome, cidade, pais, treinador, capitao, "Campeonato Principal", "Sem grupo", 0, true);
     }
 
     public Equipa(String nome,
@@ -38,7 +38,7 @@ public class Equipa {
                   String grupo,
                   int pontos,
                   boolean ativa) {
-        this(nome, cidade, pais, treinador, capitao, "Models.Campeonato Principal", grupo, pontos, ativa);
+        this(nome, cidade, pais, treinador, capitao, "Campeonato Principal", grupo, pontos, ativa);
     }
 
     public Equipa(String nome,

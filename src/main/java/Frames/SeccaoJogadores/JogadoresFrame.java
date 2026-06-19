@@ -1,8 +1,13 @@
 package Frames.SeccaoJogadores;
 
 import Design.MenuLateral;
+import Design.RoundedButton;
 import Design.RoundedPanel;
+import Design.TableStyle;
+import Design.Tema;
 import Models.Jogador;
+import Models.JogadorService;
+import Models.EquipaService;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -11,118 +16,262 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 public class JogadoresFrame extends JFrame {
 
-    private final Color BACKGROUND = new Color(245, 247, 251);
-    private final Color CARD = Color.WHITE;
-    private final Color TEXT = new Color(15, 23, 42);
-    private final Color MUTED = new Color(100, 116, 139);
-    private final Color BLUE = new Color(37, 99, 235);
-    private final Color RED = new Color(220, 38, 38);
-    private final Color GREEN = new Color(22, 163, 74);
-    private final Color ORANGE_LIGHT = new Color(255, 247, 237);
-    private final Color ORANGE = new Color(234, 88, 12);
+    private static final String TODAS_EQUIPAS = "Todas as Equipas";
+    private static final String TODAS_POSICOES = "Todas as Posições";
+    private static final String TODOS_ESTADOS = "Todos os Estados";
 
-    private final List<Jogador> jogadores;
+    private final JogadorService jogadorService;
+    private final List<Jogador> jogadoresFiltrados;
+
+    private MenuLateral menuLateral;
+    private boolean menuAberto = false;
+
     private JTable tabela;
     private DefaultTableModel modelo;
 
+    private JComboBox<String> filtroEquipas;
+    private JComboBox<String> filtroPosicoes;
+    private JComboBox<String> filtroEstados;
+
     public JogadoresFrame() {
-        jogadores = criarJogadoresDemo();
+        jogadorService = JogadorService.getInstance();
+        jogadoresFiltrados = new ArrayList<>();
 
         setTitle("Jogadores");
-        setSize(1200, 700);
+        setSize(1920, 1080);
+        setMinimumSize(new Dimension(1180, 700));
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
         JPanel main = new JPanel(new BorderLayout());
-        main.setBackground(BACKGROUND);
-        add(main);
+        main.setBackground(Tema.COR_FUNDO);
+        main.setBorder(BorderFactory.createEmptyBorder(
+                Tema.PADDING_JANELA.top,
+                Tema.PADDING_JANELA.left,
+                Tema.PADDING_JANELA.bottom,
+                Tema.PADDING_JANELA.right
+        ));
+        setContentPane(main);
 
-        main.add(new MenuLateral(this), BorderLayout.WEST);
-        main.add(criarConteudo(), BorderLayout.CENTER);
+        limparSelecaoAoClicar(main);
+
+        menuLateral = new MenuLateral(this);
+        menuLateral.setVisible(false);
+
+        main.add(menuLateral, BorderLayout.WEST);
+        main.add(criarConteudo(main), BorderLayout.CENTER);
+
+        atualizarFiltros();
+        atualizarTabela();
 
         setVisible(true);
     }
 
-    private JPanel criarConteudo() {
-        JPanel content = new JPanel(new BorderLayout(0, 24));
+    private JPanel criarConteudo(JPanel main) {
+        JPanel content = new JPanel(new BorderLayout(0, Tema.ESPACAMENTO_GRANDE));
         content.setOpaque(false);
-        content.setBorder(new EmptyBorder(30, 35, 30, 35));
+        content.setBorder(new EmptyBorder(0, 25, 0, 25));
+        limparSelecaoAoClicar(content);
 
+        JPanel cabecalho = new JPanel();
+        cabecalho.setLayout(new BoxLayout(cabecalho, BoxLayout.Y_AXIS));
+        cabecalho.setOpaque(false);
+
+        cabecalho.add(criarTopo(main));
+        cabecalho.add(Box.createVerticalStrut(14));
+        cabecalho.add(criarFiltros());
+
+        content.add(cabecalho, BorderLayout.NORTH);
+
+        JPanel centro = new JPanel(new BorderLayout(Tema.ESPACAMENTO_MEDIO, 0));
+        centro.setOpaque(false);
+        limparSelecaoAoClicar(centro);
+
+        centro.add(criarCardTabela(), BorderLayout.CENTER);
+        centro.add(criarRegraCard(), BorderLayout.EAST);
+
+        content.add(centro, BorderLayout.CENTER);
+
+        return content;
+    }
+
+    private JPanel criarTopo(JPanel main) {
         JPanel topo = new JPanel(new BorderLayout());
         topo.setOpaque(false);
+        topo.setMaximumSize(new Dimension(Integer.MAX_VALUE, 64));
+
+        JButton btnMenu = new JButton("=");
+        btnMenu.setFont(Tema.FONTE_BOTAO_MENU);
+        btnMenu.setFocusPainted(false);
+        btnMenu.setBorderPainted(false);
+        btnMenu.setContentAreaFilled(false);
+        btnMenu.setForeground(Tema.COR_TEXTO_PRINCIPAL);
+        btnMenu.setPreferredSize(new Dimension(50, 45));
+        btnMenu.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+        btnMenu.addActionListener(e -> {
+            menuAberto = !menuAberto;
+            menuLateral.setVisible(menuAberto);
+            main.revalidate();
+            main.repaint();
+        });
 
         JPanel textos = new JPanel();
         textos.setLayout(new BoxLayout(textos, BoxLayout.Y_AXIS));
         textos.setOpaque(false);
 
         JLabel titulo = new JLabel("Jogadores");
-        titulo.setFont(new Font("Segoe UI", Font.BOLD, 30));
-        titulo.setForeground(TEXT);
+        titulo.setFont(Tema.FONTE_TITULO_GRANDE);
+        titulo.setForeground(Tema.COR_TEXTO_PRINCIPAL);
 
         JLabel sub = new JLabel("Consulta, perfil e gestão do estado dos jogadores do campeonato.");
-        sub.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        sub.setForeground(MUTED);
+        sub.setFont(Tema.FONTE_SUBTITULO);
+        sub.setForeground(Tema.COR_TEXTO_SECUNDARIO);
 
         textos.add(titulo);
         textos.add(Box.createVerticalStrut(4));
         textos.add(sub);
 
-        JPanel verPerfil = criarBotaoPainel("Ver Perfil", BLUE, Color.WHITE, this::abrirSelecionado);
-        JPanel alternar = criarBotaoPainel("Ativar / Inativar", RED, Color.WHITE, this::alternarSelecionado);
+        JPanel esquerda = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
+        esquerda.setOpaque(false);
+        esquerda.add(btnMenu);
+        esquerda.add(textos);
 
         JPanel botoes = new JPanel(new FlowLayout(FlowLayout.RIGHT, 12, 0));
         botoes.setOpaque(false);
-        botoes.add(verPerfil);
-        botoes.add(alternar);
 
-        topo.add(textos, BorderLayout.WEST);
+        botoes.add(criarBotaoAcao(
+                "Ver Perfil",
+                Tema.COR_INFO,
+                Tema.COR_TEXTO_CLARO,
+                this::abrirSelecionado
+        ));
+
+        botoes.add(criarBotaoAcao(
+                "Ativar / Inativar",
+                Tema.COR_ERRO,
+                Tema.COR_TEXTO_CLARO,
+                this::alternarSelecionado
+        ));
+
+        topo.add(esquerda, BorderLayout.WEST);
         topo.add(botoes, BorderLayout.EAST);
 
-        JPanel centro = new JPanel(new BorderLayout(20, 0));
-        centro.setOpaque(false);
-        centro.add(criarCardTabela(), BorderLayout.CENTER);
-        centro.add(criarRegraCard(), BorderLayout.EAST);
-
-        content.add(topo, BorderLayout.NORTH);
-        content.add(centro, BorderLayout.CENTER);
-
-        return content;
+        return topo;
     }
 
-    private JPanel criarBotaoPainel(String texto, Color fundo, Color corTexto, Runnable acao) {
-        RoundedPanel botao = new RoundedPanel(8, fundo);
-        botao.setLayout(new BorderLayout());
-        botao.setBorder(new EmptyBorder(10, 18, 10, 18));
-        botao.setCursor(new Cursor(Cursor.HAND_CURSOR));
+    private JPanel criarFiltros() {
+        JPanel painel = new JPanel(new FlowLayout(FlowLayout.LEFT, 12, 0));
+        painel.setOpaque(false);
+        painel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 42));
+        limparSelecaoAoClicar(painel);
 
-        JLabel label = new JLabel(texto, SwingConstants.CENTER);
-        label.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        label.setForeground(corTexto);
+        filtroEquipas = criarComboFiltro();
+        filtroPosicoes = criarComboFiltro();
+        filtroEstados = criarComboFiltro();
 
-        botao.add(label, BorderLayout.CENTER);
+        filtroEquipas.addActionListener(e -> atualizarTabela());
+        filtroPosicoes.addActionListener(e -> atualizarTabela());
+        filtroEstados.addActionListener(e -> atualizarTabela());
 
-        botao.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                if (acao != null) {
-                    acao.run();
-                }
+        painel.add(filtroEquipas);
+        painel.add(filtroPosicoes);
+        painel.add(filtroEstados);
+
+        return painel;
+    }
+
+    private JComboBox<String> criarComboFiltro() {
+        JComboBox<String> combo = new JComboBox<>();
+        combo.setPreferredSize(new Dimension(190, 36));
+        combo.setFont(Tema.FONTE_TEXTO);
+        combo.setForeground(Tema.COR_TEXTO_PRINCIPAL);
+        combo.setBackground(Tema.COR_CARD);
+        combo.setFocusable(false);
+        combo.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        combo.setBorder(BorderFactory.createEmptyBorder(4, 10, 4, 10));
+        return combo;
+    }
+
+    private void atualizarFiltros() {
+        String equipaSelecionada = valorSelecionado(filtroEquipas, TODAS_EQUIPAS);
+        String posicaoSelecionada = valorSelecionado(filtroPosicoes, TODAS_POSICOES);
+        String estadoSelecionado = valorSelecionado(filtroEstados, TODOS_ESTADOS);
+
+        preencherCombo(filtroEquipas, TODAS_EQUIPAS, listarEquipas(), equipaSelecionada);
+        preencherCombo(filtroPosicoes, TODAS_POSICOES, listarPosicoes(), posicaoSelecionada);
+
+        List<String> estados = new ArrayList<>();
+        estados.add("Ativo");
+        estados.add("Inativo");
+
+        preencherCombo(filtroEstados, TODOS_ESTADOS, estados, estadoSelecionado);
+    }
+
+    private void preencherCombo(JComboBox<String> combo,
+                                String primeiroItem,
+                                List<String> opcoes,
+                                String valorSelecionado) {
+        combo.removeAllItems();
+        combo.addItem(primeiroItem);
+
+        for (String opcao : opcoes) {
+            if (opcao != null && !opcao.trim().isEmpty()) {
+                combo.addItem(opcao);
             }
+        }
 
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                botao.setBorder(new EmptyBorder(9, 17, 9, 17));
-            }
+        if (valorSelecionado != null) {
+            combo.setSelectedItem(valorSelecionado);
+        }
 
-            @Override
-            public void mouseExited(MouseEvent e) {
-                botao.setBorder(new EmptyBorder(10, 18, 10, 18));
+        if (combo.getSelectedItem() == null) {
+            combo.setSelectedItem(primeiroItem);
+        }
+    }
+
+    private List<String> listarEquipas() {
+        Set<String> equipas = new LinkedHashSet<>();
+
+        for (Jogador jogador : jogadorService.listarJogadores()) {
+            equipas.add(jogador.getEquipa());
+        }
+
+        return new ArrayList<>(equipas);
+    }
+
+    private List<String> listarPosicoes() {
+        Set<String> posicoes = new LinkedHashSet<>();
+
+        for (Jogador jogador : jogadorService.listarJogadores()) {
+            posicoes.add(jogador.getPosicao());
+        }
+
+        return new ArrayList<>(posicoes);
+    }
+
+    private String valorSelecionado(JComboBox<String> combo, String valorDefault) {
+        if (combo == null || combo.getSelectedItem() == null) {
+            return valorDefault;
+        }
+
+        return String.valueOf(combo.getSelectedItem());
+    }
+
+    private JButton criarBotaoAcao(String texto, Color fundo, Color corTexto, Runnable acao) {
+        RoundedButton botao = new RoundedButton(texto, fundo, corTexto, 12);
+        botao.setPreferredSize(new Dimension(150, 40));
+
+        botao.addActionListener(e -> {
+            if (acao != null) {
+                acao.run();
             }
         });
 
@@ -130,13 +279,20 @@ public class JogadoresFrame extends JFrame {
     }
 
     private JPanel criarCardTabela() {
-        JPanel card = new RoundedPanel(8, CARD);
+        RoundedPanel card = new RoundedPanel(Tema.RAIO_CARD, Tema.COR_CARD);
         card.setLayout(new BorderLayout());
-        card.setBorder(new EmptyBorder(18, 18, 18, 18));
+        card.setBorder(new EmptyBorder(
+                Tema.PADDING_CARD.top,
+                Tema.PADDING_CARD.left,
+                Tema.PADDING_CARD.bottom,
+                Tema.PADDING_CARD.right
+        ));
+
+        limparSelecaoAoClicar(card);
 
         JLabel titulo = new JLabel("Lista de Jogadores");
-        titulo.setFont(new Font("Segoe UI", Font.BOLD, 17));
-        titulo.setForeground(TEXT);
+        titulo.setFont(Tema.FONTE_TITULO);
+        titulo.setForeground(Tema.COR_TEXTO_PRINCIPAL);
 
         String[] colunas = {
                 "Nome", "Equipa", "Posição", "Nº", "Idade",
@@ -151,16 +307,44 @@ public class JogadoresFrame extends JFrame {
         };
 
         tabela = new JTable(modelo);
-        tabela.setRowHeight(36);
-        tabela.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-        tabela.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 12));
-        tabela.getTableHeader().setForeground(MUTED);
-        tabela.setSelectionBackground(new Color(219, 234, 254));
-        tabela.setSelectionForeground(TEXT);
-        tabela.setGridColor(new Color(226, 232, 240));
-        tabela.setShowVerticalLines(false);
+        TableStyle.aplicarTabelaLimpa(tabela, 0);
+        tabela.setRowHeight(38);
+        tabela.setAutoCreateRowSorter(true);
 
-        DefaultTableCellRenderer estadoRenderer = new DefaultTableCellRenderer() {
+        tabela.getColumnModel().getColumn(1).setCellRenderer(TableStyle.rendererEsquerda());
+        tabela.getColumnModel().getColumn(8).setCellRenderer(criarRendererEstado());
+
+        tabela.getColumnModel().getColumn(0).setPreferredWidth(180);
+        tabela.getColumnModel().getColumn(1).setPreferredWidth(140);
+        tabela.getColumnModel().getColumn(2).setPreferredWidth(110);
+        tabela.getColumnModel().getColumn(3).setPreferredWidth(45);
+        tabela.getColumnModel().getColumn(4).setPreferredWidth(55);
+        tabela.getColumnModel().getColumn(8).setPreferredWidth(90);
+
+        tabela.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int linha = tabela.rowAtPoint(e.getPoint());
+
+                if (e.getClickCount() == 2 && linha != -1) {
+                    tabela.setRowSelectionInterval(linha, linha);
+                    abrirSelecionado();
+                }
+            }
+        });
+
+        JScrollPane scroll = new JScrollPane(tabela);
+        TableStyle.configurarScrollLimpo(scroll, Tema.COR_CARD);
+        scroll.setBorder(BorderFactory.createEmptyBorder(16, 0, 0, 0));
+
+        card.add(titulo, BorderLayout.NORTH);
+        card.add(scroll, BorderLayout.CENTER);
+
+        return card;
+    }
+
+    private DefaultTableCellRenderer criarRendererEstado() {
+        return new DefaultTableCellRenderer() {
             @Override
             public Component getTableCellRendererComponent(
                     JTable table,
@@ -175,65 +359,54 @@ public class JogadoresFrame extends JFrame {
                 );
 
                 label.setHorizontalAlignment(SwingConstants.CENTER);
-                label.setFont(new Font("Segoe UI", Font.BOLD, 12));
+                label.setVerticalAlignment(SwingConstants.CENTER);
+                label.setFont(Tema.FONTE_CARD_TITULO);
+                label.setBorder(new EmptyBorder(0, 8, 0, 8));
+                label.setOpaque(true);
 
-                if (!isSelected) {
+                if (isSelected) {
+                    label.setBackground(Tema.COR_SELECAO_NEUTRA);
+                    label.setForeground(Tema.COR_TEXTO_PRINCIPAL);
+                } else {
+                    label.setBackground(Tema.COR_CARD);
+
                     if ("Ativo".equals(String.valueOf(value))) {
-                        label.setForeground(GREEN);
+                        label.setForeground(Tema.COR_SUCESSO);
                     } else {
-                        label.setForeground(RED);
+                        label.setForeground(Tema.COR_ERRO);
                     }
                 }
 
                 return label;
             }
         };
-
-        tabela.getColumnModel().getColumn(8).setCellRenderer(estadoRenderer);
-
-        tabela.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                if (e.getClickCount() == 2) {
-                    abrirSelecionado();
-                }
-            }
-        });
-
-        atualizarTabela();
-
-        JScrollPane scroll = new JScrollPane(tabela);
-        scroll.getViewport().setBackground(Color.WHITE);
-        scroll.setBorder(BorderFactory.createEmptyBorder(16, 0, 0, 0));
-
-        card.add(titulo, BorderLayout.NORTH);
-        card.add(scroll, BorderLayout.CENTER);
-
-        return card;
     }
 
     private JPanel criarRegraCard() {
-        RoundedPanel side = new RoundedPanel(8, ORANGE_LIGHT);
-        side.setPreferredSize(new Dimension(270, 0));
+        RoundedPanel side = new RoundedPanel(Tema.RAIO_CARD, Tema.CARD_AMARELO);
+        side.setPreferredSize(new Dimension(285, 0));
         side.setLayout(new BorderLayout());
-        side.setBorder(new EmptyBorder(22, 22, 22, 22));
+        side.setBorder(new EmptyBorder(24, 24, 24, 24));
+
+        limparSelecaoAoClicar(side);
 
         JLabel titulo = new JLabel("Regra dos jogadores");
-        titulo.setFont(new Font("Segoe UI", Font.BOLD, 18));
-        titulo.setForeground(ORANGE);
+        titulo.setFont(new Font(Tema.FONTE_PADRAO, Font.BOLD, 18));
+        titulo.setForeground(Tema.CARD_TEXTO_LARANJA);
 
         JTextArea texto = new JTextArea(
-                "Depois do campeonato iniciar, o jogador não deve ser removido.\n\n" +
-                        "Usa o botão de estado para inativar ou ativar o jogador sem apagar o registo.\n\n" +
-                        "Duplo clique numa linha abre o perfil completo."
+                "Os jogadores são carregados do ficheiro data/jogadores.tsv.\n\n" +
+                        "Usa os filtros para listar por equipa, posição ou estado.\n\n" +
+                        "Ao editar, ativar ou inativar, os dados ficam guardados."
         );
 
         texto.setLineWrap(true);
         texto.setWrapStyleWord(true);
         texto.setEditable(false);
+        texto.setFocusable(false);
         texto.setOpaque(false);
-        texto.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        texto.setForeground(TEXT);
+        texto.setFont(Tema.FONTE_TEXTO);
+        texto.setForeground(Tema.COR_TEXTO_PRINCIPAL);
 
         side.add(titulo, BorderLayout.NORTH);
         side.add(texto, BorderLayout.CENTER);
@@ -242,9 +415,35 @@ public class JogadoresFrame extends JFrame {
     }
 
     private void atualizarTabela() {
-        modelo.setRowCount(0);
+        if (modelo == null) {
+            return;
+        }
 
-        for (Jogador j : jogadores) {
+        modelo.setRowCount(0);
+        jogadoresFiltrados.clear();
+
+        String equipaSelecionada = valorSelecionado(filtroEquipas, TODAS_EQUIPAS);
+        String posicaoSelecionada = valorSelecionado(filtroPosicoes, TODAS_POSICOES);
+        String estadoSelecionado = valorSelecionado(filtroEstados, TODOS_ESTADOS);
+
+        for (Jogador j : jogadorService.listarJogadores()) {
+            if (!TODAS_EQUIPAS.equals(equipaSelecionada)
+                    && !equipaSelecionada.equals(j.getEquipa())) {
+                continue;
+            }
+
+            if (!TODAS_POSICOES.equals(posicaoSelecionada)
+                    && !posicaoSelecionada.equals(j.getPosicao())) {
+                continue;
+            }
+
+            if (!TODOS_ESTADOS.equals(estadoSelecionado)
+                    && !estadoSelecionado.equals(j.getEstadoTexto())) {
+                continue;
+            }
+
+            jogadoresFiltrados.add(j);
+
             modelo.addRow(new Object[]{
                     j.getNome(),
                     j.getEquipa(),
@@ -268,14 +467,20 @@ public class JogadoresFrame extends JFrame {
         }
 
         int linhaModelo = tabela.convertRowIndexToModel(linha);
-        return jogadores.get(linhaModelo);
+
+        if (linhaModelo < 0 || linhaModelo >= jogadoresFiltrados.size()) {
+            JOptionPane.showMessageDialog(this, "Não foi possível encontrar o jogador selecionado.");
+            return null;
+        }
+
+        return jogadoresFiltrados.get(linhaModelo);
     }
 
     private void abrirSelecionado() {
         Jogador jogador = jogadorSelecionado();
 
         if (jogador != null) {
-            new PerfilJogadorFrame(jogador, this::atualizarTabela);
+            new PerfilJogadorFrame(jogador, this::guardarEAtualizar);
         }
     }
 
@@ -287,132 +492,28 @@ public class JogadoresFrame extends JFrame {
         }
 
         jogador.alternarEstado();
+        guardarEAtualizar();
+    }
+
+    private void guardarEAtualizar() {
+        jogadorService.guardarJogadores();
+        EquipaService.getInstance().sincronizarEstatisticasComJogadores();
+        atualizarFiltros();
         atualizarTabela();
     }
 
-    private List<Jogador> criarJogadoresDemo() {
-        List<Jogador> lista = new ArrayList<>();
+    private void limparSelecaoTabelas() {
+        if (tabela != null) {
+            tabela.clearSelection();
+        }
+    }
 
-        lista.add(new Jogador(
-                "Cristiano Ronaldo",
-                7,
-                "Avançado",
-                83,
-                1.87,
-                "Direito",
-                LocalDate.of(1985, 2, 5),
-                "Portugal",
-                "Funchal, Madeira",
-                "Portugal",
-                "Grupo A",
-                "Top marcador",
-                8,
-                8,
-                2,
-                1,
-                720,
-                86,
-                74,
-                92,
-                true
-        ));
-
-        lista.add(new Jogador(
-                "Pedro Lima",
-                4,
-                "Defesa",
-                83,
-                1.88,
-                "Direito",
-                LocalDate.of(2000, 1, 20),
-                "Brasil",
-                "São Paulo",
-                "Leiria FC",
-                "Grupo A",
-                "Mais cartões",
-                2,
-                1,
-                1,
-                3,
-                650,
-                52,
-                53,
-                61,
-                true
-        ));
-
-        lista.add(new Jogador(
-                "Rafa Silva",
-                27,
-                "Avançado",
-                66,
-                1.72,
-                "Direito",
-                LocalDate.of(1993, 5, 17),
-                "Portugal",
-                "Vila Franca de Xira",
-                "Benfica",
-                "Grupo B",
-                "Mais assistências",
-                7,
-                8,
-                4,
-                1,
-                610,
-                81,
-                88,
-                79,
-                true
-        ));
-
-        lista.add(new Jogador(
-                "Otávio Monteiro",
-                25,
-                "Médio",
-                65,
-                1.72,
-                "Direito",
-                LocalDate.of(1995, 2, 9),
-                "Portugal",
-                "João Pessoa",
-                "FC Porto",
-                "Grupo C",
-                "Criador de jogo",
-                8,
-                4,
-                7,
-                1,
-                690,
-                69,
-                91,
-                85,
-                true
-        ));
-
-        lista.add(new Jogador(
-                "Bruno Lourenço",
-                12,
-                "Guarda-Redes",
-                85,
-                1.90,
-                "Direito",
-                LocalDate.of(1998, 3, 21),
-                "Portugal",
-                "Porto",
-                "Boavista",
-                "Grupo D",
-                "Suplente",
-                2,
-                0,
-                0,
-                1,
-                180,
-                35,
-                50,
-                76,
-                false
-        ));
-
-        return lista;
+    private void limparSelecaoAoClicar(JComponent componente) {
+        componente.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                limparSelecaoTabelas();
+            }
+        });
     }
 }

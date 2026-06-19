@@ -30,7 +30,7 @@ public class JogosFrame extends JFrame {
 
     public JogosFrame() {
         setTitle("Jogos");
-        setSize(1250, 780);
+        setSize(1920, 1080);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
@@ -51,8 +51,10 @@ public class JogosFrame extends JFrame {
         pagina.setBackground(BG);
         pagina.setBorder(new EmptyBorder(22, 24, 22, 24));
 
-        JButton botaoMenu = criarBotaoMenu(menuLateral);
-        pagina.add(botaoMenu, BorderLayout.NORTH);
+        JPanel barraSuperior = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        barraSuperior.setOpaque(false);
+        barraSuperior.add(criarBotaoMenu(menuLateral));
+        pagina.add(barraSuperior, BorderLayout.NORTH);
 
         JPanel centro = new JPanel();
         centro.setOpaque(false);
@@ -321,7 +323,7 @@ public class JogosFrame extends JFrame {
             return dataTexto;
         }
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM", new Locale("pt", "PT"));
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM", Locale.forLanguageTag("pt-PT"));
 
         String texto = data.format(formatter);
 
@@ -333,7 +335,7 @@ public class JogosFrame extends JFrame {
     }
 
     private JButton criarBotaoMenu(JPanel menuLateral) {
-        JButton botaoMenu = new JButton("☰");
+        JButton botaoMenu = new JButton("=");
 
         botaoMenu.setFocusPainted(false);
         botaoMenu.setBorderPainted(false);

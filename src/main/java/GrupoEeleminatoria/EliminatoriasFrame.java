@@ -17,8 +17,6 @@ public class EliminatoriasFrame extends JFrame {
                     "Erro",
                     JOptionPane.ERROR_MESSAGE
             );
-
-            new GruposFrame(campeonato);
             return;
         }
 
@@ -29,15 +27,13 @@ public class EliminatoriasFrame extends JFrame {
                     "Erro",
                     JOptionPane.ERROR_MESSAGE
             );
-
-            new GruposFrame(campeonato);
             return;
         }
 
         setTitle("Eliminatórias - " + campeonato.getNome());
         setSize(1250, 780);
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
 
         MenuLateral menuLateral = new MenuLateral(this);
@@ -53,7 +49,6 @@ public class EliminatoriasFrame extends JFrame {
                 pagina -> {
                     if (pagina.equals("grupos")) {
                         dispose();
-                        new GruposFrame(campeonato);
                     }
                 }
         );

@@ -12,14 +12,17 @@ import java.util.List;
 public class EquipaService {
 
     private static final Path FICHEIRO_EQUIPAS = Paths.get("data", "equipas.tsv");
-    private static final List<Equipa> equipas = new ArrayList<>();
     private static final EquipaService INSTANCE = new EquipaService();
-
-    static {
-        carregarEquipas();
-    }
+    private final Path ficheiroEquipas;
+    private final List<Equipa> equipas = new ArrayList<>();
 
     private EquipaService() {
+        this(FICHEIRO_EQUIPAS);
+    }
+
+    EquipaService(Path ficheiroEquipas) {
+        this.ficheiroEquipas = ficheiroEquipas;
+        carregarEquipas();
     }
 
     public static EquipaService getInstance() {
@@ -28,6 +31,11 @@ public class EquipaService {
 
     public List<Equipa> listarEquipas() {
         return Collections.unmodifiableList(equipas);
+    }
+
+    public void sincronizarEstatisticasComJogadores() {
+        atualizarEstatisticasComJogadores();
+        guardarEquipas();
     }
 
     public List<String> listarCampeonatos() {
@@ -44,7 +52,7 @@ public class EquipaService {
         }
 
         if (campeonatos.isEmpty()) {
-            campeonatos.add("Models.Campeonato Principal");
+            campeonatos.add("Campeonato Principal");
         }
 
         return campeonatos;
@@ -158,16 +166,16 @@ public class EquipaService {
         return TextUtils.normalizar(valor);
     }
 
-    private static void carregarEquipas() {
-        if (Files.exists(FICHEIRO_EQUIPAS)) {
+    private void carregarEquipas() {
+        if (Files.exists(ficheiroEquipas)) {
             carregarEquipasGuardadas();
-            sincronizarEstatisticasComJogadores();
+            atualizarEstatisticasComJogadores();
         }
     }
 
-    private static void carregarEquipasGuardadas() {
+    private void carregarEquipasGuardadas() {
         try {
-            for (String linha : Files.readAllLines(FICHEIRO_EQUIPAS, StandardCharsets.UTF_8)) {
+            for (String linha : Files.readAllLines(ficheiroEquipas, StandardCharsets.UTF_8)) {
                 if (linha.trim().isEmpty()) {
                     continue;
                 }
@@ -210,9 +218,9 @@ public class EquipaService {
         }
     }
 
-    private static void guardarEquipas() {
+    private void guardarEquipas() {
         try {
-            Files.createDirectories(FICHEIRO_EQUIPAS.getParent());
+            Files.createDirectories(ficheiroEquipas.getParent());
 
             List<String> linhas = new ArrayList<>();
 
@@ -235,7 +243,7 @@ public class EquipaService {
                 ));
             }
 
-            Files.write(FICHEIRO_EQUIPAS, linhas, StandardCharsets.UTF_8);
+            Files.write(ficheiroEquipas, linhas, StandardCharsets.UTF_8);
         } catch (IOException e) {
             throw new IllegalStateException("Não foi possível guardar os dados das equipas.");
         }
@@ -249,7 +257,7 @@ public class EquipaService {
         }
     }
 
-    private static void sincronizarEstatisticasComJogadores() {
+    private void atualizarEstatisticasComJogadores() {
         JogadorService jogadorService = JogadorService.getInstance();
 
         for (Equipa equipa : equipas) {
@@ -309,6 +317,6 @@ public class EquipaService {
             resultado.append('\\');
         }
 
-        return resultado.toString();
+        return TextUtils.limparCaracteresInvisiveis(resultado.toString());
     }
 }

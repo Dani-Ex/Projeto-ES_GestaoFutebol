@@ -7,6 +7,7 @@ import Design.TableStyle;
 import Design.Tema;
 import Frames.SeccaoJogadores.PerfilJogadorFrame;
 import Models.Equipa;
+import Models.EquipaService;
 import Models.Jogador;
 import Models.JogadorService;
 
@@ -16,12 +17,13 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.List;
 
 public class ConsultaEquipaFrame extends JFrame {
 
     private final Equipa equipa;
-    private final java.util.List<Jogador> jogadoresEquipa;
     private final Runnable onEquipaAtualizada;
+    private List<Jogador> jogadoresEquipa;
 
     public ConsultaEquipaFrame(Equipa equipa) {
         this(equipa, null);
@@ -30,17 +32,26 @@ public class ConsultaEquipaFrame extends JFrame {
     public ConsultaEquipaFrame(Equipa equipa, Runnable onEquipaAtualizada) {
         this.equipa = equipa;
         this.onEquipaAtualizada = onEquipaAtualizada;
-        this.jogadoresEquipa = JogadorService.getInstance().listarPorEquipa(
-                equipa.getNome(),
-                equipa.getCampeonato()
-        );
+        carregarJogadoresEquipa();
 
         setTitle("Consulta de Equipa - " + equipa.getNome());
-        setSize(1280, 760);
+        setSize(1680, 1050);
         setMinimumSize(new Dimension(1120, 700));
         setLocationRelativeTo(null);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
+        setContentPane(criarFundo());
+        setVisible(true);
+    }
+
+    private void carregarJogadoresEquipa() {
+        jogadoresEquipa = JogadorService.getInstance().listarPorEquipa(
+                equipa.getNome(),
+                equipa.getCampeonato()
+        );
+    }
+
+    private JPanel criarFundo() {
         JPanel fundo = new JPanel(new BorderLayout());
         fundo.setBackground(Tema.COR_FUNDO);
 
@@ -52,8 +63,15 @@ public class ConsultaEquipaFrame extends JFrame {
 
         fundo.add(scroll, BorderLayout.CENTER);
 
-        setContentPane(fundo);
-        setVisible(true);
+        return fundo;
+    }
+
+    private void atualizarConteudo() {
+        EquipaService.getInstance().sincronizarEstatisticasComJogadores();
+        carregarJogadoresEquipa();
+        setContentPane(criarFundo());
+        revalidate();
+        repaint();
     }
 
     private JPanel criarConteudo() {
@@ -433,6 +451,7 @@ public class ConsultaEquipaFrame extends JFrame {
 
         new PerfilJogadorFrame(jogador, () -> {
             JogadorService.getInstance().guardarJogadores();
+            atualizarConteudo();
 
             if (onEquipaAtualizada != null) {
                 onEquipaAtualizada.run();

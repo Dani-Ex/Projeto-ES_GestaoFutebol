@@ -13,8 +13,14 @@ public class JogoService {
 
     private static final Path FICHEIRO_JOGOS = Paths.get("data", "jogos.tsv");
     private static final JogoService INSTANCE = new JogoService();
+    private final Path ficheiroJogos;
 
     private JogoService() {
+        this(FICHEIRO_JOGOS);
+    }
+
+    JogoService(Path ficheiroJogos) {
+        this.ficheiroJogos = ficheiroJogos;
     }
 
     public static JogoService getInstance() {
@@ -22,14 +28,14 @@ public class JogoService {
     }
 
     public List<Jogo> listarJogos() {
-        if (!Files.exists(FICHEIRO_JOGOS)) {
+        if (!Files.exists(ficheiroJogos)) {
             return Collections.emptyList();
         }
 
         List<Jogo> jogos = new ArrayList<>();
 
         try {
-            for (String linha : Files.readAllLines(FICHEIRO_JOGOS, StandardCharsets.UTF_8)) {
+            for (String linha : Files.readAllLines(ficheiroJogos, StandardCharsets.UTF_8)) {
                 if (linha.trim().isEmpty()) {
                     continue;
                 }

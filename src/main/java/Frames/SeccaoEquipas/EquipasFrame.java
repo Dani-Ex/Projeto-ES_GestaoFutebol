@@ -46,7 +46,7 @@ public class EquipasFrame extends JFrame {
         setTitle(campeonato == null ? "Equipas" : "Equipas - " + campeonato.getNome());
         setSize(1920, 1080);
         setMinimumSize(new Dimension(1280, 760));
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setDefaultCloseOperation(campeonato == null ? EXIT_ON_CLOSE : DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
 
         JPanel main = new JPanel(new BorderLayout());
@@ -412,6 +412,8 @@ public class EquipasFrame extends JFrame {
         if (modeloEquipas == null) {
             return;
         }
+
+        equipaService.sincronizarEstatisticasComJogadores();
 
         modeloEquipas.setRowCount(0);
         equipasVisiveis.clear();
