@@ -1,5 +1,11 @@
 package Frames;
 
+import Design.MenuLateral;
+import GrupoEeleminatoria.CampeonatoRepositorio;
+import GrupoEeleminatoria.EditarCampeonatoFrame;
+import GrupoEeleminatoria.GruposFrame;
+import GrupoEeleminatoria.NovoCampeonatoFrame;
+import Models.Campeonato;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -7,11 +13,8 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import Design.MenuLateral;
-import Models.Campeonato;
-import GrupoEeleminatoria.GruposFrame;
-import GrupoEeleminatoria.NovoCampeonatoFrame;
-import GrupoEeleminatoria.CampeonatoRepositorio;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 public class CampeonatosFrame extends JFrame {
 
@@ -21,10 +24,13 @@ public class CampeonatosFrame extends JFrame {
     private final Color TEXT = new Color(30, 41, 59);
     private final Color MUTED = new Color(120, 130, 150);
     private final Color BLUE = new Color(37, 99, 235);
+    private final Color GREEN = new Color(22, 163, 74);
+    private final Color ORANGE = new Color(249, 115, 22);
+    private final Color PURPLE = new Color(124, 58, 237);
 
     public CampeonatosFrame() {
         setTitle("Campeonatos");
-        setSize(1920, 1080);
+        setSize(1250, 780);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
@@ -32,10 +38,8 @@ public class CampeonatosFrame extends JFrame {
         MenuLateral menuLateral = new MenuLateral(this);
         menuLateral.setVisible(false);
 
-        JPanel pagina = criarPagina(menuLateral);
-
         add(menuLateral, BorderLayout.WEST);
-        add(pagina, BorderLayout.CENTER);
+        add(criarPagina(menuLateral), BorderLayout.CENTER);
 
         setVisible(true);
     }
@@ -48,7 +52,7 @@ public class CampeonatosFrame extends JFrame {
         JPanel barraSuperior = new JPanel(new BorderLayout());
         barraSuperior.setOpaque(false);
 
-        JButton botaoMenu = new JButton("=");
+        JButton botaoMenu = new JButton("☰");
         botaoMenu.setFocusPainted(false);
         botaoMenu.setBorderPainted(false);
         botaoMenu.setContentAreaFilled(false);
@@ -69,6 +73,24 @@ public class CampeonatosFrame extends JFrame {
         centro.setLayout(new BoxLayout(centro, BoxLayout.Y_AXIS));
         centro.setBorder(new EmptyBorder(10, 90, 20, 90));
 
+        centro.add(criarCabecalho());
+        centro.add(Box.createVerticalStrut(24));
+        centro.add(criarEstatisticas());
+        centro.add(Box.createVerticalStrut(28));
+
+        JPanel conteudo = new JPanel(new BorderLayout(35, 0));
+        conteudo.setOpaque(false);
+        conteudo.setAlignmentX(Component.LEFT_ALIGNMENT);
+        conteudo.add(criarCardListaCampeonatos(), BorderLayout.CENTER);
+        conteudo.add(criarCardRegras(), BorderLayout.EAST);
+
+        centro.add(conteudo);
+        pagina.add(centro, BorderLayout.CENTER);
+
+        return pagina;
+    }
+
+    private JPanel criarCabecalho() {
         JPanel cabecalho = new JPanel(new BorderLayout());
         cabecalho.setOpaque(false);
         cabecalho.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -90,40 +112,58 @@ public class CampeonatosFrame extends JFrame {
         textos.add(Box.createVerticalStrut(4));
         textos.add(subtitulo);
 
+        JPanel botoes = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
+        botoes.setOpaque(false);
+
+        JButton btnEditar = criarBotaoCinza("Editar Campeonato");
+        btnEditar.addActionListener(e -> editarCampeonatoSelecionado());
+
         JButton btnNovo = criarBotaoAzul("+ Novo Campeonato");
-        btnNovo.addActionListener(e -> new NovoCampeonatoFrame());
+        btnNovo.addActionListener(e -> {
+            dispose();
+            new NovoCampeonatoFrame();
+        });
+
+        botoes.add(btnEditar);
+        botoes.add(btnNovo);
 
         cabecalho.add(textos, BorderLayout.WEST);
-        cabecalho.add(btnNovo, BorderLayout.EAST);
+        cabecalho.add(botoes, BorderLayout.EAST);
 
-        centro.add(cabecalho);
-        centro.add(Box.createVerticalStrut(24));
+        return cabecalho;
+    }
+
+    private JPanel criarEstatisticas() {
+        List<Campeonato> campeonatos = CampeonatoRepositorio.listar();
+        int total = campeonatos.size();
+        int emCurso = 0;
+        int finalizados = 0;
+        int equipas = 0;
+
+        for (Campeonato campeonato : campeonatos) {
+            CampeonatoRepositorio.sincronizarEquipasDoTsv(campeonato);
+            equipas += campeonato.getEquipas().size();
+
+            if (campeonato.isIniciado()) {
+                emCurso++;
+            }
+
+            if (campeonato.isFinalizado()) {
+                finalizados++;
+            }
+        }
 
         JPanel estatisticas = new JPanel(new GridLayout(1, 4, 18, 0));
         estatisticas.setOpaque(false);
         estatisticas.setMaximumSize(new Dimension(Integer.MAX_VALUE, 86));
         estatisticas.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        estatisticas.add(criarCartaoEstatistica("Campeonatos Totais", "6", BLUE, new Color(231, 240, 253)));
-        estatisticas.add(criarCartaoEstatistica("A Decorrer", "3", new Color(22, 163, 74), new Color(232, 248, 238)));
-        estatisticas.add(criarCartaoEstatistica("Finalizados", "2", new Color(249, 115, 22), new Color(255, 243, 224)));
-        estatisticas.add(criarCartaoEstatistica("Equipas Participantes", "24", new Color(124, 58, 237), new Color(242, 235, 255)));
+        estatisticas.add(criarCartaoEstatistica("Campeonatos Totais", String.valueOf(total), BLUE, new Color(231, 240, 253)));
+        estatisticas.add(criarCartaoEstatistica("A Decorrer", String.valueOf(emCurso), GREEN, new Color(232, 248, 238)));
+        estatisticas.add(criarCartaoEstatistica("Finalizados", String.valueOf(finalizados), ORANGE, new Color(255, 243, 224)));
+        estatisticas.add(criarCartaoEstatistica("Equipas Participantes", String.valueOf(equipas), PURPLE, new Color(242, 235, 255)));
 
-        centro.add(estatisticas);
-        centro.add(Box.createVerticalStrut(28));
-
-        JPanel conteudo = new JPanel(new BorderLayout(35, 0));
-        conteudo.setOpaque(false);
-        conteudo.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-        conteudo.add(criarCardListaCampeonatos(), BorderLayout.CENTER);
-        conteudo.add(criarCardRegras(), BorderLayout.EAST);
-
-        centro.add(conteudo);
-
-        pagina.add(centro, BorderLayout.CENTER);
-
-        return pagina;
+        return estatisticas;
     }
 
     private JPanel criarCardListaCampeonatos() {
@@ -137,13 +177,7 @@ public class CampeonatosFrame extends JFrame {
         titulo.setForeground(TEXT);
 
         String[] colunas = {
-                "Campeonato",
-                "Início",
-                "Fim",
-                "Equipas",
-                "Grupos",
-                "Fase",
-                "Estado"
+                "Campeonato", "Início", "Fim", "Equipas", "Grupos", "Fase", "Estado"
         };
 
         DefaultTableModel modelo = new DefaultTableModel(colunas, 0) {
@@ -153,15 +187,19 @@ public class CampeonatosFrame extends JFrame {
             }
         };
 
+        DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd MMM");
+
         for (Campeonato campeonato : CampeonatoRepositorio.listar()) {
+            CampeonatoRepositorio.sincronizarEquipasDoTsv(campeonato);
+
             modelo.addRow(new Object[]{
                     campeonato.getNome(),
-                    "01 Jul",
-                    "22 Jul",
-                    "24",
-                    "4",
-                    campeonato.isGruposGerados() ? "Grupos gerados" : "Por gerar",
-                    campeonato.isFaseGruposTerminada() ? "Fase grupos terminada" : "Planeado"
+                    campeonato.getDataInicioCampeonato().format(formato),
+                    campeonato.getDataFimCampeonato().format(formato),
+                    campeonato.getEquipas().size() + "/" + campeonato.getNumeroEquipasNecessarias(),
+                    campeonato.isGruposGerados() ? campeonato.getGrupos().size() : "-",
+                    obterFase(campeonato),
+                    campeonato.getEstado()
             });
         }
 
@@ -171,23 +209,21 @@ public class CampeonatosFrame extends JFrame {
         tabelaCampeonatos.setForeground(new Color(51, 65, 85));
         tabelaCampeonatos.setGridColor(new Color(226, 232, 240));
         tabelaCampeonatos.setShowVerticalLines(false);
+        tabelaCampeonatos.setSelectionBackground(new Color(226, 232, 240));
+        tabelaCampeonatos.setSelectionForeground(TEXT);
         tabelaCampeonatos.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 12));
         tabelaCampeonatos.getTableHeader().setForeground(new Color(100, 116, 139));
         tabelaCampeonatos.getTableHeader().setBackground(Color.WHITE);
+        tabelaCampeonatos.getTableHeader().setReorderingAllowed(false);
 
         tabelaCampeonatos.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                int linha = tabelaCampeonatos.getSelectedRow();
-
-                if (linha >= 0) {
-                    String nomeCampeonato = tabelaCampeonatos.getValueAt(linha, 0).toString();
-                    Campeonato campeonato = CampeonatoRepositorio.procurarPorNome(nomeCampeonato);
-
-                    if (campeonato != null) {
-                        new GruposFrame(campeonato);
-                    }
+                if (e.getClickCount() != 2) {
+                    return;
                 }
+
+                abrirCampeonatoSelecionado();
             }
         });
 
@@ -197,8 +233,58 @@ public class CampeonatosFrame extends JFrame {
 
         card.add(titulo, BorderLayout.NORTH);
         card.add(scroll, BorderLayout.CENTER);
-
         return card;
+    }
+
+    private String obterFase(Campeonato campeonato) {
+        if (campeonato.isFaseGruposTerminada()) {
+            return "Eliminatórias";
+        }
+
+        if (campeonato.isGruposGerados()) {
+            return "Fase de grupos";
+        }
+
+        return "Configuração";
+    }
+
+    private void abrirCampeonatoSelecionado() {
+        Campeonato campeonato = obterCampeonatoSelecionado();
+
+        if (campeonato == null) {
+            return;
+        }
+
+        dispose();
+        new GruposFrame(campeonato);
+    }
+
+    private void editarCampeonatoSelecionado() {
+        Campeonato campeonato = obterCampeonatoSelecionado();
+
+        if (campeonato == null) {
+            mostrarErro("Seleciona um campeonato na tabela.");
+            return;
+        }
+
+        if (!campeonato.isEmConfiguracao() || campeonato.isGruposGerados()) {
+            mostrarErro("Só podes editar o campeonato antes de iniciar e antes de gerar os grupos.");
+            return;
+        }
+
+        dispose();
+        new EditarCampeonatoFrame(campeonato);
+    }
+
+    private Campeonato obterCampeonatoSelecionado() {
+        int linha = tabelaCampeonatos.getSelectedRow();
+
+        if (linha < 0) {
+            return null;
+        }
+
+        String nome = tabelaCampeonatos.getValueAt(linha, 0).toString();
+        return CampeonatoRepositorio.procurarPorNome(nome);
     }
 
     private JPanel criarCardRegras() {
@@ -222,15 +308,12 @@ public class CampeonatosFrame extends JFrame {
 
                 • 1.º e 2.º lugar passam à fase mata-mata
 
-                • Grupos devem ter número par de equipas
+                • O número de equipas deve ser múltiplo de 4
 
-                • Cada equipa deve ter 23 jogadores
+                • A edição fica bloqueada após iniciar o campeonato
                 """);
 
-        texto.setFont(new Font("Segoe UI", Font.BOLD, 16));
-
         card.add(texto, BorderLayout.CENTER);
-
         return card;
     }
 
@@ -250,26 +333,34 @@ public class CampeonatosFrame extends JFrame {
         card.add(labelTitulo);
         card.add(Box.createVerticalStrut(8));
         card.add(labelValor);
-
         return card;
     }
 
-    private JButton criarBotaoAzul(String texto) {
-        JButton botao = new JButton(texto);
+    private void mostrarErro(String mensagem) {
+        JOptionPane.showMessageDialog(this, mensagem, "Erro", JOptionPane.ERROR_MESSAGE);
+    }
 
+    private JButton criarBotaoAzul(String texto) {
+        return criarBotao(texto, BLUE, Color.WHITE);
+    }
+
+    private JButton criarBotaoCinza(String texto) {
+        return criarBotao(texto, new Color(241, 245, 249), TEXT);
+    }
+
+    private JButton criarBotao(String texto, Color fundo, Color corTexto) {
+        JButton botao = new JButton(texto);
         botao.setFocusPainted(false);
         botao.setBorderPainted(false);
-        botao.setBackground(BLUE);
-        botao.setForeground(Color.WHITE);
+        botao.setBackground(fundo);
+        botao.setForeground(corTexto);
         botao.setFont(new Font("Segoe UI", Font.BOLD, 13));
         botao.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        botao.setBorder(new EmptyBorder(11, 20, 11, 20));
-
+        botao.setBorder(new EmptyBorder(11, 18, 11, 18));
         return botao;
     }
 
     static class PainelArredondado extends JPanel {
-
         private final int raio;
         private final Color corFundo;
 
@@ -282,17 +373,12 @@ public class CampeonatosFrame extends JFrame {
         @Override
         protected void paintComponent(Graphics g) {
             Graphics2D desenho = (Graphics2D) g.create();
-
             desenho.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
             desenho.setColor(new Color(0, 0, 0, 18));
             desenho.fillRoundRect(4, 6, getWidth() - 8, getHeight() - 8, raio, raio);
-
             desenho.setColor(corFundo);
             desenho.fillRoundRect(0, 0, getWidth() - 8, getHeight() - 8, raio, raio);
-
             desenho.dispose();
-
             super.paintComponent(g);
         }
     }

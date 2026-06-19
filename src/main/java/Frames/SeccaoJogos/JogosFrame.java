@@ -30,7 +30,7 @@ public class JogosFrame extends JFrame {
 
     public JogosFrame() {
         setTitle("Jogos");
-        setSize(1920, 1080);
+        setSize(1250, 780);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
@@ -38,10 +38,8 @@ public class JogosFrame extends JFrame {
         MenuLateral menuLateral = new MenuLateral(this);
         menuLateral.setVisible(false);
 
-        JPanel pagina = criarPagina(menuLateral);
-
         add(menuLateral, BorderLayout.WEST);
-        add(pagina, BorderLayout.CENTER);
+        add(criarPagina(menuLateral), BorderLayout.CENTER);
 
         setVisible(true);
     }
@@ -51,37 +49,20 @@ public class JogosFrame extends JFrame {
         pagina.setBackground(BG);
         pagina.setBorder(new EmptyBorder(22, 24, 22, 24));
 
-        JPanel barraSuperior = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
-        barraSuperior.setOpaque(false);
-        barraSuperior.add(criarBotaoMenu(menuLateral));
-        pagina.add(barraSuperior, BorderLayout.NORTH);
+        JButton botaoMenu = criarBotaoMenu(menuLateral);
+        pagina.add(botaoMenu, BorderLayout.NORTH);
 
         JPanel centro = new JPanel();
         centro.setOpaque(false);
         centro.setLayout(new BoxLayout(centro, BoxLayout.Y_AXIS));
         centro.setBorder(new EmptyBorder(15, 60, 20, 60));
 
-        JLabel titulo = new JLabel("Jogos");
-        titulo.setFont(new Font("Segoe UI", Font.BOLD, 30));
-        titulo.setForeground(TEXT);
-        titulo.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-        JLabel subtitulo = new JLabel("Consulta os próximos jogos e os jogos recentes de todos os campeonatos.");
-        subtitulo.setFont(new Font("Segoe UI", Font.PLAIN, 15));
-        subtitulo.setForeground(MUTED);
-        subtitulo.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-        centro.add(titulo);
-        centro.add(Box.createVerticalStrut(4));
-        centro.add(subtitulo);
+        centro.add(criarCabecalho());
         centro.add(Box.createVerticalStrut(22));
-
         centro.add(criarCardsResumo());
         centro.add(Box.createVerticalStrut(22));
-
         centro.add(criarCardProximosJogos());
         centro.add(Box.createVerticalStrut(22));
-
         centro.add(criarCardJogosRecentes());
 
         JScrollPane scroll = new JScrollPane(centro);
@@ -90,10 +71,54 @@ public class JogosFrame extends JFrame {
         scroll.getVerticalScrollBar().setUnitIncrement(16);
 
         pagina.add(scroll, BorderLayout.CENTER);
-
         carregarTabelas();
-
         return pagina;
+    }
+
+    private JPanel criarCabecalho() {
+        JPanel cabecalho = new JPanel(new BorderLayout());
+        cabecalho.setOpaque(false);
+        cabecalho.setAlignmentX(Component.LEFT_ALIGNMENT);
+        cabecalho.setMaximumSize(new Dimension(Integer.MAX_VALUE, 70));
+
+        JPanel textos = new JPanel();
+        textos.setOpaque(false);
+        textos.setLayout(new BoxLayout(textos, BoxLayout.Y_AXIS));
+
+        JLabel titulo = new JLabel("Jogos");
+        titulo.setFont(new Font("Segoe UI", Font.BOLD, 30));
+        titulo.setForeground(TEXT);
+
+        JLabel subtitulo = new JLabel("Consulta e cria jogos para os campeonatos existentes.");
+        subtitulo.setFont(new Font("Segoe UI", Font.PLAIN, 15));
+        subtitulo.setForeground(MUTED);
+
+        textos.add(titulo);
+        textos.add(Box.createVerticalStrut(4));
+        textos.add(subtitulo);
+
+        JButton btnNovoJogo = criarBotaoAzul("+ Criar Jogo");
+        btnNovoJogo.addActionListener(e -> abrirNovoJogo());
+
+        cabecalho.add(textos, BorderLayout.WEST);
+        cabecalho.add(btnNovoJogo, BorderLayout.EAST);
+
+        return cabecalho;
+    }
+
+    private void abrirNovoJogo() {
+        if (CampeonatoRepositorio.listar().isEmpty()) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Ainda não existe nenhum campeonato criado.",
+                    "Erro",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            return;
+        }
+
+        dispose();
+        new NovoJogoFrame();
     }
 
     private JPanel criarCardsResumo() {
@@ -131,33 +156,28 @@ public class JogosFrame extends JFrame {
         card.add(labelTitulo);
         card.add(Box.createVerticalStrut(8));
         card.add(labelValor);
-
         return card;
     }
 
     private JPanel criarCardProximosJogos() {
         JPanel card = criarCardTabela("Próximos Jogos");
-
         tabelaProximos = criarTabela();
+
         JScrollPane scroll = new JScrollPane(tabelaProximos);
         scroll.setBorder(null);
         scroll.getViewport().setBackground(Color.WHITE);
-
         card.add(scroll, BorderLayout.CENTER);
-
         return card;
     }
 
     private JPanel criarCardJogosRecentes() {
         JPanel card = criarCardTabela("Jogos Recentes");
-
         tabelaRecentes = criarTabela();
+
         JScrollPane scroll = new JScrollPane(tabelaRecentes);
         scroll.setBorder(null);
         scroll.getViewport().setBackground(Color.WHITE);
-
         card.add(scroll, BorderLayout.CENTER);
-
         return card;
     }
 
@@ -175,21 +195,13 @@ public class JogosFrame extends JFrame {
         titulo.setBorder(new EmptyBorder(0, 0, 14, 0));
 
         card.add(titulo, BorderLayout.NORTH);
-
         return card;
     }
 
     private JTable criarTabela() {
         String[] colunas = {
-                "Data",
-                "Hora",
-                "Equipa A",
-                "Equipa B",
-                "Estádio",
-                "Fase",
-                "Estado",
-                "Resultado",
-                "Campeonato"
+                "Data", "Hora", "Equipa A", "Equipa B", "Estádio",
+                "Fase", "Estado", "Resultado", "Campeonato"
         };
 
         DefaultTableModel modelo = new DefaultTableModel(colunas, 0) {
@@ -200,7 +212,6 @@ public class JogosFrame extends JFrame {
         };
 
         JTable tabela = new JTable(modelo);
-
         tabela.setRowHeight(32);
         tabela.setFont(new Font("Segoe UI", Font.PLAIN, 13));
         tabela.setForeground(TEXT);
@@ -219,21 +230,15 @@ public class JogosFrame extends JFrame {
 
     private void carregarTabelas() {
         List<Jogo> todosJogos = obterTodosJogos();
-
-        List<Jogo> proximos = obterProximosJogos(todosJogos);
-        List<Jogo> recentes = obterJogosRecentes(todosJogos);
-
-        preencherTabela(tabelaProximos, proximos);
-        preencherTabela(tabelaRecentes, recentes);
+        preencherTabela(tabelaProximos, obterProximosJogos(todosJogos));
+        preencherTabela(tabelaRecentes, obterJogosRecentes(todosJogos));
     }
 
     private List<Jogo> obterTodosJogos() {
         List<Jogo> jogos = new ArrayList<>();
 
         for (Campeonato campeonato : CampeonatoRepositorio.listar()) {
-            if (campeonato.getJogos() != null) {
-                jogos.addAll(campeonato.getJogos());
-            }
+            jogos.addAll(campeonato.getJogos());
         }
 
         return jogos;
@@ -241,22 +246,20 @@ public class JogosFrame extends JFrame {
 
     private List<Jogo> obterProximosJogos(List<Jogo> todosJogos) {
         LocalDate hoje = LocalDate.now();
-
         List<Jogo> proximos = new ArrayList<>();
 
         for (Jogo jogo : todosJogos) {
             LocalDate data = converterData(jogo.getData());
-
-            boolean estaFinalizado = jogo.getEstado() != null
+            boolean finalizado = jogo.getEstado() != null
                     && jogo.getEstado().equalsIgnoreCase("Finalizado");
 
-            if (data != null && !data.isBefore(hoje) && !estaFinalizado) {
+            if (data != null && !data.isBefore(hoje) && !finalizado) {
                 proximos.add(jogo);
             }
         }
 
         proximos.sort(Comparator
-                .comparing((Jogo j) -> converterData(j.getData()))
+                .comparing((Jogo jogo) -> converterData(jogo.getData()))
                 .thenComparing(Jogo::getHora));
 
         return proximos;
@@ -264,22 +267,20 @@ public class JogosFrame extends JFrame {
 
     private List<Jogo> obterJogosRecentes(List<Jogo> todosJogos) {
         LocalDate hoje = LocalDate.now();
-
         List<Jogo> recentes = new ArrayList<>();
 
         for (Jogo jogo : todosJogos) {
             LocalDate data = converterData(jogo.getData());
-
-            boolean estaFinalizado = jogo.getEstado() != null
+            boolean finalizado = jogo.getEstado() != null
                     && jogo.getEstado().equalsIgnoreCase("Finalizado");
 
-            if (data != null && (data.isBefore(hoje) || estaFinalizado)) {
+            if (data != null && (data.isBefore(hoje) || finalizado)) {
                 recentes.add(jogo);
             }
         }
 
         recentes.sort(Comparator
-                .comparing((Jogo j) -> converterData(j.getData()), Comparator.nullsLast(Comparator.reverseOrder()))
+                .comparing((Jogo jogo) -> converterData(jogo.getData()), Comparator.nullsLast(Comparator.reverseOrder()))
                 .thenComparing(Jogo::getHora));
 
         return recentes;
@@ -323,20 +324,12 @@ public class JogosFrame extends JFrame {
             return dataTexto;
         }
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM", Locale.forLanguageTag("pt-PT"));
-
-        String texto = data.format(formatter);
-
-        if (texto.length() > 0) {
-            texto = texto.substring(0, 1).toUpperCase() + texto.substring(1);
-        }
-
-        return texto;
+        String texto = data.format(DateTimeFormatter.ofPattern("dd MMM", new Locale("pt", "PT")));
+        return texto.isEmpty() ? texto : texto.substring(0, 1).toUpperCase() + texto.substring(1);
     }
 
     private JButton criarBotaoMenu(JPanel menuLateral) {
-        JButton botaoMenu = new JButton("=");
-
+        JButton botaoMenu = new JButton("☰");
         botaoMenu.setFocusPainted(false);
         botaoMenu.setBorderPainted(false);
         botaoMenu.setContentAreaFilled(false);
@@ -353,8 +346,19 @@ public class JogosFrame extends JFrame {
         return botaoMenu;
     }
 
-    static class PainelArredondado extends JPanel {
+    private JButton criarBotaoAzul(String texto) {
+        JButton botao = new JButton(texto);
+        botao.setFocusPainted(false);
+        botao.setBorderPainted(false);
+        botao.setBackground(BLUE);
+        botao.setForeground(Color.WHITE);
+        botao.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        botao.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        botao.setBorder(new EmptyBorder(11, 18, 11, 18));
+        return botao;
+    }
 
+    static class PainelArredondado extends JPanel {
         private final int raio;
         private final Color corFundo;
 
@@ -367,20 +371,12 @@ public class JogosFrame extends JFrame {
         @Override
         protected void paintComponent(Graphics g) {
             Graphics2D desenho = (Graphics2D) g.create();
-
-            desenho.setRenderingHint(
-                    RenderingHints.KEY_ANTIALIASING,
-                    RenderingHints.VALUE_ANTIALIAS_ON
-            );
-
+            desenho.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             desenho.setColor(new Color(0, 0, 0, 14));
             desenho.fillRoundRect(4, 6, getWidth() - 8, getHeight() - 8, raio, raio);
-
             desenho.setColor(corFundo);
             desenho.fillRoundRect(0, 0, getWidth() - 8, getHeight() - 8, raio, raio);
-
             desenho.dispose();
-
             super.paintComponent(g);
         }
     }
