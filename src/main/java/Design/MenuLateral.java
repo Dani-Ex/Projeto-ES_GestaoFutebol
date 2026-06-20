@@ -114,11 +114,6 @@ public class MenuLateral extends JPanel {
         add(btnRegras);
     }
 
-    private void abrirPlaceholder(JFrame frame, String titulo) {
-        frame.dispose();
-        new SecaoPlaceholderFrame(titulo);
-    }
-
     private JButton criarBotaoMenu(String texto) {
         JButton btn = new JButton(texto);
 

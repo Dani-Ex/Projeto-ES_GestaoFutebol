@@ -36,7 +36,6 @@ public class BilheteriaService {
 
     private static final Path FICHEIRO_BILHETES = Paths.get("data", "bilhetes.tsv");
     private static final Path FICHEIRO_PRECOS = Paths.get("data", "precos_bilhetes.tsv");
-    private static final Path FICHEIRO_CAPACIDADES_ANTIGO = Paths.get("data", "capacidades_bilhetes.tsv");
     private static final Path FICHEIRO_ESTADIOS = Paths.get("data", "estadios.tsv");
     private static final Path FICHEIRO_RECEITAS = Paths.get("data", "receitas.tsv");
 
@@ -703,27 +702,6 @@ public class BilheteriaService {
                 }
             } catch (IOException e) {
                 throw new IllegalStateException("Não foi possível ler os preços dos bilhetes.", e);
-            }
-        }
-
-        // Migração simples: mantém os jogos já presentes na configuração antiga.
-        if (precos.isEmpty() && Files.exists(FICHEIRO_CAPACIDADES_ANTIGO)) {
-            try {
-                for (String linha : Files.readAllLines(FICHEIRO_CAPACIDADES_ANTIGO, StandardCharsets.UTF_8)) {
-                    if (linha == null || linha.trim().isEmpty()) continue;
-                    String[] campos = linha.split("\\t", -1);
-                    if (campos.length >= 1 && !vazio(campos[0])) {
-                        precos.put(campos[0], new Precos(
-                                PRECO_NORMAL_PADRAO, PRECO_VIP_PADRAO, PRECO_PREMIUM_PADRAO
-                        ));
-                    }
-                }
-            } catch (IOException e) {
-                throw new IllegalStateException("Não foi possível migrar a configuração antiga da bilheteira.", e);
-            }
-
-            if (!precos.isEmpty()) {
-                guardarTodosPrecos(precos);
             }
         }
 
