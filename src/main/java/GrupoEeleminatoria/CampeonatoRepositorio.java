@@ -59,6 +59,10 @@ public class CampeonatoRepositorio {
         List<String> nomes = new ArrayList<>();
 
         for (Campeonato campeonato : campeonatos) {
+            if (campeonato == null) {
+                continue;
+            }
+
             if (campeonato.getNome() != null
                     && !campeonato.getNome().trim().isEmpty()) {
 
@@ -71,18 +75,92 @@ public class CampeonatoRepositorio {
         return nomes;
     }
 
-    public static List<String> listarNomesCampeonatosParaClassificacao() {
+    public static List<String> listarNomesCampeonatosEmPreparacaoComVagas() {
         List<String> nomes = new ArrayList<>();
 
         for (Campeonato campeonato : campeonatos) {
-            if (campeonato.getNome() != null
-                    && !campeonato.getNome().trim().isEmpty()) {
+            if (campeonato == null || !campeonato.isEmConfiguracao()) {
+                continue;
+            }
 
-                nomes.add(campeonato.getNome().trim());
+            sincronizarEquipasDoTsv(campeonato);
+
+            if (campeonato.getEquipas().size() >= campeonato.getNumeroEquipasNecessarias()) {
+                continue;
+            }
+
+            String nome = campeonato.getNome();
+
+            if (nome != null && !nome.trim().isEmpty()) {
+                nomes.add(nome.trim());
             }
         }
 
         nomes.sort(String.CASE_INSENSITIVE_ORDER);
+
+        return nomes;
+    }
+
+    public static boolean campeonatoPodeReceberEquipa(String nomeCampeonato) {
+        Campeonato campeonato = procurarPorNome(nomeCampeonato);
+
+        if (campeonato == null || !campeonato.isEmConfiguracao()) {
+            return false;
+        }
+
+        sincronizarEquipasDoTsv(campeonato);
+        return campeonato.getEquipas().size() < campeonato.getNumeroEquipasNecessarias();
+    }
+
+    public static boolean removerEquipaDoCampeonato(String nomeEquipa, String nomeCampeonato) {
+        Campeonato campeonato = procurarPorNome(nomeCampeonato);
+
+        if (campeonato == null || !campeonato.isEmConfiguracao()) {
+            return false;
+        }
+
+        sincronizarEquipasDoTsv(campeonato);
+
+        String nomeNormalizado = nomeEquipa == null ? "" : nomeEquipa.trim();
+        boolean removida = campeonato.getEquipas().removeIf(
+                equipa -> equipa.equalsIgnoreCase(nomeNormalizado)
+        );
+
+        for (List<String> equipasGrupo : campeonato.getGrupos().values()) {
+            equipasGrupo.removeIf(
+                    equipa -> equipa.equalsIgnoreCase(nomeNormalizado)
+            );
+        }
+
+        return removida;
+    }
+
+    public static List<String> listarNomesCampeonatosIniciados() {
+        List<String> nomes = new ArrayList<>();
+
+        for (Campeonato campeonato : campeonatos) {
+            if (campeonato == null || !campeonato.isIniciado()) {
+                continue;
+            }
+
+            String nome = campeonato.getNome();
+
+            if (nome != null && !nome.trim().isEmpty()) {
+                nomes.add(nome.trim());
+            }
+        }
+
+        nomes.sort(String.CASE_INSENSITIVE_ORDER);
+
+        return nomes;
+    }
+
+    public static List<String> listarNomesCampeonatosParaClassificacao() {
+        List<String> nomes = listarNomesCampeonatosIniciados();
+
+        if (nomes.isEmpty()) {
+            return listarNomesCampeonatosGuardados();
+        }
 
         return nomes;
     }
