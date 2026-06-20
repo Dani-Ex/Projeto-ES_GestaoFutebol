@@ -6,6 +6,8 @@ import Design.TableStyle;
 import Design.Tema;
 import Frames.SeccaoEquipas.ConsultaEquipaFrame;
 import Models.CampeonatoRepositorio;
+import Models.Bilhete;
+import Models.BilheteriaService;
 import Models.Equipa;
 import Models.EquipaService;
 import Models.DashboardLogic;
@@ -25,6 +27,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -35,6 +38,7 @@ public class DashboardFrame extends JFrame {
     private final List<JTable> tabelasDashboard = new ArrayList<>();
     private final List<ReceitaJogo> receitas = new ArrayList<>();
     private final ReceitaService receitaService = ReceitaService.getInstance();
+    private final BilheteriaService bilheteriaService = new BilheteriaService();
     private final JogoService jogoService = JogoService.getInstance();
     private final EquipaService equipaService = EquipaService.getInstance();
 
@@ -762,16 +766,39 @@ public class DashboardFrame extends JFrame {
 
     private ResumoFinanceiro calcularResumoFinanceiro() {
         ResumoFinanceiro resumo = new ResumoFinanceiro();
+        Map<String, ResumoBilheteira> bilheteiraPorJogo = carregarBilheteiraPorJogo();
+        int totalJogosComReceita = 0;
 
-        for (ReceitaJogo receita : receitas) {
-            resumo.totalBilhetes += receita.bilhetes;
-            resumo.totalPatrocinios += receita.patrocinio;
-            resumo.totalLucro += receita.lucro();
+        for (Receita receita : receitaService.listarReceitas()) {
+            ResumoBilheteira bilheteira = bilheteiraPorJogo.get(receita.getIdJogo());
+            int bilhetes = bilheteira == null ? receita.getBilhetes() : bilheteira.bilhetes;
+            double totalBilheteira = bilheteira == null ? receita.getBilheteira() : bilheteira.total;
+
+            resumo.totalBilhetes += bilhetes;
+            resumo.totalPatrocinios += receita.getPatrocinio();
+            resumo.totalLucro += totalBilheteira + receita.getPatrocinio() + receita.getDireitosTv();
+            totalJogosComReceita++;
         }
 
-        resumo.mediaLucroPorJogo = receitas.isEmpty() ? 0 : resumo.totalLucro / receitas.size();
+        resumo.mediaLucroPorJogo = totalJogosComReceita == 0 ? 0 : resumo.totalLucro / totalJogosComReceita;
 
         return resumo;
+    }
+
+    private Map<String, ResumoBilheteira> carregarBilheteiraPorJogo() {
+        Map<String, ResumoBilheteira> resumoPorJogo = new LinkedHashMap<>();
+
+        for (Bilhete bilhete : bilheteriaService.listarBilhetes()) {
+            ResumoBilheteira resumo = resumoPorJogo.computeIfAbsent(
+                    bilhete.getIdJogo(),
+                    idJogo -> new ResumoBilheteira()
+            );
+
+            resumo.bilhetes += bilhete.getQuantidade();
+            resumo.total += bilhete.getTotal();
+        }
+
+        return resumoPorJogo;
     }
 
     private List<Jogo> listarJogosPorEstado(String estado) {
@@ -897,6 +924,11 @@ public class DashboardFrame extends JFrame {
         private double totalPatrocinios;
         private double totalLucro;
         private double mediaLucroPorJogo;
+    }
+
+    private static class ResumoBilheteira {
+        private int bilhetes;
+        private double total;
     }
 
     private enum TipoGraficoLucro {

@@ -7,6 +7,8 @@ import Design.RoundedPanel;
 import Design.Tema;
 import Models.Jogo;
 import Models.JogoService;
+import Models.Bilhete;
+import Models.BilheteriaService;
 import Models.Receita;
 import Models.ReceitaService;
 
@@ -20,6 +22,7 @@ public class EditarReceitaFrame extends JFrame {
     private final Runnable onReceitaAlterada;
     private final JogoService jogoService = JogoService.getInstance();
     private final ReceitaService receitaService = ReceitaService.getInstance();
+    private final BilheteriaService bilheteriaService = new BilheteriaService();
 
     private PlaceholderTextField campoJogo;
     private PlaceholderTextField campoCampeonato;
@@ -129,8 +132,8 @@ public class EditarReceitaFrame extends JFrame {
         campoJogo = criarCampoBloqueado();
         campoCampeonato = criarCampoBloqueado();
         campoDia = criarCampoBloqueado();
-        campoBilhetes = criarCampo("Ex: 41532");
-        campoBilheteira = criarCampo("Ex: 120000");
+        campoBilhetes = criarCampoBloqueado();
+        campoBilheteira = criarCampoBloqueado();
         campoPatrocinio = criarCampo("Ex: 50000");
         campoDireitosTv = criarCampo("Ex: 80000");
 
@@ -236,23 +239,60 @@ public class EditarReceitaFrame extends JFrame {
             return;
         }
 
-        Jogo jogo = jogoService.procurarPorId(idJogo);
+        Jogo jogo = procurarJogoDaReceita(idJogo);
 
         campoJogo.setText(jogo == null ? idJogo : jogo.getNomeJogo());
         campoCampeonato.setText(jogo == null ? "" : jogo.getCampeonato());
         campoDia.setText(jogo == null ? "" : jogo.getData());
-        campoBilhetes.setText(String.valueOf(receita.getBilhetes()));
-        campoBilheteira.setText(formatarCampo(receita.getBilheteira()));
+
+        ResumoBilheteira bilheteira = carregarResumoBilheteira(idJogo);
+        campoBilhetes.setText(String.valueOf(bilheteira == null ? 0 : bilheteira.bilhetes));
+        campoBilheteira.setText(formatarCampo(bilheteira == null ? 0 : bilheteira.total));
         campoPatrocinio.setText(formatarCampo(receita.getPatrocinio()));
         campoDireitosTv.setText(formatarCampo(receita.getDireitosTv()));
     }
 
+    private ResumoBilheteira carregarResumoBilheteira(String idJogo) {
+        ResumoBilheteira resumo = null;
+
+        for (Bilhete bilhete : bilheteriaService.listarBilhetesDoJogo(idJogo)) {
+            if (resumo == null) {
+                resumo = new ResumoBilheteira();
+            }
+
+            resumo.bilhetes += bilhete.getQuantidade();
+            resumo.total += bilhete.getTotal();
+        }
+
+        return resumo;
+    }
+
+    private Jogo procurarJogoDaReceita(String idJogo) {
+        if (idJogo == null) {
+            return null;
+        }
+
+        String[] partes = idJogo.split("::", 2);
+        if (partes.length == 2) {
+            for (Jogo jogo : jogoService.listarJogos()) {
+                if (jogo.getId().equalsIgnoreCase(partes[0])
+                        && jogo.getCampeonato() != null
+                        && jogo.getCampeonato().equalsIgnoreCase(partes[1])) {
+                    return jogo;
+                }
+            }
+        }
+
+        return jogoService.procurarPorId(idJogo);
+    }
+
     private void guardarAlteracoes() {
         try {
+            ResumoBilheteira bilheteira = carregarResumoBilheteira(idJogo);
             Receita receita = new Receita(
                     idJogo,
-                    lerInteiroPositivo(campoBilhetes.getText(), "Bilhetes vendidos"),
-                    lerValorPositivo(campoBilheteira.getText(), "Bilheteira"),
+                    bilheteira == null ? 0 : bilheteira.bilhetes,
+                    bilheteira == null ? 0 : bilheteira.total,
                     lerValorPositivo(campoPatrocinio.getText(), "Patroc\u00EDnio"),
                     lerValorPositivo(campoDireitosTv.getText(), "Direitos TV")
             );
@@ -313,16 +353,6 @@ public class EditarReceitaFrame extends JFrame {
         }
     }
 
-    private int lerInteiroPositivo(String valor, String campo) {
-        double numero = lerValorPositivo(valor, campo);
-
-        if (numero != Math.rint(numero)) {
-            throw new IllegalArgumentException(campo + " deve ser um n\u00FAmero inteiro.");
-        }
-
-        return (int) numero;
-    }
-
     private double lerValorPositivo(String valor, String campo) {
         String normalizado = valor == null ? "" : valor.trim().replace(".", "").replace(",", ".");
 
@@ -355,5 +385,10 @@ public class EditarReceitaFrame extends JFrame {
         if (onReceitaAlterada != null) {
             onReceitaAlterada.run();
         }
+    }
+
+    private static class ResumoBilheteira {
+        private int bilhetes;
+        private double total;
     }
 }

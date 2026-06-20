@@ -8,6 +8,8 @@ import Design.RoundedPanel;
 import Design.Tema;
 import Models.Jogo;
 import Models.JogoService;
+import Models.Bilhete;
+import Models.BilheteriaService;
 import Models.Receita;
 import Models.ReceitaService;
 
@@ -22,6 +24,7 @@ public class NovaReceitaFrame extends JFrame {
     private final Runnable onReceitaCriada;
     private final JogoService jogoService = JogoService.getInstance();
     private final ReceitaService receitaService = ReceitaService.getInstance();
+    private final BilheteriaService bilheteriaService = new BilheteriaService();
     private final List<JogoOpcao> jogosDisponiveis = new ArrayList<>();
 
     private JComboBox<JogoOpcao> campoJogo;
@@ -67,7 +70,7 @@ public class NovaReceitaFrame extends JFrame {
         boolean finalizado = estado.equalsIgnoreCase("Realizado")
                 || estado.equalsIgnoreCase("Finalizado");
 
-        return finalizado && !receitaService.existeReceitaParaJogo(jogo.getId());
+        return finalizado && !receitaService.existeReceitaParaJogo(bilheteriaService.getChaveJogo(jogo));
     }
 
     private JPanel criarConteudo() {
@@ -150,8 +153,8 @@ public class NovaReceitaFrame extends JFrame {
         campoJogo = criarComboJogos();
         campoCampeonato = criarCampoBloqueado();
         campoDia = criarCampoBloqueado();
-        campoBilhetes = criarCampo("Ex: 41532");
-        campoBilheteira = criarCampo("Ex: 120000");
+        campoBilhetes = criarCampoBloqueado();
+        campoBilheteira = criarCampoBloqueado();
         campoPatrocinio = criarCampo("Ex: 50000");
         campoDireitosTv = criarCampo("Ex: 80000");
 
@@ -256,11 +259,37 @@ public class NovaReceitaFrame extends JFrame {
         if (opcao == null) {
             campoCampeonato.setText("");
             campoDia.setText("");
+            campoBilhetes.setText("0");
+            campoBilheteira.setText("0");
             return;
         }
 
         campoCampeonato.setText(opcao.jogo.getCampeonato());
         campoDia.setText(opcao.jogo.getData());
+
+        ResumoBilheteira bilheteira = carregarResumoBilheteira(bilheteriaService.getChaveJogo(opcao.jogo));
+        if (bilheteira != null) {
+            campoBilhetes.setText(String.valueOf(bilheteira.bilhetes));
+            campoBilheteira.setText(formatarCampo(bilheteira.total));
+        } else {
+            campoBilhetes.setText("0");
+            campoBilheteira.setText("0");
+        }
+    }
+
+    private ResumoBilheteira carregarResumoBilheteira(String idJogo) {
+        ResumoBilheteira resumo = null;
+
+        for (Bilhete bilhete : bilheteriaService.listarBilhetesDoJogo(idJogo)) {
+            if (resumo == null) {
+                resumo = new ResumoBilheteira();
+            }
+
+            resumo.bilhetes += bilhete.getQuantidade();
+            resumo.total += bilhete.getTotal();
+        }
+
+        return resumo;
     }
 
     private void guardarReceita() {
@@ -271,10 +300,13 @@ public class NovaReceitaFrame extends JFrame {
                 throw new IllegalArgumentException("N\u00E3o existem jogos finalizados dispon\u00EDveis para registar receita.");
             }
 
+            String chaveJogo = bilheteriaService.getChaveJogo(opcao.jogo);
+            ResumoBilheteira bilheteira = carregarResumoBilheteira(chaveJogo);
+
             Receita receita = new Receita(
-                    opcao.jogo.getId(),
-                    lerInteiroPositivo(campoBilhetes.getText(), "Bilhetes vendidos"),
-                    lerValorPositivo(campoBilheteira.getText(), "Bilheteira"),
+                    chaveJogo,
+                    bilheteira == null ? 0 : bilheteira.bilhetes,
+                    bilheteira == null ? 0 : bilheteira.total,
                     lerValorPositivo(campoPatrocinio.getText(), "Patroc\u00EDnio"),
                     lerValorPositivo(campoDireitosTv.getText(), "Direitos TV")
             );
@@ -300,16 +332,6 @@ public class NovaReceitaFrame extends JFrame {
         }
     }
 
-    private int lerInteiroPositivo(String valor, String campo) {
-        double numero = lerValorPositivo(valor, campo);
-
-        if (numero != Math.rint(numero)) {
-            throw new IllegalArgumentException(campo + " deve ser um n\u00FAmero inteiro.");
-        }
-
-        return (int) numero;
-    }
-
     private double lerValorPositivo(String valor, String campo) {
         String normalizado = valor == null ? "" : valor.trim().replace(".", "").replace(",", ".");
 
@@ -330,6 +352,14 @@ public class NovaReceitaFrame extends JFrame {
         }
     }
 
+    private String formatarCampo(double valor) {
+        if (valor == Math.rint(valor)) {
+            return String.valueOf((long) valor);
+        }
+
+        return String.valueOf(valor);
+    }
+
     private void notificarReceitaCriada() {
         if (onReceitaCriada != null) {
             onReceitaCriada.run();
@@ -347,5 +377,10 @@ public class NovaReceitaFrame extends JFrame {
         public String toString() {
             return jogo.getNomeJogo();
         }
+    }
+
+    private static class ResumoBilheteira {
+        private int bilhetes;
+        private double total;
     }
 }

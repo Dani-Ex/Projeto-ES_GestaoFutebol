@@ -777,7 +777,6 @@ public class BilheteriaService {
 
     private void ajustarReceitaDoJogo(String idJogo, int deltaBilhetes, double deltaBilheteira) {
         List<String> linhas = new ArrayList<>();
-        boolean encontrado = false;
 
         try {
             if (Files.exists(FICHEIRO_RECEITAS)) {
@@ -796,16 +795,10 @@ public class BilheteriaService {
                                 + formatarNumero(Math.max(0, bilheteiraAtual + deltaBilheteira)) + "\t"
                                 + formatarNumero(patrocinio) + "\t"
                                 + formatarNumero(direitosTv));
-                        encontrado = true;
                     } else {
                         linhas.add(linha);
                     }
                 }
-            }
-
-            if (!encontrado && (deltaBilhetes > 0 || deltaBilheteira > 0)) {
-                linhas.add(idJogo + "\t" + Math.max(0, deltaBilhetes) + "\t"
-                        + formatarNumero(Math.max(0, deltaBilheteira)) + "\t0\t0");
             }
 
             Files.createDirectories(FICHEIRO_RECEITAS.getParent());

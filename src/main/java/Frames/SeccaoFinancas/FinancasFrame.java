@@ -5,8 +5,11 @@ import Design.RoundedButton;
 import Design.RoundedPanel;
 import Design.TableStyle;
 import Design.Tema;
+import Models.CampeonatoRepositorio;
 import Models.Jogo;
 import Models.JogoService;
+import Models.Bilhete;
+import Models.BilheteriaService;
 import Models.Receita;
 import Models.ReceitaService;
 
@@ -15,11 +18,14 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 public class FinancasFrame extends JFrame {
 
+    private static final String FINANCAS_TOTAIS = "Todas as finanças";
     private static final Color CARD_BILHETEIRA = new Color(220, 252, 231);
     private static final Color CARD_DIREITOS_TV = new Color(255, 237, 213);
     private static final Color CARD_BILHETES = new Color(229, 231, 235);
@@ -29,8 +35,10 @@ public class FinancasFrame extends JFrame {
     private static final int LARGURA_AREA_FINANCAS = (LARGURA_CARD_RESUMO * 6) + (ESPACAMENTO_CARDS * 5);
 
     private final List<ReceitaJogo> receitas = new ArrayList<>();
+    private final List<ReceitaJogo> receitasVisiveis = new ArrayList<>();
     private final JogoService jogoService = JogoService.getInstance();
     private final ReceitaService receitaService = ReceitaService.getInstance();
+    private final BilheteriaService bilheteriaService = new BilheteriaService();
 
     private MenuLateral menuLateral;
     private boolean menuAberto = false;
@@ -44,6 +52,7 @@ public class FinancasFrame extends JFrame {
     private JLabel valorDireitosTv;
     private JLabel valorBilhetesVendidos;
     private JLabel valorMediaJogo;
+    private JComboBox<String> comboCampeonatoFinancas;
 
     public FinancasFrame() {
         setTitle("Finan\u00E7as");
@@ -168,10 +177,58 @@ public class FinancasFrame extends JFrame {
         btnNovaReceita.setBorder(BorderFactory.createEmptyBorder(0, 14, 0, 14));
         btnNovaReceita.addActionListener(e -> new NovaReceitaFrame(this::recarregarReceitas));
 
+        comboCampeonatoFinancas = new JComboBox<>(listarOpcoesCampeonatosFinancas().toArray(new String[0]));
+        comboCampeonatoFinancas.setFont(Tema.FONTE_CARD_TITULO);
+        comboCampeonatoFinancas.setForeground(Tema.COR_TEXTO_PRINCIPAL);
+        comboCampeonatoFinancas.setBackground(Tema.COR_BOTAO_SECUNDARIO);
+        comboCampeonatoFinancas.setFocusable(false);
+        comboCampeonatoFinancas.setPreferredSize(new Dimension(230, 40));
+        comboCampeonatoFinancas.setMaximumSize(new Dimension(230, 40));
+        comboCampeonatoFinancas.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        comboCampeonatoFinancas.setRenderer(criarRendererComboFinancas());
+        comboCampeonatoFinancas.addActionListener(e -> atualizarTabela());
+
+        JPanel acoes = new JPanel(new FlowLayout(FlowLayout.RIGHT, 12, 0));
+        acoes.setOpaque(false);
+        acoes.add(comboCampeonatoFinancas);
+        acoes.add(btnNovaReceita);
+
         topo.add(tituloBox, BorderLayout.WEST);
-        topo.add(btnNovaReceita, BorderLayout.EAST);
+        topo.add(acoes, BorderLayout.EAST);
 
         return topo;
+    }
+
+    private List<String> listarOpcoesCampeonatosFinancas() {
+        List<String> opcoes = new ArrayList<>();
+        opcoes.add(FINANCAS_TOTAIS);
+
+        for (String campeonato : CampeonatoRepositorio.listarNomesCampeonatosGuardados()) {
+            if (campeonato != null && !campeonato.trim().isEmpty()) {
+                opcoes.add(campeonato);
+            }
+        }
+
+        return opcoes;
+    }
+
+    private ListCellRenderer<? super String> criarRendererComboFinancas() {
+        DefaultListCellRenderer renderer = new DefaultListCellRenderer();
+
+        return (list, value, index, isSelected, cellHasFocus) -> {
+            JLabel label = (JLabel) renderer.getListCellRendererComponent(
+                    list, value, index, isSelected, cellHasFocus
+            );
+
+            if (FINANCAS_TOTAIS.equals(value)) {
+                label.setFont(Tema.FONTE_CARD_TITULO.deriveFont(Font.BOLD));
+                if (!isSelected) {
+                    label.setForeground(Tema.CARD_TEXTO_AZUL);
+                }
+            }
+
+            return label;
+        };
     }
 
     private JPanel criarCardsResumo() {
@@ -318,8 +375,10 @@ public class FinancasFrame extends JFrame {
 
     private void atualizarTabela() {
         modeloReceitas.setRowCount(0);
+        receitasVisiveis.clear();
 
-        for (ReceitaJogo receita : receitas) {
+        for (ReceitaJogo receita : receitasFiltradasPorCampeonato()) {
+            receitasVisiveis.add(receita);
             modeloReceitas.addRow(new Object[]{
                     receita.jogo,
                     formatarInteiro(receita.bilhetes),
@@ -335,6 +394,7 @@ public class FinancasFrame extends JFrame {
 
     private void recarregarReceitas() {
         carregarReceitas();
+        atualizarOpcoesCampeonatosFinancas();
         atualizarTabela();
     }
 
@@ -347,8 +407,8 @@ public class FinancasFrame extends JFrame {
 
         int linhaModelo = tabelaReceitas.convertRowIndexToModel(linha);
 
-        if (linhaModelo >= 0 && linhaModelo < receitas.size()) {
-            new EditarReceitaFrame(receitas.get(linhaModelo).idJogo, this::recarregarReceitas);
+        if (linhaModelo >= 0 && linhaModelo < receitasVisiveis.size()) {
+            new EditarReceitaFrame(receitasVisiveis.get(linhaModelo).idJogo, this::recarregarReceitas);
         }
     }
 
@@ -363,7 +423,7 @@ public class FinancasFrame extends JFrame {
         double totalDireitosTv = 0;
         double totalLucro = 0;
 
-        for (ReceitaJogo receita : receitas) {
+        for (ReceitaJogo receita : receitasVisiveis) {
             totalBilhetes += receita.bilhetes;
             totalBilheteira += receita.bilheteira;
             totalPatrocinios += receita.patrocinio;
@@ -371,7 +431,7 @@ public class FinancasFrame extends JFrame {
             totalLucro += receita.lucro();
         }
 
-        double media = receitas.isEmpty() ? 0 : totalLucro / receitas.size();
+        double media = receitasVisiveis.isEmpty() ? 0 : totalLucro / receitasVisiveis.size();
 
         valorLucroTotal.setText(formatarEuros(totalLucro));
         valorBilheteira.setText(formatarEuros(totalBilheteira));
@@ -381,22 +441,122 @@ public class FinancasFrame extends JFrame {
         valorMediaJogo.setText(formatarEuros(media));
     }
 
+    private void atualizarOpcoesCampeonatosFinancas() {
+        if (comboCampeonatoFinancas == null) {
+            return;
+        }
+
+        String selecionado = getCampeonatoFinancasSelecionado();
+        comboCampeonatoFinancas.removeAllItems();
+
+        for (String opcao : listarOpcoesCampeonatosFinancas()) {
+            comboCampeonatoFinancas.addItem(opcao);
+        }
+
+        comboCampeonatoFinancas.setSelectedItem(selecionado);
+        if (comboCampeonatoFinancas.getSelectedItem() == null) {
+            comboCampeonatoFinancas.setSelectedItem(FINANCAS_TOTAIS);
+        }
+    }
+
+    private List<ReceitaJogo> receitasFiltradasPorCampeonato() {
+        String campeonato = getCampeonatoFinancasSelecionado();
+
+        if (FINANCAS_TOTAIS.equals(campeonato)) {
+            return new ArrayList<>(receitas);
+        }
+
+        List<ReceitaJogo> filtradas = new ArrayList<>();
+        for (ReceitaJogo receita : receitas) {
+            if (textoIgual(receita.campeonato, campeonato)) {
+                filtradas.add(receita);
+            }
+        }
+
+        return filtradas;
+    }
+
+    private String getCampeonatoFinancasSelecionado() {
+        if (comboCampeonatoFinancas == null || comboCampeonatoFinancas.getSelectedItem() == null) {
+            return FINANCAS_TOTAIS;
+        }
+
+        return comboCampeonatoFinancas.getSelectedItem().toString();
+    }
+
+    private boolean textoIgual(String valor, String esperado) {
+        return valorOuTraco(valor).equalsIgnoreCase(valorOuTraco(esperado));
+    }
+
+    private String valorOuTraco(String valor) {
+        return valor == null || valor.trim().isEmpty() ? "-" : valor;
+    }
+
     private void carregarReceitas() {
         receitas.clear();
+        Map<String, ResumoBilheteira> bilheteiraPorJogo = carregarBilheteiraPorJogo();
 
         for (Receita receita : receitaService.listarReceitas()) {
-            Jogo jogo = jogoService.procurarPorId(receita.getIdJogo());
+            String idJogo = receita.getIdJogo();
+
+            Jogo jogo = procurarJogoDaReceita(idJogo);
             String nomeJogo = jogo == null ? receita.getIdJogo() : jogo.getNomeJogo();
+            ResumoBilheteira bilheteira = bilheteiraPorJogo.get(idJogo);
 
             receitas.add(new ReceitaJogo(
-                    receita.getIdJogo(),
+                    idJogo,
                     nomeJogo,
-                    receita.getBilhetes(),
-                    receita.getBilheteira(),
+                    obterCampeonato(jogo),
+                    bilheteira == null ? receita.getBilhetes() : bilheteira.bilhetes,
+                    bilheteira == null ? receita.getBilheteira() : bilheteira.total,
                     receita.getPatrocinio(),
                     receita.getDireitosTv()
             ));
         }
+
+    }
+
+    private Map<String, ResumoBilheteira> carregarBilheteiraPorJogo() {
+        Map<String, ResumoBilheteira> resumoPorJogo = new LinkedHashMap<>();
+
+        for (Bilhete bilhete : bilheteriaService.listarBilhetes()) {
+            ResumoBilheteira resumo = resumoPorJogo.computeIfAbsent(
+                    bilhete.getIdJogo(),
+                    idJogo -> new ResumoBilheteira()
+            );
+
+            resumo.bilhetes += bilhete.getQuantidade();
+            resumo.total += bilhete.getTotal();
+        }
+
+        return resumoPorJogo;
+    }
+
+    private Jogo procurarJogoDaReceita(String idJogo) {
+        if (idJogo == null) {
+            return null;
+        }
+
+        String[] partes = idJogo.split("::", 2);
+        if (partes.length == 2) {
+            for (Jogo jogo : jogoService.listarJogos()) {
+                if (jogo.getId().equalsIgnoreCase(partes[0])
+                        && jogo.getCampeonato() != null
+                        && jogo.getCampeonato().equalsIgnoreCase(partes[1])) {
+                    return jogo;
+                }
+            }
+        }
+
+        return jogoService.procurarPorId(idJogo);
+    }
+
+    private String obterCampeonato(Jogo jogo) {
+        if (jogo == null || jogo.getCampeonato() == null || jogo.getCampeonato().trim().isEmpty()) {
+            return "Sem campeonato";
+        }
+
+        return jogo.getCampeonato();
     }
 
     private String formatarEuros(double valor) {
@@ -430,6 +590,7 @@ public class FinancasFrame extends JFrame {
     private static class ReceitaJogo {
         private final String idJogo;
         private final String jogo;
+        private final String campeonato;
         private final int bilhetes;
         private final double bilheteira;
         private final double patrocinio;
@@ -438,6 +599,7 @@ public class FinancasFrame extends JFrame {
         private ReceitaJogo(
                 String idJogo,
                 String jogo,
+                String campeonato,
                 int bilhetes,
                 double bilheteira,
                 double patrocinio,
@@ -445,6 +607,7 @@ public class FinancasFrame extends JFrame {
         ) {
             this.idJogo = idJogo;
             this.jogo = jogo;
+            this.campeonato = campeonato;
             this.bilhetes = bilhetes;
             this.bilheteira = bilheteira;
             this.patrocinio = patrocinio;
@@ -454,5 +617,10 @@ public class FinancasFrame extends JFrame {
         private double lucro() {
             return bilheteira + patrocinio + direitosTv;
         }
+    }
+
+    private static class ResumoBilheteira {
+        private int bilhetes;
+        private double total;
     }
 }
