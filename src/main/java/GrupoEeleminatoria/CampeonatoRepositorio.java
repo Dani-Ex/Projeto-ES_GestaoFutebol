@@ -487,7 +487,7 @@ public class CampeonatoRepositorio {
     private static Map<String, Integer> criarMapaColunas(String linha) {
         Map<String, Integer> colunas = new HashMap<>();
 
-        if (!linha.startsWith("nome\\t")) {
+        if (!linha.startsWith("nome\t")) {
             return colunas;
         }
 
@@ -588,7 +588,7 @@ public class CampeonatoRepositorio {
                 if (primeiraLinha) {
                     primeiraLinha = false;
 
-                    if (linha.startsWith("id\\t")) {
+                    if (linha.startsWith("id\t")) {
                         continue;
                     }
                 }
@@ -639,7 +639,7 @@ public class CampeonatoRepositorio {
                 if (primeiraLinha) {
                     primeiraLinha = false;
 
-                    if (linha.startsWith("campeonato\\t")) {
+                    if (linha.startsWith("campeonato\t")) {
                         continue;
                     }
                 }
@@ -682,7 +682,7 @@ public class CampeonatoRepositorio {
                 if (primeiraLinha) {
                     primeiraLinha = false;
 
-                    if (linha.startsWith("id\\t")) {
+                    if (linha.startsWith("id\t")) {
                         continue;
                     }
                 }
