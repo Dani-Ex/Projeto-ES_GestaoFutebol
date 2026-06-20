@@ -39,6 +39,7 @@ public class BilheteriaFrame extends JFrame {
     private DefaultTableModel modeloJogos;
     private DefaultTableModel modeloCompras;
 
+    private JComboBox<String> comboComprador;
     private JComboBox<String> comboTipo;
     private JSpinner spinnerQuantidade;
     private JComboBox<String> comboPagamento;
@@ -96,7 +97,8 @@ public class BilheteriaFrame extends JFrame {
         JPanel linhaSuperior = new JPanel(new BorderLayout(Tema.ESPACAMENTO_MEDIO, 0));
         linhaSuperior.setOpaque(false);
         linhaSuperior.setAlignmentX(Component.LEFT_ALIGNMENT);
-        linhaSuperior.setMaximumSize(new Dimension(Integer.MAX_VALUE, 430));
+        // Altura suficiente para mostrar todos os campos e o botão "Confirmar compra".
+        linhaSuperior.setMaximumSize(new Dimension(Integer.MAX_VALUE, 560));
 
         linhaSuperior.add(criarCardJogos(), BorderLayout.CENTER);
         linhaSuperior.add(criarCardCompra(), BorderLayout.EAST);
@@ -180,7 +182,7 @@ public class BilheteriaFrame extends JFrame {
         titulo.setFont(Tema.FONTE_TITULO);
         titulo.setForeground(Tema.COR_TEXTO_PRINCIPAL);
 
-        JLabel ajuda = new JLabel("Duplo clique para gerir jogo, estádio e lugares.");
+        JLabel ajuda = new JLabel("Duplo clique para gerir jogo, estádio e preços.");
         ajuda.setFont(Tema.FONTE_TEXTO_PEQUENO);
         ajuda.setForeground(Tema.COR_TEXTO_SECUNDARIO);
 
@@ -247,7 +249,10 @@ public class BilheteriaFrame extends JFrame {
 
     private JPanel criarCardCompra() {
         RoundedPanel card = criarCardBase();
-        card.setPreferredSize(new Dimension(330, 0));
+
+        // Evita que o formulário de compra seja cortado antes do botão.
+        card.setPreferredSize(new Dimension(330, 520));
+        card.setMinimumSize(new Dimension(330, 520));
         card.setLayout(new BorderLayout());
 
         JPanel content = new JPanel();
@@ -264,6 +269,8 @@ public class BilheteriaFrame extends JFrame {
         lblPreco = criarLabelResumo("Preço unitário: -");
         lblDisponiveis = criarLabelResumo("Disponíveis: -");
         lblTotal = criarLabelTotal("Total: 0,00 €");
+
+        comboComprador = criarComboCompradores(null);
 
         comboTipo = new JComboBox<>(new String[]{
                 BilheteriaService.TIPO_NORMAL,
@@ -289,8 +296,13 @@ public class BilheteriaFrame extends JFrame {
                 Color.WHITE,
                 12
         );
-        btnComprar.setPreferredSize(new Dimension(210, 42));
+
+        btnComprar.setFont(Tema.FONTE_TEXTO);
         btnComprar.setForeground(Color.WHITE);
+        btnComprar.setPreferredSize(new Dimension(1, 52));
+        btnComprar.setMinimumSize(new Dimension(1, 52));
+        btnComprar.setMaximumSize(new Dimension(Integer.MAX_VALUE, 52));
+        btnComprar.setAlignmentX(Component.LEFT_ALIGNMENT);
         btnComprar.setEnabled(false);
         btnComprar.addActionListener(e -> confirmarCompra());
 
@@ -302,6 +314,8 @@ public class BilheteriaFrame extends JFrame {
         content.add(Box.createVerticalStrut(8));
         content.add(lblDisponiveis);
         content.add(Box.createVerticalStrut(18));
+        content.add(criarCampoComLabel("Comprador", comboComprador));
+        content.add(Box.createVerticalStrut(14));
         content.add(criarCampoComLabel("Tipo de bilhete", comboTipo));
         content.add(Box.createVerticalStrut(14));
         content.add(criarCampoComLabel("Quantidade", spinnerQuantidade));
@@ -311,14 +325,18 @@ public class BilheteriaFrame extends JFrame {
         content.add(lblTotal);
         content.add(Box.createVerticalStrut(18));
 
-        JPanel painelBotao = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
-        painelBotao.setOpaque(false);
-        painelBotao.setAlignmentX(Component.LEFT_ALIGNMENT);
-        painelBotao.setMaximumSize(new Dimension(Integer.MAX_VALUE, 50));
-        painelBotao.add(btnComprar);
-        content.add(painelBotao);
+        JPanel linhaBotaoComprar = new JPanel(new BorderLayout());
+        linhaBotaoComprar.setOpaque(false);
+        linhaBotaoComprar.setAlignmentX(Component.LEFT_ALIGNMENT);
+        linhaBotaoComprar.setPreferredSize(new Dimension(1, 52));
+        linhaBotaoComprar.setMinimumSize(new Dimension(1, 52));
+        linhaBotaoComprar.setMaximumSize(new Dimension(Integer.MAX_VALUE, 52));
+        linhaBotaoComprar.add(btnComprar, BorderLayout.CENTER);
 
-        card.add(content, BorderLayout.NORTH);
+        content.add(linhaBotaoComprar);
+
+        card.add(content, BorderLayout.CENTER);
+
         return card;
     }
 
@@ -365,7 +383,9 @@ public class BilheteriaFrame extends JFrame {
         cabecalho.add(textos, BorderLayout.WEST);
         cabecalho.add(acoes, BorderLayout.EAST);
 
-        String[] colunas = {"Transação", "Tipo", "Qtd.", "Preço", "Total", "Pagamento", "Data"};
+        String[] colunas = {
+                "Transação", "Comprador", "Tipo", "Qtd.", "Preço", "Total", "Pagamento", "Data"
+        };
         modeloCompras = new DefaultTableModel(colunas, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -584,9 +604,11 @@ public class BilheteriaFrame extends JFrame {
             return;
         }
 
-        JDialog dialog = criarDialogo("Editar compra de bilhetes", 640, 440);
+        JDialog dialog = criarDialogo("Editar compra de bilhetes", 660, 510);
 
         JComboBox<Jogo> comboJogos = criarComboJogos(jogos, jogoAtual);
+        JComboBox<String> comboCompradorEdicao = criarComboCompradores(compra.getNomeComprador());
+
         JComboBox<String> comboTipoEdicao = new JComboBox<>(new String[]{
                 BilheteriaService.TIPO_NORMAL,
                 BilheteriaService.TIPO_VIP,
@@ -595,7 +617,13 @@ public class BilheteriaFrame extends JFrame {
         configurarCombo(comboTipoEdicao);
         comboTipoEdicao.setSelectedItem(compra.getTipo());
 
-        JSpinner quantidade = criarSpinnerNumero(compra.getQuantidade(), 1, 1);
+        // O máximo inicial precisa aceitar pelo menos a quantidade já comprada.
+        // Depois atualizarLimite() calcula o máximo real conforme jogo e zona.
+        JSpinner quantidade = criarSpinnerNumero(
+                compra.getQuantidade(),
+                1,
+                Math.max(1, compra.getQuantidade())
+        );
 
         JComboBox<String> comboPagamentoEdicao = new JComboBox<>(new String[]{
                 "Cartão", "MB WAY", "Multibanco", "Dinheiro"
@@ -647,6 +675,8 @@ public class BilheteriaFrame extends JFrame {
         formulario.setLayout(new BoxLayout(formulario, BoxLayout.Y_AXIS));
         formulario.setBorder(new EmptyBorder(24, 24, 8, 24));
 
+        formulario.add(criarCampoComLabel("Comprador", comboCompradorEdicao));
+        formulario.add(Box.createVerticalStrut(12));
         formulario.add(criarCampoComLabel("Jogo da compra", comboJogos));
         formulario.add(Box.createVerticalStrut(12));
         formulario.add(criarCampoComLabel("Tipo", comboTipoEdicao));
@@ -692,6 +722,7 @@ public class BilheteriaFrame extends JFrame {
             try {
                 bilheteriaService.editarCompra(
                         compra.getIdTransacao(),
+                        valorComboEditavel(comboCompradorEdicao),
                         (Jogo) comboJogos.getSelectedItem(),
                         String.valueOf(comboTipoEdicao.getSelectedItem()),
                         valorSpinner(quantidade),
@@ -866,6 +897,53 @@ public class BilheteriaFrame extends JFrame {
         return combo;
     }
 
+    private JComboBox<String> criarComboCompradores(String selecionado) {
+        JComboBox<String> combo = new JComboBox<>();
+
+        for (String comprador : bilheteriaService.listarCompradores()) {
+            combo.addItem(comprador);
+        }
+
+        configurarCombo(combo);
+        combo.setEditable(true);
+        combo.setFocusable(true);
+
+        Component editor = combo.getEditor().getEditorComponent();
+        if (editor instanceof JTextField campo) {
+            configurarCampoTexto(campo);
+        }
+
+        if (selecionado != null) {
+            combo.setSelectedItem(selecionado);
+        }
+
+        return combo;
+    }
+
+    private String valorComboEditavel(JComboBox<String> combo) {
+        Object valor = combo.isEditable()
+                ? combo.getEditor().getItem()
+                : combo.getSelectedItem();
+
+        return valor == null ? "" : valor.toString().trim();
+    }
+
+    private void atualizarComboCompradores() {
+        if (comboComprador == null) {
+            return;
+        }
+
+        String nomeAtual = valorComboEditavel(comboComprador);
+
+        comboComprador.removeAllItems();
+        for (String comprador : bilheteriaService.listarCompradores()) {
+            comboComprador.addItem(comprador);
+        }
+
+        comboComprador.setSelectedItem(nomeAtual);
+        comboComprador.getEditor().setItem(nomeAtual);
+    }
+
     private JComboBox<String> criarComboEstadios(String selecionado) {
         JComboBox<String> combo = new JComboBox<>();
         for (String estadio : bilheteriaService.listarEstadiosExistentes()) {
@@ -881,7 +959,15 @@ public class BilheteriaFrame extends JFrame {
     }
 
     private JSpinner criarSpinnerNumero(int valor, int minimo, int maximo) {
-        JSpinner spinner = new JSpinner(new SpinnerNumberModel(valor, minimo, maximo, 1));
+        // SpinnerNumberModel exige: mínimo <= valor <= máximo.
+        int minimoSeguro = Math.max(0, minimo);
+        int maximoSeguro = Math.max(minimoSeguro, maximo);
+        int valorSeguro = Math.max(minimoSeguro, Math.min(valor, maximoSeguro));
+
+        JSpinner spinner = new JSpinner(
+                new SpinnerNumberModel(valorSeguro, minimoSeguro, maximoSeguro, 1)
+        );
+
         configurarSpinner(spinner);
         return spinner;
     }
@@ -897,6 +983,7 @@ public class BilheteriaFrame extends JFrame {
 
         atualizarTabelaJogos();
         selecionarJogoPorId(idSelecionado);
+        atualizarComboCompradores();
         atualizarResumoCompra();
         atualizarTabelaCompras();
     }
@@ -941,6 +1028,7 @@ public class BilheteriaFrame extends JFrame {
             comprasVisiveis.add(compra);
             modeloCompras.addRow(new Object[]{
                     compra.getIdTransacao(),
+                    compra.getNomeComprador(),
                     compra.getTipo(),
                     compra.getQuantidade(),
                     formatarEuros(compra.getPrecoUnitario()),
@@ -1069,8 +1157,11 @@ public class BilheteriaFrame extends JFrame {
                 throw new IllegalArgumentException("Seleciona primeiro um jogo na tabela.");
             }
 
+            String nomeComprador = valorComboEditavel(comboComprador);
+
             Bilhete compra = bilheteriaService.comprarBilhetes(
                     jogo,
+                    nomeComprador,
                     String.valueOf(comboTipo.getSelectedItem()),
                     valorSpinner(spinnerQuantidade),
                     String.valueOf(comboPagamento.getSelectedItem())
@@ -1080,6 +1171,7 @@ public class BilheteriaFrame extends JFrame {
                     this,
                     "Compra realizada com sucesso.\n\n"
                             + "Transação: " + compra.getIdTransacao() + "\n"
+                            + "Comprador: " + compra.getNomeComprador() + "\n"
                             + "Jogo: " + jogo.getNomeJogo() + "\n"
                             + "Bilhetes: " + compra.getQuantidade() + " " + compra.getTipo() + "\n"
                             + "Total: " + formatarEuros(compra.getTotal()),
@@ -1087,6 +1179,7 @@ public class BilheteriaFrame extends JFrame {
                     JOptionPane.INFORMATION_MESSAGE
             );
 
+            comboComprador.getEditor().setItem("");
             atualizarTudo(jogo);
         } catch (IllegalArgumentException | IllegalStateException e) {
             mostrarErro(e.getMessage());
@@ -1151,6 +1244,14 @@ public class BilheteriaFrame extends JFrame {
         painel.add(lbl, BorderLayout.NORTH);
         painel.add(campo, BorderLayout.CENTER);
         return painel;
+    }
+
+    private void configurarCampoTexto(JTextField campo) {
+        campo.setFont(Tema.FONTE_TEXTO);
+        campo.setForeground(Tema.COR_TEXTO_PRINCIPAL);
+        campo.setBackground(Tema.COR_INPUT);
+        campo.setBorder(new RoundedBorder(Tema.COR_LINHA, 12));
+        campo.setCaretColor(Tema.COR_TEXTO_PRINCIPAL);
     }
 
     private void configurarCombo(JComboBox<?> combo) {

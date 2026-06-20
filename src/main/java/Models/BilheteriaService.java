@@ -1,7 +1,5 @@
 package Models;
 
-import Models.CampeonatoRepositorio;
-
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -12,8 +10,10 @@ import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 import java.util.Map;
 import java.util.UUID;
 
@@ -112,20 +112,33 @@ public class BilheteriaService {
 
                 String[] campos = linha.split("\\t", -1);
 
-                // Formato atual: id, jogo, tipo, preço, quantidade, total, pagamento, data.
+                // Formato atual:
+                // id | jogo | comprador | tipo | preço | quantidade | total | pagamento | data
+                if (campos.length == 9) {
+                    bilhetes.add(new Bilhete(
+                            campos[0], campos[1], campos[2], campos[3],
+                            parseDouble(campos[4]), parseInt(campos[5]), parseDouble(campos[6]),
+                            campos[7], parseDataHora(campos[8])
+                    ));
+                    continue;
+                }
+
+                // Compatibilidade com compras antigas sem o nome do comprador.
+                // id | jogo | tipo | preço | quantidade | total | pagamento | data
                 if (campos.length == 8) {
                     bilhetes.add(new Bilhete(
-                            campos[0], campos[1], campos[2],
+                            campos[0], campos[1], "Comprador não indicado", campos[2],
                             parseDouble(campos[3]), parseInt(campos[4]), parseDouble(campos[5]),
                             campos[6], parseDataHora(campos[7])
                     ));
                     continue;
                 }
 
-                // Compatibilidade com o ficheiro antigo que incluía nome e e-mail.
+                // Compatibilidade com o formato antigo:
+                // id | jogo | nome | email | tipo | preço | quantidade | total | pagamento | data
                 if (campos.length >= 10) {
                     bilhetes.add(new Bilhete(
-                            campos[0], campos[1], campos[4],
+                            campos[0], campos[1], campos[2], campos[4],
                             parseDouble(campos[5]), parseInt(campos[6]), parseDouble(campos[7]),
                             campos[8], parseDataHora(campos[9])
                     ));
@@ -146,6 +159,24 @@ public class BilheteriaService {
             }
         }
         return resultado;
+    }
+
+    /**
+     * Devolve os compradores já existentes no TSV para os poder escolher
+     * num JComboBox editável. Um novo nome também pode ser escrito.
+     */
+    public List<String> listarCompradores() {
+        Set<String> nomes = new LinkedHashSet<>();
+
+        for (Bilhete bilhete : listarBilhetes()) {
+            String nome = bilhete.getNomeComprador();
+
+            if (!vazio(nome) && !"Comprador não indicado".equalsIgnoreCase(nome.trim())) {
+                nomes.add(nome.trim());
+            }
+        }
+
+        return new ArrayList<>(nomes);
     }
 
     /** Preço configurado para uma zona num jogo específico. */
@@ -290,15 +321,21 @@ public class BilheteriaService {
         guardarTodosPrecos(precos);
     }
 
-    public Bilhete comprarBilhetes(Jogo jogo,
-                                   String tipo,
-                                   int quantidade,
-                                   String metodoPagamento) {
+    public Bilhete comprarBilhetes(
+            Jogo jogo,
+            String nomeComprador,
+            String tipo,
+            int quantidade,
+            String metodoPagamento
+    ) {
         if (jogo == null) {
             throw new IllegalArgumentException("Seleciona primeiro um jogo.");
         }
         if (!carregarPrecos().containsKey(jogo.getId())) {
             throw new IllegalArgumentException("Este jogo ainda não foi configurado na bilheteira.");
+        }
+        if (vazio(nomeComprador)) {
+            throw new IllegalArgumentException("Indica ou seleciona o nome do comprador.");
         }
 
         validarJogoAindaNaoComecou(jogo);
@@ -322,8 +359,15 @@ public class BilheteriaService {
         double total = precoUnitario * quantidade;
 
         Bilhete compra = new Bilhete(
-                gerarIdTransacao(), jogo.getId(), tipo, precoUnitario, quantidade,
-                total, metodoPagamento, LocalDateTime.now()
+                gerarIdTransacao(),
+                jogo.getId(),
+                nomeComprador.trim(),
+                tipo,
+                precoUnitario,
+                quantidade,
+                total,
+                metodoPagamento,
+                LocalDateTime.now()
         );
 
         List<Bilhete> bilhetes = new ArrayList<>(listarBilhetes());
@@ -334,14 +378,38 @@ public class BilheteriaService {
         return compra;
     }
 
+    /*
+     * Compatibilidade com chamadas antigas do projeto.
+     */
+    public Bilhete comprarBilhetes(
+            Jogo jogo,
+            String tipo,
+            int quantidade,
+            String metodoPagamento
+    ) {
+        return comprarBilhetes(
+                jogo,
+                "Comprador não indicado",
+                tipo,
+                quantidade,
+                metodoPagamento
+        );
+    }
+
     /** Corrige uma compra antes de o jogo original e o novo jogo começarem. */
-    public void editarCompra(String idTransacao,
-                             Jogo novoJogo,
-                             String novoTipo,
-                             int novaQuantidade,
-                             String novoMetodoPagamento) {
+    public void editarCompra(
+            String idTransacao,
+            String novoNomeComprador,
+            Jogo novoJogo,
+            String novoTipo,
+            int novaQuantidade,
+            String novoMetodoPagamento
+    ) {
         if (vazio(idTransacao)) {
             throw new IllegalArgumentException("Compra inválida.");
+        }
+        if (vazio(novoNomeComprador)) {
+            throw new IllegalArgumentException("Indica ou seleciona o nome do comprador.");
         }
         if (novoJogo == null) {
             throw new IllegalArgumentException("Seleciona o jogo da compra.");
@@ -387,9 +455,15 @@ public class BilheteriaService {
         double novoTotal = novoPreco * novaQuantidade;
 
         Bilhete compraAtualizada = new Bilhete(
-                compraOriginal.getIdTransacao(), novoJogo.getId(), novoTipo,
-                novoPreco, novaQuantidade, novoTotal,
-                novoMetodoPagamento, compraOriginal.getDataCompra()
+                compraOriginal.getIdTransacao(),
+                novoJogo.getId(),
+                novoNomeComprador.trim(),
+                novoTipo,
+                novoPreco,
+                novaQuantidade,
+                novoTotal,
+                novoMetodoPagamento,
+                compraOriginal.getDataCompra()
         );
 
         bilhetes.set(indice, compraAtualizada);
@@ -397,6 +471,35 @@ public class BilheteriaService {
 
         ajustarReceitaDoJogo(jogoOriginal.getId(), -compraOriginal.getQuantidade(), -compraOriginal.getTotal());
         ajustarReceitaDoJogo(novoJogo.getId(), novaQuantidade, novoTotal);
+    }
+
+    /*
+     * Compatibilidade com o formulário anterior, que ainda não tinha comprador.
+     */
+    public void editarCompra(
+            String idTransacao,
+            Jogo novoJogo,
+            String novoTipo,
+            int novaQuantidade,
+            String novoMetodoPagamento
+    ) {
+        Bilhete compra = null;
+
+        for (Bilhete bilhete : listarBilhetes()) {
+            if (bilhete.getIdTransacao().equalsIgnoreCase(idTransacao)) {
+                compra = bilhete;
+                break;
+            }
+        }
+
+        editarCompra(
+                idTransacao,
+                compra == null ? "Comprador não indicado" : compra.getNomeComprador(),
+                novoJogo,
+                novoTipo,
+                novaQuantidade,
+                novoMetodoPagamento
+        );
     }
 
     public void eliminarCompra(String idTransacao) {
@@ -431,9 +534,15 @@ public class BilheteriaService {
                 totalTransferido += bilhete.getTotal();
 
                 bilhetes.set(i, new Bilhete(
-                        bilhete.getIdTransacao(), idNovo, bilhete.getTipo(),
-                        bilhete.getPrecoUnitario(), bilhete.getQuantidade(), bilhete.getTotal(),
-                        bilhete.getMetodoPagamento(), bilhete.getDataCompra()
+                        bilhete.getIdTransacao(),
+                        idNovo,
+                        bilhete.getNomeComprador(),
+                        bilhete.getTipo(),
+                        bilhete.getPrecoUnitario(),
+                        bilhete.getQuantidade(),
+                        bilhete.getTotal(),
+                        bilhete.getMetodoPagamento(),
+                        bilhete.getDataCompra()
                 ));
                 alterou = true;
             }
@@ -553,7 +662,15 @@ public class BilheteriaService {
         return null;
     }
 
-    /** Lê primeiro os estádios já carregados pelo projeto e também aceita data/estadios.tsv. */
+    /**
+     * Carrega a capacidade diretamente do TSV dos estádios.
+     *
+     * Formato atual:
+     * id | nome | cidade | proprietario | lugaresNormal | lugaresVip | lugaresPremium
+     *
+     * O TSV é lido depois do repositório para que os lugares guardados em
+     * data/estadios.tsv sejam sempre os valores usados pela bilheteira.
+     */
     private List<Estadio> listarEstadiosComCapacidades() {
         Map<String, Estadio> porNome = new LinkedHashMap<>();
 
@@ -561,20 +678,58 @@ public class BilheteriaService {
             adicionarEstadio(porNome, estadio);
         }
 
-        if (Files.exists(FICHEIRO_ESTADIOS)) {
-            try {
-                for (String linha : Files.readAllLines(FICHEIRO_ESTADIOS, StandardCharsets.UTF_8)) {
-                    if (linha == null || linha.trim().isEmpty()) continue;
-                    String[] campos = linha.split("\\t", -1);
-                    if (campos.length < 6) continue;
-                    adicionarEstadio(porNome, new Estadio(
-                            campos[0].trim(), campos[1].trim(), campos[2].trim(),
-                            parseInt(campos[3]), parseInt(campos[4]), parseInt(campos[5])
-                    ));
+        if (!Files.exists(FICHEIRO_ESTADIOS)) {
+            return new ArrayList<>(porNome.values());
+        }
+
+        try {
+            for (String linha : Files.readAllLines(FICHEIRO_ESTADIOS, StandardCharsets.UTF_8)) {
+                if (linha == null || linha.trim().isEmpty()) {
+                    continue;
                 }
-            } catch (IOException e) {
-                throw new IllegalStateException("Não foi possível ler os estádios guardados.", e);
+
+                String[] campos = linha.split("\\t", -1);
+
+                // id | nome | cidade | proprietário | normal | vip | premium
+                if (campos.length >= 7) {
+                    if ("id".equalsIgnoreCase(campos[0].trim())) {
+                        continue;
+                    }
+
+                    Estadio estadio = new Estadio(
+                            campos[1].trim(),
+                            campos[2].trim(),
+                            campos[3].trim(),
+                            parseInt(campos[4]),
+                            parseInt(campos[5]),
+                            parseInt(campos[6])
+                    );
+
+                    porNome.put(estadio.getNome().trim().toLowerCase(Locale.ROOT), estadio);
+                    continue;
+                }
+
+                // Formato alternativo sem id:
+                // nome | cidade | proprietário | normal | vip | premium
+                if (campos.length >= 6) {
+                    if ("nome".equalsIgnoreCase(campos[0].trim())) {
+                        continue;
+                    }
+
+                    Estadio estadio = new Estadio(
+                            campos[0].trim(),
+                            campos[1].trim(),
+                            campos[2].trim(),
+                            parseInt(campos[3]),
+                            parseInt(campos[4]),
+                            parseInt(campos[5])
+                    );
+
+                    porNome.put(estadio.getNome().trim().toLowerCase(Locale.ROOT), estadio);
+                }
             }
+        } catch (IOException e) {
+            throw new IllegalStateException("Não foi possível ler os estádios guardados.", e);
         }
 
         return new ArrayList<>(porNome.values());
@@ -656,9 +811,14 @@ public class BilheteriaService {
             List<String> linhas = new ArrayList<>();
             for (Bilhete bilhete : bilhetes) {
                 linhas.add(String.join("\t",
-                        limpar(bilhete.getIdTransacao()), limpar(bilhete.getIdJogo()), limpar(bilhete.getTipo()),
-                        String.valueOf(bilhete.getPrecoUnitario()), String.valueOf(bilhete.getQuantidade()),
-                        String.valueOf(bilhete.getTotal()), limpar(bilhete.getMetodoPagamento()),
+                        limpar(bilhete.getIdTransacao()),
+                        limpar(bilhete.getIdJogo()),
+                        limpar(bilhete.getNomeComprador()),
+                        limpar(bilhete.getTipo()),
+                        String.valueOf(bilhete.getPrecoUnitario()),
+                        String.valueOf(bilhete.getQuantidade()),
+                        String.valueOf(bilhete.getTotal()),
+                        limpar(bilhete.getMetodoPagamento()),
                         bilhete.getDataCompra().toString()
                 ));
             }
