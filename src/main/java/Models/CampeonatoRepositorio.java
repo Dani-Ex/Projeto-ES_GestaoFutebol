@@ -957,6 +957,15 @@ public class CampeonatoRepositorio {
         return diretas;
     }
 
+    /*
+     * Valida todas as regras antes de um jogo ser criado.
+     *
+     * Regras da fase de grupos:
+     * - só equipas do mesmo grupo podem jogar entre si;
+     * - cada dupla pode jogar no máximo duas vezes;
+     * - numa fase de grupos de 4 equipas, cada equipa pode ter no máximo 6 jogos;
+     * - depois de a fase de grupos terminar, não podem ser criados jogos de grupo.
+     */
     public static String motivoBloqueioCriacaoJogo(
             Campeonato campeonato,
             String fase,
@@ -967,9 +976,31 @@ public class CampeonatoRepositorio {
             return "Seleciona um campeonato válido.";
         }
 
-        if (ehFaseDeGrupos(campeonato, fase)
-                && campeonato.isFaseGruposTerminada()) {
-            return "A fase de grupos já terminou. Não podes criar mais jogos de grupos.";
+        if (equipaA == null || equipaA.trim().isEmpty()
+                || equipaB == null || equipaB.trim().isEmpty()) {
+            return "Seleciona as duas equipas do jogo.";
+        }
+
+        if (equipaA.trim().equalsIgnoreCase(equipaB.trim())) {
+            return "A Equipa A e a Equipa B têm de ser diferentes.";
+        }
+
+        /*
+         * Se o utilizador escreve "Fase de grupos" em vez de indicar
+         * Grupo A, Grupo B, etc., bloqueamos. Assim não há forma de
+         * contornar a regra dos confrontos por grupo.
+         */
+        if (pareceFaseDeGrupos(fase) && !ehFaseDeGrupos(campeonato, fase)) {
+            return "Seleciona um grupo válido, por exemplo \"Grupo A\".";
+        }
+
+        if (ehFaseDeGrupos(campeonato, fase)) {
+            return validarCriacaoJogoDeGrupo(
+                    campeonato,
+                    fase,
+                    equipaA,
+                    equipaB
+            );
         }
 
         int tamanhoRonda = obterTamanhoRondaEliminatoria(fase);
@@ -1010,6 +1041,85 @@ public class CampeonatoRepositorio {
         return "";
     }
 
+    private static String validarCriacaoJogoDeGrupo(
+            Campeonato campeonato,
+            String fase,
+            String equipaA,
+            String equipaB
+    ) {
+        if (!campeonato.isGruposGerados()) {
+            return "Primeiro tens de gerar os grupos antes de criar jogos da fase de grupos.";
+        }
+
+        if (campeonato.isFaseGruposTerminada()) {
+            return "A fase de grupos já terminou. Não podes criar mais jogos de grupos.";
+        }
+
+        List<String> equipasDoGrupo = obterEquipasDoGrupo(campeonato, fase);
+
+        if (equipasDoGrupo.isEmpty()) {
+            return "Não foi possível encontrar as equipas do grupo selecionado.";
+        }
+
+        if (!equipaPertenceAoGrupo(equipasDoGrupo, equipaA)
+                || !equipaPertenceAoGrupo(equipasDoGrupo, equipaB)) {
+            return "As duas equipas têm de pertencer ao grupo \""
+                    + fase.trim() + "\".";
+        }
+
+        /*
+         * Em grupo de 4 equipas:
+         * (4 - 1) × 2 = 6 jogos máximos por equipa.
+         *
+         * A fórmula adapta-se caso uses grupos com outro número de equipas.
+         */
+        int limiteJogosPorEquipa = Math.max(
+                0,
+                (equipasDoGrupo.size() - 1) * 2
+        );
+
+        int jogosDaEquipaA = contarJogosDaEquipaNoGrupo(
+                campeonato,
+                fase,
+                equipaA
+        );
+
+        int jogosDaEquipaB = contarJogosDaEquipaNoGrupo(
+                campeonato,
+                fase,
+                equipaB
+        );
+
+        if (jogosDaEquipaA >= limiteJogosPorEquipa) {
+            return "A equipa \"" + equipaA.trim()
+                    + "\" já realizou ou tem agendados todos os "
+                    + limiteJogosPorEquipa
+                    + " jogos permitidos neste grupo.";
+        }
+
+        if (jogosDaEquipaB >= limiteJogosPorEquipa) {
+            return "A equipa \"" + equipaB.trim()
+                    + "\" já realizou ou tem agendados todos os "
+                    + limiteJogosPorEquipa
+                    + " jogos permitidos neste grupo.";
+        }
+
+        int confrontos = contarConfrontosNoGrupo(
+                campeonato,
+                fase,
+                equipaA,
+                equipaB
+        );
+
+        if (confrontos >= 2) {
+            return "As equipas \"" + equipaA.trim()
+                    + "\" e \"" + equipaB.trim()
+                    + "\" já têm os dois confrontos permitidos neste grupo.";
+        }
+
+        return "";
+    }
+
     private static boolean ehJogoDaFaseDeGrupos(Campeonato campeonato, Jogo jogo) {
         return jogo != null && ehFaseDeGrupos(campeonato, jogo.getFaseGrupo());
     }
@@ -1028,6 +1138,135 @@ public class CampeonatoRepositorio {
         }
 
         return false;
+    }
+
+    private static boolean pareceFaseDeGrupos(String fase) {
+        String texto = normalizarTexto(fase);
+
+        return texto.equals("fase de grupos")
+                || texto.equals("grupos")
+                || texto.startsWith("grupo ");
+    }
+
+    private static List<String> obterEquipasDoGrupo(
+            Campeonato campeonato,
+            String fase
+    ) {
+        List<String> resultado = new ArrayList<>();
+
+        if (campeonato == null
+                || campeonato.getGrupos() == null
+                || fase == null) {
+            return resultado;
+        }
+
+        for (Map.Entry<String, List<String>> entrada
+                : campeonato.getGrupos().entrySet()) {
+
+            if (entrada.getKey() != null
+                    && entrada.getKey().equalsIgnoreCase(fase.trim())
+                    && entrada.getValue() != null) {
+
+                resultado.addAll(entrada.getValue());
+                return resultado;
+            }
+        }
+
+        return resultado;
+    }
+
+    private static boolean equipaPertenceAoGrupo(
+            List<String> equipasDoGrupo,
+            String equipa
+    ) {
+        if (equipa == null) {
+            return false;
+        }
+
+        for (String equipaDoGrupo : equipasDoGrupo) {
+            if (equipaDoGrupo != null
+                    && equipaDoGrupo.equalsIgnoreCase(equipa.trim())) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static int contarJogosDaEquipaNoGrupo(
+            Campeonato campeonato,
+            String fase,
+            String equipa
+    ) {
+        int total = 0;
+
+        if (campeonato == null
+                || campeonato.getJogos() == null
+                || equipa == null) {
+            return total;
+        }
+
+        for (Jogo jogo : campeonato.getJogos()) {
+            if (!jogoPertenceAoGrupo(jogo, fase)) {
+                continue;
+            }
+
+            if (equipaParticipaNoJogo(jogo, equipa)) {
+                total++;
+            }
+        }
+
+        return total;
+    }
+
+    private static int contarConfrontosNoGrupo(
+            Campeonato campeonato,
+            String fase,
+            String equipaA,
+            String equipaB
+    ) {
+        int total = 0;
+
+        if (campeonato == null || campeonato.getJogos() == null) {
+            return total;
+        }
+
+        for (Jogo jogo : campeonato.getJogos()) {
+            if (!jogoPertenceAoGrupo(jogo, fase)) {
+                continue;
+            }
+
+            boolean mesmoSentido = nomesIguais(jogo.getEquipaA(), equipaA)
+                    && nomesIguais(jogo.getEquipaB(), equipaB);
+
+            boolean sentidoInverso = nomesIguais(jogo.getEquipaA(), equipaB)
+                    && nomesIguais(jogo.getEquipaB(), equipaA);
+
+            if (mesmoSentido || sentidoInverso) {
+                total++;
+            }
+        }
+
+        return total;
+    }
+
+    private static boolean jogoPertenceAoGrupo(Jogo jogo, String fase) {
+        return jogo != null
+                && jogo.getFaseGrupo() != null
+                && fase != null
+                && jogo.getFaseGrupo().trim().equalsIgnoreCase(fase.trim());
+    }
+
+    private static boolean equipaParticipaNoJogo(Jogo jogo, String equipa) {
+        return jogo != null
+                && (nomesIguais(jogo.getEquipaA(), equipa)
+                || nomesIguais(jogo.getEquipaB(), equipa));
+    }
+
+    private static boolean nomesIguais(String primeiro, String segundo) {
+        return primeiro != null
+                && segundo != null
+                && primeiro.trim().equalsIgnoreCase(segundo.trim());
     }
 
     private static boolean jogoEstaAgendado(Jogo jogo) {
