@@ -24,6 +24,7 @@ public class EstadiosFrame extends JFrame {
     private final Color BLUE = new Color(37, 99, 235);
     private final Color GREEN = new Color(22, 163, 74);
     private final Color ORANGE = new Color(249, 115, 22);
+    private final Color RED = new Color(220, 38, 38);
 
     public EstadiosFrame() {
         inicializar();
@@ -87,7 +88,7 @@ public class EstadiosFrame extends JFrame {
         titulo.setFont(new Font("Segoe UI", Font.BOLD, 30));
         titulo.setForeground(TEXT);
 
-        JLabel subtitulo = new JLabel("Consulta, cria, associa e edita estádios antes de o campeonato iniciar.");
+        JLabel subtitulo = new JLabel("Consulta, cria, associa, edita e elimina estádios antes de o campeonato iniciar.");
         subtitulo.setFont(new Font("Segoe UI", Font.PLAIN, 15));
         subtitulo.setForeground(MUTED);
 
@@ -129,14 +130,17 @@ public class EstadiosFrame extends JFrame {
         JButton btnNovo = criarBotaoAzul("Novo Estádio");
         JButton btnAssociar = criarBotaoVerde("Associar Existente");
         JButton btnEditar = criarBotaoLaranja("Editar Estádio");
+        JButton btnEliminar = criarBotaoVermelho("Eliminar Estádio");
 
         btnNovo.addActionListener(e -> abrirNovoEstadio());
         btnAssociar.addActionListener(e -> associarEstadioExistente());
         btnEditar.addActionListener(e -> editarEstadioSelecionado());
+        btnEliminar.addActionListener(e -> eliminarEstadioSelecionado());
 
         barra.add(btnNovo);
         barra.add(btnAssociar);
         barra.add(btnEditar);
+        barra.add(btnEliminar);
         return barra;
     }
 
@@ -263,6 +267,17 @@ public class EstadiosFrame extends JFrame {
             return;
         }
 
+        String bloqueioReserva =
+                CampeonatoRepositorio.motivoBloqueioReservaEstadio(
+                        associacao.estadio.getNome(),
+                        campeonatoDestino
+                );
+
+        if (!bloqueioReserva.isEmpty()) {
+            mostrarErro(bloqueioReserva);
+            return;
+        }
+
         if (!campeonatoDestino.adicionarEstadio(copiarEstadio(associacao.estadio))) {
             mostrarErro("Não foi possível associar o estádio ao campeonato.");
             return;
@@ -277,6 +292,60 @@ public class EstadiosFrame extends JFrame {
                 "Sucesso",
                 JOptionPane.INFORMATION_MESSAGE
         );
+    }
+
+
+    private void eliminarEstadioSelecionado() {
+        AssociacaoEstadio associacao = obterAssociacaoSelecionada();
+
+        if (associacao == null) {
+            mostrarErro("Seleciona um estádio na tabela para eliminar.");
+            return;
+        }
+
+        String nomeEstadio = associacao.estadio.getNome();
+
+        String bloqueio = CampeonatoRepositorio.motivoBloqueioEliminacaoEstadio(
+                nomeEstadio
+        );
+
+        if (!bloqueio.isEmpty()) {
+            mostrarErro(bloqueio);
+            return;
+        }
+
+        int resposta = JOptionPane.showConfirmDialog(
+                this,
+                "Queres mesmo eliminar o estádio \""
+                        + nomeEstadio
+                        + "\"?\n\n"
+                        + "O estádio será removido do sistema e de todos os "
+                        + "campeonatos que ainda estejam em configuração.",
+                "Eliminar Estádio",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE
+        );
+
+        if (resposta != JOptionPane.YES_OPTION) {
+            return;
+        }
+
+        if (!CampeonatoRepositorio.eliminarEstadio(nomeEstadio)) {
+            mostrarErro(
+                    "Não foi possível eliminar o estádio. "
+                            + "Confirma que nenhum campeonato associado foi iniciado."
+            );
+            return;
+        }
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Estádio eliminado com sucesso.",
+                "Sucesso",
+                JOptionPane.INFORMATION_MESSAGE
+        );
+
+        carregarTabela();
     }
 
     private void editarEstadioSelecionado() {
@@ -396,6 +465,10 @@ public class EstadiosFrame extends JFrame {
 
     private JButton criarBotaoLaranja(String texto) {
         return criarBotao(texto, ORANGE, Color.WHITE);
+    }
+
+    private JButton criarBotaoVermelho(String texto) {
+        return criarBotao(texto, RED, Color.WHITE);
     }
 
     private JButton criarBotaoCinza(String texto) {

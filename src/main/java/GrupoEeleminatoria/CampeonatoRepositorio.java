@@ -59,42 +59,30 @@ public class CampeonatoRepositorio {
         List<String> nomes = new ArrayList<>();
 
         for (Campeonato campeonato : campeonatos) {
-            if (campeonato == null
-                    || campeonato.getNome() == null
-                    || campeonato.getNome().trim().isEmpty()) {
-                continue;
-            }
+            if (campeonato.getNome() != null
+                    && !campeonato.getNome().trim().isEmpty()) {
 
-            nomes.add(campeonato.getNome().trim());
-        }
-
-        return nomes;
-    }
-
-    public static List<String> listarNomesCampeonatosIniciados() {
-        List<String> nomes = new ArrayList<>();
-
-        for (Campeonato campeonato : campeonatos) {
-            if (campeonato == null || !campeonato.isIniciado()) {
-                continue;
-            }
-
-            String nome = campeonato.getNome();
-
-            if (nome != null && !nome.trim().isEmpty()) {
-                nomes.add(nome.trim());
+                nomes.add(campeonato.getNome().trim());
             }
         }
+
+        nomes.sort(String.CASE_INSENSITIVE_ORDER);
 
         return nomes;
     }
 
     public static List<String> listarNomesCampeonatosParaClassificacao() {
-        List<String> nomes = listarNomesCampeonatosIniciados();
+        List<String> nomes = new ArrayList<>();
 
-        if (nomes.isEmpty()) {
-            return listarNomesCampeonatosGuardados();
+        for (Campeonato campeonato : campeonatos) {
+            if (campeonato.getNome() != null
+                    && !campeonato.getNome().trim().isEmpty()) {
+
+                nomes.add(campeonato.getNome().trim());
+            }
         }
+
+        nomes.sort(String.CASE_INSENSITIVE_ORDER);
 
         return nomes;
     }
@@ -108,13 +96,48 @@ public class CampeonatoRepositorio {
         salvar();
     }
 
-    public static void remover(Campeonato campeonato) {
-        if (campeonato == null) {
-            return;
+    /*
+     * Um campeonato só pode ser eliminado enquanto ainda está em configuração.
+     * Ao eliminar, as equipas e jogadores deixam de estar associados ao campeonato
+     * e os jogos/agendamentos desse campeonato deixam de ser gravados.
+     */
+    public static boolean eliminarCampeonatoNaoIniciado(Campeonato campeonato) {
+        if (campeonato == null
+                || !campeonato.isEmConfiguracao()
+                || campeonato.isGruposGerados()) {
+            return false;
         }
 
-        campeonatos.remove(campeonato);
+        String nomeCampeonato = campeonato.getNome();
+
+        if (!campeonatos.remove(campeonato)) {
+            return false;
+        }
+
+        limparAssociacaoCampeonatoNoTsv(
+                FICHEIRO_EQUIPAS,
+                5,
+                6,
+                nomeCampeonato
+        );
+
+        limparAssociacaoCampeonatoNoTsv(
+                FICHEIRO_JOGADORES,
+                10,
+                11,
+                nomeCampeonato
+        );
+
         salvar();
+        return true;
+    }
+
+    /*
+     * Mantém compatibilidade com chamadas antigas ao método remover().
+     * A regra de segurança continua a ser aplicada.
+     */
+    public static void remover(Campeonato campeonato) {
+        eliminarCampeonatoNaoIniciado(campeonato);
     }
 
     public static Campeonato procurarPorNome(String nome) {
@@ -291,6 +314,114 @@ public class CampeonatoRepositorio {
                     campeonato.getEstadios().set(i, copiarEstadio(copiaAtualizada));
                 }
             }
+        }
+
+        salvar();
+        return true;
+    }
+
+
+    /*
+     * Um estádio fica reservado desde que é associado a um campeonato e só volta
+     * a poder ser associado a outro quando esse campeonato estiver finalizado.
+     */
+    public static String motivoBloqueioReservaEstadio(
+            String nomeEstadio,
+            Campeonato campeonatoDestino
+    ) {
+        if (nomeEstadio == null || nomeEstadio.trim().isEmpty()) {
+            return "Seleciona um estádio válido.";
+        }
+
+        String nomeLimpo = nomeEstadio.trim();
+
+        for (Campeonato campeonato : campeonatos) {
+            if (campeonato == campeonatoDestino) {
+                continue;
+            }
+
+            if (campeonato.existeEstadioComNome(nomeLimpo)
+                    && !campeonato.isFinalizado()) {
+                return "O estádio \"" + nomeLimpo
+                        + "\" está reservado pelo campeonato \""
+                        + campeonato.getNome()
+                        + "\" e só ficará disponível quando esse campeonato terminar.";
+            }
+        }
+
+        return "";
+    }
+
+    /*
+     * A eliminação global do estádio só é permitida quando nenhum campeonato
+     * associado foi iniciado, gerou grupos ou terminou.
+     */
+    public static String motivoBloqueioEliminacaoEstadio(String nomeEstadio) {
+        if (nomeEstadio == null || nomeEstadio.trim().isEmpty()) {
+            return "Seleciona um estádio válido.";
+        }
+
+        String nomeLimpo = nomeEstadio.trim();
+
+        for (Campeonato campeonato : campeonatos) {
+            if (campeonato.existeEstadioComNome(nomeLimpo)
+                    && (!campeonato.isEmConfiguracao()
+                    || campeonato.isGruposGerados())) {
+                return "Não é possível eliminar o estádio \""
+                        + nomeLimpo
+                        + "\" porque está associado ao campeonato \""
+                        + campeonato.getNome()
+                        + "\", que já foi iniciado, tem grupos gerados ou foi finalizado.";
+            }
+        }
+
+        return "";
+    }
+
+    /*
+     * Elimina o estádio do catálogo e remove a associação dos campeonatos que
+     * ainda se encontram em configuração.
+     */
+    public static boolean eliminarEstadio(String nomeEstadio) {
+        if (nomeEstadio == null || nomeEstadio.trim().isEmpty()) {
+            return false;
+        }
+
+        String bloqueio = motivoBloqueioEliminacaoEstadio(nomeEstadio);
+
+        if (!bloqueio.isEmpty()) {
+            return false;
+        }
+
+        String nomeLimpo = nomeEstadio.trim();
+        boolean encontrado = false;
+
+        for (Campeonato campeonato : campeonatos) {
+            boolean removido = campeonato.getEstadios().removeIf(
+                    estadio -> estadio.getNome().equalsIgnoreCase(nomeLimpo)
+            );
+
+            if (removido) {
+                encontrado = true;
+            }
+        }
+
+        String idParaRemover = null;
+
+        for (Map.Entry<String, Estadio> entrada : catalogoEstadios.entrySet()) {
+            if (entrada.getValue().getNome().equalsIgnoreCase(nomeLimpo)) {
+                idParaRemover = entrada.getKey();
+                encontrado = true;
+                break;
+            }
+        }
+
+        if (idParaRemover != null) {
+            catalogoEstadios.remove(idParaRemover);
+        }
+
+        if (!encontrado) {
+            return false;
         }
 
         salvar();
@@ -912,6 +1043,58 @@ public class CampeonatoRepositorio {
         }
 
         Files.write(FICHEIRO_EQUIPAS, atualizadas, StandardCharsets.UTF_8);
+    }
+
+
+    /*
+     * Ao eliminar um campeonato em configuração, as equipas e os jogadores
+     * continuam no sistema, mas deixam de estar associados ao campeonato removido.
+     */
+    private static void limparAssociacaoCampeonatoNoTsv(
+            Path ficheiro,
+            int indiceCampeonato,
+            int indiceGrupo,
+            String nomeCampeonato
+    ) {
+        if (!Files.exists(ficheiro) || nomeCampeonato == null) {
+            return;
+        }
+
+        try {
+            List<String> linhas = Files.readAllLines(
+                    ficheiro,
+                    StandardCharsets.UTF_8
+            );
+
+            List<String> atualizadas = new ArrayList<>();
+
+            for (String linha : linhas) {
+                String[] dados = removerBom(linha).split("\\t", -1);
+
+                if (dados.length > indiceCampeonato
+                        && dados[indiceCampeonato].trim()
+                        .equalsIgnoreCase(nomeCampeonato)) {
+
+                    dados[indiceCampeonato] = "";
+
+                    if (dados.length > indiceGrupo) {
+                        dados[indiceGrupo] = SEM_GRUPO;
+                    }
+
+                    atualizadas.add(String.join("\t", dados));
+                } else {
+                    atualizadas.add(linha);
+                }
+            }
+
+            Files.write(ficheiro, atualizadas, StandardCharsets.UTF_8);
+
+        } catch (IOException e) {
+            System.out.println(
+                    "Erro ao remover associação de campeonato: "
+                            + e.getMessage()
+            );
+        }
     }
 
     private static void atualizarNomeCampeonatoNoTsv(
