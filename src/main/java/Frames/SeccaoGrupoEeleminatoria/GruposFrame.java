@@ -11,6 +11,9 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -20,6 +23,8 @@ import java.util.Map;
 public class GruposFrame extends JFrame {
 
     private final Campeonato campeonato;
+    private Timer temporizadorFimAutomatico;
+    private boolean avisoJogosEmFaltaMostrado;
 
     private final Color BG = new Color(245, 247, 251);
     private final Color TEXT = new Color(30, 41, 59);
@@ -45,6 +50,8 @@ public class GruposFrame extends JFrame {
 
         add(menuLateral, BorderLayout.WEST);
         add(pagina, BorderLayout.CENTER);
+
+        iniciarVerificacaoAutomaticaFimGrupos();
 
         setVisible(true);
     }
@@ -527,26 +534,154 @@ public class GruposFrame extends JFrame {
     }
 
     private void terminarFaseGrupos() {
+        concluirFaseGrupos(false);
+    }
+
+    /*
+     * A aplicação verifica a data ao abrir esta página e depois a cada minuto.
+     * Como é uma aplicação desktop, se estiver fechada a verificação acontece
+     * assim que a aplicação voltar a abrir.
+     */
+    private void iniciarVerificacaoAutomaticaFimGrupos() {
+        verificarFimAutomaticoFaseGrupos();
+
+        temporizadorFimAutomatico = new Timer(
+                60_000,
+                e -> verificarFimAutomaticoFaseGrupos()
+        );
+        temporizadorFimAutomatico.setRepeats(true);
+        temporizadorFimAutomatico.start();
+
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosed(WindowEvent e) {
+                if (temporizadorFimAutomatico != null) {
+                    temporizadorFimAutomatico.stop();
+                }
+            }
+        });
+    }
+
+    private void verificarFimAutomaticoFaseGrupos() {
+        if (!campeonato.isGruposGerados()
+                || campeonato.getGrupos().isEmpty()
+                || campeonato.isFaseGruposTerminada()
+                || campeonato.getDataFimGrupos() == null) {
+            return;
+        }
+
+        /*
+         * A fase termina automaticamente na própria data configurada.
+         * Para terminar apenas no dia seguinte, troca esta condição por:
+         * LocalDate.now().isAfter(campeonato.getDataFimGrupos())
+         */
+        if (LocalDate.now().isBefore(campeonato.getDataFimGrupos())) {
+            return;
+        }
+
+        /*
+         * Não fecha a classificação com jogos sem resultado, para não
+         * classificar equipas de forma injusta.
+         */
+        if (!todosJogosDosGruposEstaoRealizados()) {
+            if (!avisoJogosEmFaltaMostrado) {
+                avisoJogosEmFaltaMostrado = true;
+
+                JOptionPane.showMessageDialog(
+                        this,
+                        "A data final da fase de grupos já foi atingida, "
+                                + "mas ainda existem jogos sem resultado.\n"
+                                + "A fase será terminada automaticamente assim "
+                                + "que todos os jogos dos grupos forem realizados.",
+                        "Fase de grupos pendente",
+                        JOptionPane.WARNING_MESSAGE
+                );
+            }
+
+            return;
+        }
+
+        concluirFaseGrupos(true);
+    }
+
+    private boolean todosJogosDosGruposEstaoRealizados() {
+        if (campeonato.getJogos() == null || campeonato.getJogos().isEmpty()) {
+            return false;
+        }
+
+        boolean encontrouJogoDeGrupo = false;
+
+        for (Jogo jogo : campeonato.getJogos()) {
+            if (!campeonato.getGrupos().containsKey(jogo.getFaseGrupo())) {
+                continue;
+            }
+
+            encontrouJogoDeGrupo = true;
+
+            boolean realizado = jogo.getEstado() != null
+                    && (jogo.getEstado().equalsIgnoreCase("Realizado")
+                    || jogo.getEstado().equalsIgnoreCase("Finalizado"));
+
+            if (!realizado || obterGolosDoResultado(jogo.getResultado()) == null) {
+                return false;
+            }
+        }
+
+        return encontrouJogoDeGrupo;
+    }
+
+    private void concluirFaseGrupos(boolean automatico) {
         if (!campeonato.isGruposGerados() || campeonato.getGrupos().isEmpty()) {
-            mostrarErro("Primeiro tens de gerar os grupos.");
+            if (!automatico) {
+                mostrarErro("Primeiro tens de gerar os grupos.");
+            }
             return;
         }
 
         if (campeonato.isFaseGruposTerminada()) {
-            mostrarErro("A fase de grupos já foi terminada.");
+            if (!automatico) {
+                mostrarErro("A fase de grupos já foi terminada.");
+            }
             return;
         }
 
+        /*
+         * Ao terminar manualmente a fase de grupos, os jogos dos grupos que
+         * ainda estavam agendados passam para o estado "Encerrado".
+         * Assim deixam de aparecer em Próximos Jogos e não contam para a tabela.
+         *
+         * No fecho automático este número normalmente será 0, porque a verificação
+         * automática só termina quando todos os jogos já foram realizados.
+         */
+        int jogosEncerrados =
+                CampeonatoRepositorio.encerrarJogosDeGruposNaoRealizados(campeonato);
+
         gerarEquipasClassificadasParaEliminatorias();
-
         campeonato.setFaseGruposTerminada(true);
-
         CampeonatoRepositorio.salvar();
+
+        if (temporizadorFimAutomatico != null) {
+            temporizadorFimAutomatico.stop();
+        }
+
+        String detalheJogos = jogosEncerrados == 0
+                ? ""
+                : "\n\nForam encerrados " + jogosEncerrados
+                + " jogo(s) de grupos que ainda não tinham resultado.";
 
         JOptionPane.showMessageDialog(
                 this,
-                "Fase de grupos terminada com sucesso.\nAs equipas classificadas já estão disponíveis nas eliminatórias.",
-                "Sucesso",
+                automatico
+                        ? "A fase de grupos terminou automaticamente porque "
+                        + "a data final foi atingida.\n"
+                        + "As equipas classificadas já estão disponíveis "
+                        + "nas eliminatórias."
+                        + detalheJogos
+                        : "Fase de grupos terminada com sucesso.\n"
+                        + "As equipas classificadas já estão disponíveis "
+                        + "nas eliminatórias."
+                        + detalheJogos,
+                automatico ? "Conclusão automática" : "Sucesso",
                 JOptionPane.INFORMATION_MESSAGE
         );
 

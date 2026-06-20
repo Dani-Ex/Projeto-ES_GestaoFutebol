@@ -1,4 +1,6 @@
 nome	numeroEquipas	numeroEstadios	dataInicio	dataFimGrupos	dataInicioEliminatoria	dataFimCampeonato	estado	gruposGerados	faseGruposTerminada	eliminatoriasGeradas	equipasEliminatorias
-Liga Configuracao 2026	4	2	2026-09-01	2026-09-16	2026-09-19	2026-09-30	Iniciado	true	true	false	Braga Norte;Faro Sul
-Liga Atlantica 2026	4	2	2026-06-01	2026-07-03	2026-07-07	2026-07-18	Iniciado	true	false	false	
+Liga Configuracao 2026	4	2	2026-09-01	2026-09-16	2026-09-19	2026-09-30	Iniciado	true	true	true	Braga Norte;Faro Sul
+Liga Atlantica 2026	4	2	2026-06-01	2026-07-03	2026-07-07	2026-07-18	Iniciado	true	true	true	Coimbra Estrela;Lisboa Norte
 Taca Finalizada 2026	4	2	2026-03-01	2026-03-20	2026-03-24	2026-04-05	Finalizado	true	true	true	Norte Real;Sul Clube
+Mundial 2026	12	4	2026-05-01	2026-05-10	2026-05-11	2026-05-20	Iniciado	true	true	true	belgica;holanda;Brazil;coreia;Alemanha;Congo
+Mundial 2027	12	4	2026-01-01	2026-01-06	2026-01-07	2026-01-10	Iniciado	true	true	false	Alemanha;brazil;belgica;espanha;argentina;congo

@@ -1,6 +1,11 @@
 package Frames.SeccaoJogos;
 
+import Design.FocusUtils;
 import Design.MenuLateral;
+import Design.RoundedButton;
+import Design.RoundedPanel;
+import Design.TableStyle;
+import Design.Tema;
 import Models.CampeonatoRepositorio;
 import Models.Campeonato;
 import Models.Jogo;
@@ -19,18 +24,16 @@ import java.util.Locale;
 
 public class JogosFrame extends JFrame {
 
-    private final Color BG = new Color(245, 247, 251);
-    private final Color TEXT = new Color(30, 41, 59);
-    private final Color MUTED = new Color(100, 116, 139);
-    private final Color BLUE = new Color(37, 99, 235);
-    private final Color GREEN = new Color(22, 163, 74);
-
     private JTable tabelaProximos;
     private JTable tabelaRecentes;
 
+    private final List<Jogo> jogosProximosVisiveis = new ArrayList<>();
+    private final List<Jogo> jogosRecentesVisiveis = new ArrayList<>();
+
     public JogosFrame() {
         setTitle("Jogos");
-        setSize(1920, 1080);
+        setSize(1250, 780);
+        setMinimumSize(new Dimension(1080, 680));
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
@@ -46,14 +49,20 @@ public class JogosFrame extends JFrame {
 
     private JPanel criarPagina(JPanel menuLateral) {
         JPanel pagina = new JPanel(new BorderLayout());
-        pagina.setBackground(BG);
-        pagina.setBorder(new EmptyBorder(22, 24, 22, 24));
+        pagina.setBackground(Tema.COR_FUNDO);
+        pagina.setBorder(new EmptyBorder(
+                Tema.PADDING_JANELA.top,
+                Tema.PADDING_JANELA.left,
+                Tema.PADDING_JANELA.bottom,
+                Tema.PADDING_JANELA.right
+        ));
+
+        FocusUtils.limparFocoAoClicar(pagina);
 
         JPanel barraSuperior = new JPanel(new BorderLayout());
         barraSuperior.setOpaque(false);
 
         JButton botaoMenu = criarBotaoMenu(menuLateral);
-
         barraSuperior.add(botaoMenu, BorderLayout.WEST);
 
         pagina.add(barraSuperior, BorderLayout.NORTH);
@@ -64,20 +73,21 @@ public class JogosFrame extends JFrame {
         centro.setBorder(new EmptyBorder(15, 60, 20, 60));
 
         centro.add(criarCabecalho());
-        centro.add(Box.createVerticalStrut(22));
+        centro.add(Box.createVerticalStrut(Tema.ESPACAMENTO_MEDIO));
         centro.add(criarCardsResumo());
-        centro.add(Box.createVerticalStrut(22));
+        centro.add(Box.createVerticalStrut(Tema.ESPACAMENTO_MEDIO));
         centro.add(criarCardProximosJogos());
-        centro.add(Box.createVerticalStrut(22));
+        centro.add(Box.createVerticalStrut(Tema.ESPACAMENTO_MEDIO));
         centro.add(criarCardJogosRecentes());
 
-        JScrollPane scroll = new JScrollPane(centro);
-        scroll.setBorder(null);
-        scroll.getViewport().setBackground(BG);
-        scroll.getVerticalScrollBar().setUnitIncrement(16);
+        JScrollPane scrollPrincipal = new JScrollPane(centro);
+        TableStyle.configurarScrollLimpo(scrollPrincipal, Tema.COR_FUNDO);
+        scrollPrincipal.getVerticalScrollBar().setUnitIncrement(16);
 
-        pagina.add(scroll, BorderLayout.CENTER);
+        pagina.add(scrollPrincipal, BorderLayout.CENTER);
+
         carregarTabelas();
+
         return pagina;
     }
 
@@ -92,34 +102,59 @@ public class JogosFrame extends JFrame {
         textos.setLayout(new BoxLayout(textos, BoxLayout.Y_AXIS));
 
         JLabel titulo = new JLabel("Jogos");
-        titulo.setFont(new Font("Segoe UI", Font.BOLD, 30));
-        titulo.setForeground(TEXT);
+        titulo.setFont(Tema.FONTE_TITULO_GRANDE);
+        titulo.setForeground(Tema.COR_TEXTO_PRINCIPAL);
 
-        JLabel subtitulo = new JLabel("Consulta e cria jogos para os campeonatos existentes.");
-        subtitulo.setFont(new Font("Segoe UI", Font.PLAIN, 15));
-        subtitulo.setForeground(MUTED);
+        JLabel subtitulo = new JLabel(
+                "Cria jogos, regista resultados e acompanha o calendário dos campeonatos."
+        );
+        subtitulo.setFont(Tema.FONTE_SUBTITULO);
+        subtitulo.setForeground(Tema.COR_TEXTO_SECUNDARIO);
 
         textos.add(titulo);
         textos.add(Box.createVerticalStrut(4));
         textos.add(subtitulo);
 
-        JButton btnNovoJogo = criarBotaoAzul("+ Criar Jogo");
-        btnNovoJogo.addActionListener(e -> abrirNovoJogo());
+        JPanel botoes = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
+        botoes.setOpaque(false);
+
+        JButton btnResultado = new RoundedButton(
+                "Registar Resultado",
+                Tema.COR_SUCESSO,
+                Tema.COR_TEXTO_CLARO,
+                12
+        );
+        btnResultado.addActionListener(e -> registarResultadoSelecionado());
+
+        JButton btnEliminar = new RoundedButton(
+                "Eliminar Jogo",
+                Tema.COR_ERRO,
+                Tema.COR_TEXTO_CLARO,
+                12
+        );
+        btnEliminar.addActionListener(e -> eliminarJogoSelecionado());
+
+        JButton btnNovo = new RoundedButton(
+                "+ Criar Jogo",
+                Tema.COR_INFO,
+                Tema.COR_TEXTO_CLARO,
+                12
+        );
+        btnNovo.addActionListener(e -> abrirNovoJogo());
+
+        botoes.add(btnResultado);
+        botoes.add(btnEliminar);
+        botoes.add(btnNovo);
 
         cabecalho.add(textos, BorderLayout.WEST);
-        cabecalho.add(btnNovoJogo, BorderLayout.EAST);
+        cabecalho.add(botoes, BorderLayout.EAST);
 
         return cabecalho;
     }
 
     private void abrirNovoJogo() {
         if (CampeonatoRepositorio.listar().isEmpty()) {
-            JOptionPane.showMessageDialog(
-                    this,
-                    "Ainda não existe nenhum campeonato criado.",
-                    "Erro",
-                    JOptionPane.ERROR_MESSAGE
-            );
+            mostrarErro("Ainda não existe nenhum campeonato criado.");
             return;
         }
 
@@ -130,77 +165,104 @@ public class JogosFrame extends JFrame {
     private JPanel criarCardsResumo() {
         List<Jogo> todosJogos = obterTodosJogos();
 
-        int total = todosJogos.size();
-        int proximos = obterProximosJogos(todosJogos).size();
-        int recentes = obterJogosRecentes(todosJogos).size();
-
         JPanel cards = new JPanel(new GridLayout(1, 3, 18, 0));
         cards.setOpaque(false);
-        cards.setMaximumSize(new Dimension(Integer.MAX_VALUE, 95));
+        cards.setMaximumSize(new Dimension(Integer.MAX_VALUE, Tema.ALTURA_CARD_RESUMO));
         cards.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        cards.add(criarCartaoResumo("Total de Jogos", String.valueOf(total), BLUE, new Color(231, 240, 253)));
-        cards.add(criarCartaoResumo("Próximos Jogos", String.valueOf(proximos), GREEN, new Color(232, 248, 238)));
-        cards.add(criarCartaoResumo("Jogos Recentes", String.valueOf(recentes), new Color(249, 115, 22), new Color(255, 243, 224)));
+        cards.add(criarCartaoResumo(
+                "Total de Jogos",
+                String.valueOf(todosJogos.size()),
+                Tema.CARD_AZUL,
+                Tema.CARD_TEXTO_AZUL
+        ));
+
+        cards.add(criarCartaoResumo(
+                "Próximos Jogos",
+                String.valueOf(obterProximosJogos(todosJogos).size()),
+                Tema.CARD_VERDE,
+                Tema.CARD_TEXTO_VERDE
+        ));
+
+        cards.add(criarCartaoResumo(
+                "Jogos Realizados",
+                String.valueOf(contarJogosRealizados(todosJogos)),
+                Tema.CARD_AMARELO,
+                Tema.CARD_TEXTO_LARANJA
+        ));
 
         return cards;
     }
 
-    private JPanel criarCartaoResumo(String titulo, String valor, Color corTexto, Color corFundo) {
-        JPanel card = new PainelArredondado(18, corFundo);
-        card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
-        card.setBorder(new EmptyBorder(18, 20, 14, 20));
+    private RoundedPanel criarCartaoResumo(
+            String titulo,
+            String valor,
+            Color corFundo,
+            Color corTitulo
+    ) {
+        RoundedPanel card = new RoundedPanel(Tema.RAIO_CARD, corFundo);
+        card.setLayout(new BorderLayout());
+        card.setBorder(new EmptyBorder(
+                Tema.PADDING_CARD_RESUMO.top,
+                Tema.PADDING_CARD_RESUMO.left,
+                Tema.PADDING_CARD_RESUMO.bottom,
+                Tema.PADDING_CARD_RESUMO.right
+        ));
 
         JLabel labelTitulo = new JLabel(titulo);
-        labelTitulo.setFont(new Font("Segoe UI", Font.BOLD, 13));
-        labelTitulo.setForeground(corTexto);
+        labelTitulo.setFont(Tema.FONTE_CARD_TITULO);
+        labelTitulo.setForeground(corTitulo);
 
         JLabel labelValor = new JLabel(valor);
-        labelValor.setFont(new Font("Segoe UI", Font.BOLD, 26));
-        labelValor.setForeground(TEXT);
+        labelValor.setFont(Tema.FONTE_CARD_VALOR_GRANDE);
+        labelValor.setForeground(Tema.COR_TEXTO_PRINCIPAL);
 
-        card.add(labelTitulo);
-        card.add(Box.createVerticalStrut(8));
-        card.add(labelValor);
+        card.add(labelTitulo, BorderLayout.NORTH);
+        card.add(labelValor, BorderLayout.CENTER);
+
         return card;
     }
 
     private JPanel criarCardProximosJogos() {
-        JPanel card = criarCardTabela("Próximos Jogos");
-        tabelaProximos = criarTabela();
-
-        JScrollPane scroll = new JScrollPane(tabelaProximos);
-        scroll.setBorder(null);
-        scroll.getViewport().setBackground(Color.WHITE);
-        card.add(scroll, BorderLayout.CENTER);
-        return card;
+        return criarCardTabela("Próximos Jogos", true);
     }
 
     private JPanel criarCardJogosRecentes() {
-        JPanel card = criarCardTabela("Jogos Recentes");
-        tabelaRecentes = criarTabela();
-
-        JScrollPane scroll = new JScrollPane(tabelaRecentes);
-        scroll.setBorder(null);
-        scroll.getViewport().setBackground(Color.WHITE);
-        card.add(scroll, BorderLayout.CENTER);
-        return card;
+        return criarCardTabela("Jogos Recentes e Resultados", false);
     }
 
-    private JPanel criarCardTabela(String tituloTexto) {
-        JPanel card = new PainelArredondado(18, Color.WHITE);
+    private JPanel criarCardTabela(String tituloTexto, boolean proximos) {
+        RoundedPanel card = new RoundedPanel(Tema.RAIO_CARD, Tema.COR_CARD);
         card.setLayout(new BorderLayout());
-        card.setBorder(new EmptyBorder(20, 20, 20, 20));
-        card.setPreferredSize(new Dimension(1000, 290));
+        card.setBorder(new EmptyBorder(
+                Tema.PADDING_CARD.top,
+                Tema.PADDING_CARD.left,
+                Tema.PADDING_CARD.bottom,
+                Tema.PADDING_CARD.right
+        ));
+        card.setPreferredSize(new Dimension(1000, 285));
         card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 320));
         card.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         JLabel titulo = new JLabel(tituloTexto);
-        titulo.setFont(new Font("Segoe UI", Font.BOLD, 20));
-        titulo.setForeground(TEXT);
-        titulo.setBorder(new EmptyBorder(0, 0, 14, 0));
+        titulo.setFont(Tema.FONTE_TABELA_TITULO);
+        titulo.setForeground(Tema.COR_TEXTO_PRINCIPAL);
+        titulo.setBorder(new EmptyBorder(0, 0, Tema.ESPACAMENTO_PEQUENO, 0));
+
+        JTable tabela = criarTabela();
+
+        if (proximos) {
+            tabelaProximos = tabela;
+        } else {
+            tabelaRecentes = tabela;
+        }
+
+        JScrollPane scroll = new JScrollPane(tabela);
+        TableStyle.configurarScrollLimpo(scroll, Tema.COR_CARD);
 
         card.add(titulo, BorderLayout.NORTH);
+        card.add(scroll, BorderLayout.CENTER);
+
         return card;
     }
 
@@ -218,97 +280,359 @@ public class JogosFrame extends JFrame {
         };
 
         JTable tabela = new JTable(modelo);
-        tabela.setRowHeight(32);
-        tabela.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-        tabela.setForeground(TEXT);
-        tabela.setGridColor(new Color(226, 232, 240));
-        tabela.setShowVerticalLines(false);
-        tabela.setSelectionBackground(new Color(226, 232, 240));
-        tabela.setSelectionForeground(TEXT);
-
-        tabela.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 12));
-        tabela.getTableHeader().setForeground(MUTED);
-        tabela.getTableHeader().setBackground(Color.WHITE);
-        tabela.getTableHeader().setReorderingAllowed(false);
+        TableStyle.aplicarTabelaLimpa(tabela, 2);
+        tabela.setRowHeight(34);
 
         return tabela;
     }
 
     private void carregarTabelas() {
         List<Jogo> todosJogos = obterTodosJogos();
-        preencherTabela(tabelaProximos, obterProximosJogos(todosJogos));
-        preencherTabela(tabelaRecentes, obterJogosRecentes(todosJogos));
+
+        jogosProximosVisiveis.clear();
+        jogosProximosVisiveis.addAll(obterProximosJogos(todosJogos));
+
+        jogosRecentesVisiveis.clear();
+        jogosRecentesVisiveis.addAll(obterJogosRecentes(todosJogos));
+
+        preencherTabela(tabelaProximos, jogosProximosVisiveis);
+        preencherTabela(tabelaRecentes, jogosRecentesVisiveis);
     }
 
     private List<Jogo> obterTodosJogos() {
         List<Jogo> jogos = new ArrayList<>();
 
         for (Campeonato campeonato : CampeonatoRepositorio.listar()) {
-            jogos.addAll(campeonato.getJogos());
+            if (campeonato != null && campeonato.getJogos() != null) {
+                jogos.addAll(campeonato.getJogos());
+            }
         }
 
         return jogos;
     }
 
     private List<Jogo> obterProximosJogos(List<Jogo> todosJogos) {
-        LocalDate hoje = LocalDate.now();
         List<Jogo> proximos = new ArrayList<>();
 
         for (Jogo jogo : todosJogos) {
-            LocalDate data = converterData(jogo.getData());
-            boolean finalizado = jogo.getEstado() != null
-                    && jogo.getEstado().equalsIgnoreCase("Finalizado");
-
-            if (data != null && !data.isBefore(hoje) && !finalizado) {
+            /*
+             * Só jogos realmente agendados são próximos.
+             * Jogos "Encerrado", "Cancelado", "Realizado" e "Finalizado"
+             * deixam de aparecer nesta tabela.
+             */
+            if (jogoEstaPendente(jogo)) {
                 proximos.add(jogo);
             }
         }
 
-        proximos.sort(Comparator
-                .comparing((Jogo jogo) -> converterData(jogo.getData()))
-                .thenComparing(Jogo::getHora));
+        proximos.sort(
+                Comparator.comparing(
+                        (Jogo jogo) -> converterData(jogo.getData()),
+                        Comparator.nullsLast(Comparator.naturalOrder())
+                ).thenComparing(
+                        Jogo::getHora,
+                        Comparator.nullsLast(String.CASE_INSENSITIVE_ORDER)
+                )
+        );
 
         return proximos;
     }
 
     private List<Jogo> obterJogosRecentes(List<Jogo> todosJogos) {
-        LocalDate hoje = LocalDate.now();
         List<Jogo> recentes = new ArrayList<>();
 
         for (Jogo jogo : todosJogos) {
-            LocalDate data = converterData(jogo.getData());
-            boolean finalizado = jogo.getEstado() != null
-                    && jogo.getEstado().equalsIgnoreCase("Finalizado");
-
-            if (data != null && (data.isBefore(hoje) || finalizado)) {
+            /*
+             * Os jogos fechados sem resultado também ficam no histórico,
+             * com o estado "Encerrado", mas nunca em Próximos Jogos.
+             */
+            if (!jogoEstaPendente(jogo)) {
                 recentes.add(jogo);
             }
         }
 
-        recentes.sort(Comparator
-                .comparing((Jogo jogo) -> converterData(jogo.getData()), Comparator.nullsLast(Comparator.reverseOrder()))
-                .thenComparing(Jogo::getHora));
+        recentes.sort(
+                Comparator.comparing(
+                        (Jogo jogo) -> converterData(jogo.getData()),
+                        Comparator.nullsLast(Comparator.reverseOrder())
+                ).thenComparing(
+                        Jogo::getHora,
+                        Comparator.nullsLast(Comparator.reverseOrder())
+                )
+        );
 
         return recentes;
     }
 
+    private int contarJogosRealizados(List<Jogo> jogos) {
+        int total = 0;
+
+        for (Jogo jogo : jogos) {
+            if (jogoEstaRealizado(jogo)) {
+                total++;
+            }
+        }
+
+        return total;
+    }
+
+    private boolean jogoEstaPendente(Jogo jogo) {
+        if (jogo == null || jogo.getEstado() == null) {
+            return false;
+        }
+
+        return jogo.getEstado().equalsIgnoreCase("Agendado");
+    }
+
+    private boolean jogoEstaRealizado(Jogo jogo) {
+        if (jogo == null || jogo.getEstado() == null) {
+            return false;
+        }
+
+        return jogo.getEstado().equalsIgnoreCase("Realizado")
+                || jogo.getEstado().equalsIgnoreCase("Finalizado");
+    }
+
     private void preencherTabela(JTable tabela, List<Jogo> jogos) {
+        if (tabela == null) {
+            return;
+        }
+
         DefaultTableModel modelo = (DefaultTableModel) tabela.getModel();
         modelo.setRowCount(0);
 
         for (Jogo jogo : jogos) {
             modelo.addRow(new Object[]{
                     formatarData(jogo.getData()),
-                    jogo.getHora(),
-                    jogo.getEquipaA(),
-                    jogo.getEquipaB(),
-                    jogo.getEstadio(),
-                    jogo.getFaseGrupo(),
-                    jogo.getEstado(),
-                    jogo.getResultado(),
-                    jogo.getCampeonato()
+                    valorOuTraco(jogo.getHora()),
+                    valorOuTraco(jogo.getEquipaA()),
+                    valorOuTraco(jogo.getEquipaB()),
+                    valorOuTraco(jogo.getEstadio()),
+                    valorOuTraco(jogo.getFaseGrupo()),
+                    valorOuTraco(jogo.getEstado()),
+                    valorOuTraco(jogo.getResultado()),
+                    valorOuTraco(jogo.getCampeonato())
             });
         }
+    }
+
+    private void registarResultadoSelecionado() {
+        Jogo jogo = obterJogoSelecionado();
+
+        if (jogo == null) {
+            mostrarErro("Seleciona um jogo em Próximos Jogos.");
+            return;
+        }
+
+        String bloqueio = CampeonatoRepositorio.motivoBloqueioRegistoResultado(jogo);
+
+        if (!bloqueio.isEmpty()) {
+            mostrarErro(bloqueio);
+            return;
+        }
+
+        JSpinner golosA = criarSpinnerGolos();
+        JSpinner golosB = criarSpinnerGolos();
+
+        JPanel painel = new JPanel(new GridBagLayout());
+        painel.setBorder(new EmptyBorder(8, 8, 8, 8));
+
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(6, 8, 6, 8);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 3;
+
+        JLabel titulo = new JLabel(
+                jogo.getEquipaA() + "  vs  " + jogo.getEquipaB()
+        );
+        titulo.setFont(Tema.FONTE_TITULO);
+        titulo.setForeground(Tema.COR_TEXTO_PRINCIPAL);
+        painel.add(titulo, gbc);
+
+        gbc.gridwidth = 1;
+        gbc.gridy = 1;
+        gbc.gridx = 0;
+        painel.add(new JLabel(jogo.getEquipaA()), gbc);
+
+        gbc.gridx = 1;
+        painel.add(new JLabel("Resultado"), gbc);
+
+        gbc.gridx = 2;
+        painel.add(new JLabel(jogo.getEquipaB()), gbc);
+
+        gbc.gridy = 2;
+        gbc.gridx = 0;
+        painel.add(golosA, gbc);
+
+        gbc.gridx = 1;
+        JLabel separador = new JLabel("-");
+        separador.setHorizontalAlignment(SwingConstants.CENTER);
+        separador.setFont(Tema.FONTE_TITULO);
+        painel.add(separador, gbc);
+
+        gbc.gridx = 2;
+        painel.add(golosB, gbc);
+
+        JLabel aviso = new JLabel(
+                ehJogoEliminatorio(jogo)
+                        ? "Nas eliminatórias, o resultado não pode terminar empatado."
+                        : "O resultado será guardado como Realizado."
+        );
+        aviso.setFont(Tema.FONTE_TEXTO_PEQUENO);
+        aviso.setForeground(Tema.COR_TEXTO_SECUNDARIO);
+
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        gbc.gridwidth = 3;
+        painel.add(aviso, gbc);
+
+        int resposta = JOptionPane.showConfirmDialog(
+                this,
+                painel,
+                "Registar Resultado",
+                JOptionPane.OK_CANCEL_OPTION,
+                JOptionPane.PLAIN_MESSAGE
+        );
+
+        if (resposta != JOptionPane.OK_OPTION) {
+            return;
+        }
+
+        int resultadoA = (Integer) golosA.getValue();
+        int resultadoB = (Integer) golosB.getValue();
+
+        if (ehJogoEliminatorio(jogo) && resultadoA == resultadoB) {
+            mostrarErro(
+                    "Nas eliminatórias não pode haver empate. "
+                            + "Indica o resultado final depois de prolongamento ou penáltis."
+            );
+            return;
+        }
+
+        boolean atualizado = CampeonatoRepositorio.registarResultadoJogo(
+                jogo.getId(),
+                resultadoA,
+                resultadoB
+        );
+
+        if (!atualizado) {
+            mostrarErro("Não foi possível guardar o resultado deste jogo.");
+            return;
+        }
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Resultado guardado com sucesso.",
+                "Sucesso",
+                JOptionPane.INFORMATION_MESSAGE
+        );
+
+        reabrirJogosFrame();
+    }
+
+    private void eliminarJogoSelecionado() {
+        Jogo jogo = obterJogoSelecionado();
+
+        if (jogo == null) {
+            mostrarErro("Seleciona um jogo em Próximos Jogos.");
+            return;
+        }
+
+        String bloqueio = CampeonatoRepositorio.motivoBloqueioEliminacaoJogo(jogo);
+
+        if (!bloqueio.isEmpty()) {
+            mostrarErro(bloqueio);
+            return;
+        }
+
+        int resposta = JOptionPane.showConfirmDialog(
+                this,
+                "Queres mesmo eliminar o jogo:\n\n"
+                        + jogo.getEquipaA() + " vs " + jogo.getEquipaB()
+                        + "\n"
+                        + formatarData(jogo.getData()) + " às " + jogo.getHora() + "?",
+                "Eliminar Jogo",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE
+        );
+
+        if (resposta != JOptionPane.YES_OPTION) {
+            return;
+        }
+
+        boolean eliminado = CampeonatoRepositorio.eliminarJogoNaoRealizado(jogo.getId());
+
+        if (!eliminado) {
+            mostrarErro("Não foi possível eliminar o jogo.");
+            return;
+        }
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Jogo eliminado com sucesso.",
+                "Sucesso",
+                JOptionPane.INFORMATION_MESSAGE
+        );
+
+        reabrirJogosFrame();
+    }
+
+    private Jogo obterJogoSelecionado() {
+        if (tabelaProximos != null) {
+            int linha = tabelaProximos.getSelectedRow();
+
+            if (linha >= 0 && linha < jogosProximosVisiveis.size()) {
+                return jogosProximosVisiveis.get(linha);
+            }
+        }
+
+        if (tabelaRecentes != null) {
+            int linha = tabelaRecentes.getSelectedRow();
+
+            if (linha >= 0 && linha < jogosRecentesVisiveis.size()) {
+                return jogosRecentesVisiveis.get(linha);
+            }
+        }
+
+        return null;
+    }
+
+    private JSpinner criarSpinnerGolos() {
+        JSpinner spinner = new JSpinner(new SpinnerNumberModel(0, 0, 99, 1));
+        spinner.setFont(Tema.FONTE_TEXTO);
+        spinner.setPreferredSize(new Dimension(90, 34));
+
+        JComponent editor = spinner.getEditor();
+        if (editor instanceof JSpinner.DefaultEditor) {
+            ((JSpinner.DefaultEditor) editor).getTextField()
+                    .setHorizontalAlignment(SwingConstants.CENTER);
+        }
+
+        return spinner;
+    }
+
+    private boolean ehJogoEliminatorio(Jogo jogo) {
+        if (jogo == null || jogo.getFaseGrupo() == null) {
+            return false;
+        }
+
+        String fase = jogo.getFaseGrupo().toLowerCase();
+
+        return fase.startsWith("elim:")
+                || fase.contains("quartos")
+                || fase.contains("meias")
+                || fase.contains("semi")
+                || fase.equals("final")
+                || fase.endsWith(" final")
+                || fase.contains("oitavos");
+    }
+
+    private void reabrirJogosFrame() {
+        dispose();
+        new JogosFrame();
     }
 
     private LocalDate converterData(String dataTexto) {
@@ -327,20 +651,29 @@ public class JogosFrame extends JFrame {
         LocalDate data = converterData(dataTexto);
 
         if (data == null) {
-            return dataTexto;
+            return valorOuTraco(dataTexto);
         }
 
-        String texto = data.format(DateTimeFormatter.ofPattern("dd MMM", new Locale("pt", "PT")));
-        return texto.isEmpty() ? texto : texto.substring(0, 1).toUpperCase() + texto.substring(1);
+        String texto = data.format(
+                DateTimeFormatter.ofPattern("dd MMM", new Locale("pt", "PT"))
+        );
+
+        return texto.isEmpty()
+                ? texto
+                : texto.substring(0, 1).toUpperCase() + texto.substring(1);
+    }
+
+    private String valorOuTraco(String valor) {
+        return valor == null || valor.trim().isEmpty() ? "-" : valor;
     }
 
     private JButton criarBotaoMenu(JPanel menuLateral) {
         JButton botaoMenu = new JButton("=");
+        botaoMenu.setFont(Tema.FONTE_BOTAO_MENU);
         botaoMenu.setFocusPainted(false);
         botaoMenu.setBorderPainted(false);
         botaoMenu.setContentAreaFilled(false);
-        botaoMenu.setFont(new Font("Segoe UI", Font.BOLD, 24));
-        botaoMenu.setForeground(TEXT);
+        botaoMenu.setForeground(Tema.COR_TEXTO_PRINCIPAL);
         botaoMenu.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
         botaoMenu.addActionListener(e -> {
@@ -352,38 +685,12 @@ public class JogosFrame extends JFrame {
         return botaoMenu;
     }
 
-    private JButton criarBotaoAzul(String texto) {
-        JButton botao = new JButton(texto);
-        botao.setFocusPainted(false);
-        botao.setBorderPainted(false);
-        botao.setBackground(BLUE);
-        botao.setForeground(Color.WHITE);
-        botao.setFont(new Font("Segoe UI", Font.BOLD, 13));
-        botao.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        botao.setBorder(new EmptyBorder(11, 18, 11, 18));
-        return botao;
-    }
-
-    static class PainelArredondado extends JPanel {
-        private final int raio;
-        private final Color corFundo;
-
-        public PainelArredondado(int raio, Color corFundo) {
-            this.raio = raio;
-            this.corFundo = corFundo;
-            setOpaque(false);
-        }
-
-        @Override
-        protected void paintComponent(Graphics g) {
-            Graphics2D desenho = (Graphics2D) g.create();
-            desenho.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            desenho.setColor(new Color(0, 0, 0, 14));
-            desenho.fillRoundRect(4, 6, getWidth() - 8, getHeight() - 8, raio, raio);
-            desenho.setColor(corFundo);
-            desenho.fillRoundRect(0, 0, getWidth() - 8, getHeight() - 8, raio, raio);
-            desenho.dispose();
-            super.paintComponent(g);
-        }
+    private void mostrarErro(String mensagem) {
+        JOptionPane.showMessageDialog(
+                this,
+                mensagem,
+                "Erro",
+                JOptionPane.ERROR_MESSAGE
+        );
     }
 }
