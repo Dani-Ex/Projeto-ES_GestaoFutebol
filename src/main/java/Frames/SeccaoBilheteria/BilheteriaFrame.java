@@ -7,9 +7,9 @@ import Design.RoundedButton;
 import Design.RoundedPanel;
 import Design.TableStyle;
 import Design.Tema;
-import Models.Bilhete;
-import Models.BilheteriaService;
-import Models.Jogo;
+import Models.Bilheteria.Bilhete;
+import Models.Bilheteria.BilheteriaService;
+import Models.Jogos.Jogo;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;

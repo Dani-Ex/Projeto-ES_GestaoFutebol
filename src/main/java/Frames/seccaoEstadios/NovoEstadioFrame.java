@@ -1,12 +1,12 @@
-package Frames.seccaoEstadios;
+package Frames.SeccaoEstadios;
 
 import Design.MenuLateral;
 import Design.RoundedBorder;
 import Design.RoundedButton;
 import Design.RoundedPanel;
-import Models.CampeonatoRepositorio;
-import Models.Campeonato;
-import Models.Estadio;
+import Models.Campeonatos.CampeonatoRepositorio;
+import Models.Campeonatos.Campeonato;
+import Models.Estadios.Estadio;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;

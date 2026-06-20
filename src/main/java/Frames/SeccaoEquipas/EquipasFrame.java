@@ -7,10 +7,10 @@ import Design.RoundedButton;
 import Design.RoundedPanel;
 import Design.TableStyle;
 import Design.Tema;
-import Models.CampeonatoRepositorio;
-import Models.Campeonato;
-import Models.Equipa;
-import Models.EquipaService;
+import Models.Campeonatos.CampeonatoRepositorio;
+import Models.Campeonatos.Campeonato;
+import Models.Equipas.Equipa;
+import Models.Equipas.EquipaService;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;

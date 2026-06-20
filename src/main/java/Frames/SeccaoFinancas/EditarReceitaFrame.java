@@ -5,12 +5,12 @@ import Design.PlaceholderTextField;
 import Design.RoundedButton;
 import Design.RoundedPanel;
 import Design.Tema;
-import Models.Jogo;
-import Models.JogoService;
-import Models.Bilhete;
-import Models.BilheteriaService;
-import Models.Receita;
-import Models.ReceitaService;
+import Models.Jogos.Jogo;
+import Models.Jogos.JogoService;
+import Models.Bilheteria.Bilhete;
+import Models.Bilheteria.BilheteriaService;
+import Models.Financas.Receita;
+import Models.Financas.ReceitaService;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;

@@ -1,10 +1,10 @@
 package Frames.SeccaoJogos;
 
 import Design.MenuLateral;
-import Models.CampeonatoRepositorio;
-import Models.Campeonato;
-import Models.Estadio;
-import Models.Jogo;
+import Models.Campeonatos.CampeonatoRepositorio;
+import Models.Campeonatos.Campeonato;
+import Models.Estadios.Estadio;
+import Models.Jogos.Jogo;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;

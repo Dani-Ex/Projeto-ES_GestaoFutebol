@@ -5,9 +5,9 @@ import Design.RoundedBorder;
 import Design.RoundedButton;
 import Design.RoundedPanel;
 import Design.Tema;
-import Models.EquipaService;
-import Models.Jogador;
-import Models.JogadorService;
+import Models.Equipas.EquipaService;
+import Models.Jogadores.Jogador;
+import Models.Jogadores.JogadorService;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;

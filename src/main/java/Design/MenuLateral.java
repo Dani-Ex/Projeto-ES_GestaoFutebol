@@ -1,13 +1,15 @@
 package Design;
 
-import Frames.*;
+import Frames.SeccaoDashboard.DashboardFrame;
+import Frames.SeccaoEstatisticas.EstadisticasFrame;
+import Frames.SeccaoRegras.RegrasFrame;
 import Frames.SeccaoBilheteria.BilheteriaFrame;
 import Frames.SeccaoEquipas.EquipasFrame;
 import Frames.SeccaoFinancas.FinancasFrame;
 import Frames.SeccaoJogadores.JogadoresFrame;
 import Frames.SeccaoJogos.JogosFrame;
-import Frames.seccaoEstadios.EstadiosFrame;
-import Frames.CampeonatosFrame;
+import Frames.SeccaoEstadios.EstadiosFrame;
+import Frames.SeccaoCampeonatos.CampeonatosFrame;
 
 import javax.swing.*;
 import java.awt.*;

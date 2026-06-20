@@ -5,9 +5,9 @@ import Design.FormUtils;
 import Design.RoundedButton;
 import Design.RoundedPanel;
 import Design.Tema;
-import Models.CampeonatoRepositorio;
-import Models.Equipa;
-import Models.EquipaService;
+import Models.Campeonatos.CampeonatoRepositorio;
+import Models.Equipas.Equipa;
+import Models.Equipas.EquipaService;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;

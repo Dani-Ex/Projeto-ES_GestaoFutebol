@@ -4,9 +4,9 @@ import Design.ModernScrollBarUI;
 import Design.RoundedPanel;
 import Design.TableStyle;
 import Design.Tema;
-import Models.Jogador;
-import Models.JogadorService;
-import Models.EquipaService;
+import Models.Jogadores.Jogador;
+import Models.Jogadores.JogadorService;
+import Models.Equipas.EquipaService;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;

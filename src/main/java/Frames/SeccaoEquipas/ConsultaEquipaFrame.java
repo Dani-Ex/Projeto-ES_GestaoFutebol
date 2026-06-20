@@ -6,10 +6,10 @@ import Design.RoundedPanel;
 import Design.TableStyle;
 import Design.Tema;
 import Frames.SeccaoJogadores.PerfilJogadorFrame;
-import Models.Equipa;
-import Models.EquipaService;
-import Models.Jogador;
-import Models.JogadorService;
+import Models.Equipas.Equipa;
+import Models.Equipas.EquipaService;
+import Models.Jogadores.Jogador;
+import Models.Jogadores.JogadorService;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;

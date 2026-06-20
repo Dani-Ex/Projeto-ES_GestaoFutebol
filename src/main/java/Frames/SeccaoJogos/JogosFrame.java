@@ -6,10 +6,10 @@ import Design.RoundedButton;
 import Design.RoundedPanel;
 import Design.TableStyle;
 import Design.Tema;
-import Frames.DetalheJogoFrame;
-import Models.CampeonatoRepositorio;
-import Models.Campeonato;
-import Models.Jogo;
+import Frames.SeccaoJogos.DetalheJogoFrame;
+import Models.Campeonatos.CampeonatoRepositorio;
+import Models.Campeonatos.Campeonato;
+import Models.Jogos.Jogo;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
