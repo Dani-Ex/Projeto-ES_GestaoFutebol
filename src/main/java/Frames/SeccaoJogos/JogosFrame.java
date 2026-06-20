@@ -299,6 +299,8 @@ public class JogosFrame extends JFrame {
         }
     }
 
+
+
     private LocalDate converterData(String dataTexto) {
         if (dataTexto == null || dataTexto.trim().isEmpty()) {
             return null;

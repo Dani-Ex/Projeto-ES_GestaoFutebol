@@ -340,4 +340,48 @@ public class JogadorService {
 
         return TextUtils.limparCaracteresInvisiveis(resultado.toString());
     }
+
+    public synchronized void ajustarEstatisticasDoEvento(
+            Jogador jogador,
+            int deltaGolos,
+            int deltaCartoes
+    ) {
+        if (jogador == null) {
+            throw new IllegalArgumentException(
+                    "O jogador do evento não existe."
+            );
+        }
+
+        int golosAtualizados = jogador.getGolos() + deltaGolos;
+        int cartoesAtualizados = jogador.getCartoes() + deltaCartoes;
+
+        if (golosAtualizados < 0 || cartoesAtualizados < 0) {
+            throw new IllegalStateException(
+                    "Não é possível remover o evento porque as estatísticas ficariam negativas."
+            );
+        }
+
+        jogador.setGolos(golosAtualizados);
+        jogador.setCartoes(cartoesAtualizados);
+
+        guardarJogadores();
+    }
+
+    public synchronized Jogador procurarJogador(
+            String nome,
+            int numero,
+            String equipa,
+            String campeonato
+    ) {
+        for (Jogador jogador : jogadores) {
+            if (jogador.getNumero() == numero
+                    && normalizar(jogador.getNome()).equals(normalizar(nome))
+                    && normalizar(jogador.getEquipa()).equals(normalizar(equipa))
+                    && normalizar(jogador.getCampeonato()).equals(normalizar(campeonato))) {
+                return jogador;
+            }
+        }
+
+        return null;
+    }
 }
