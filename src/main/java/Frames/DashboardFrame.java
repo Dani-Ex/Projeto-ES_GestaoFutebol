@@ -5,6 +5,7 @@ import Design.RoundedPanel;
 import Design.TableStyle;
 import Design.Tema;
 import Frames.SeccaoEquipas.ConsultaEquipaFrame;
+import Models.Campeonato;
 import Models.CampeonatoRepositorio;
 import Models.Bilhete;
 import Models.BilheteriaService;
@@ -37,6 +38,8 @@ public class DashboardFrame extends JFrame {
 
     private final List<JTable> tabelasDashboard = new ArrayList<>();
     private final List<ReceitaJogo> receitas = new ArrayList<>();
+    private final List<Jogo> proximosJogosVisiveis = new ArrayList<>();
+    private final List<Jogo> ultimosJogosVisiveis = new ArrayList<>();
     private final ReceitaService receitaService = ReceitaService.getInstance();
     private final BilheteriaService bilheteriaService = new BilheteriaService();
     private final JogoService jogoService = JogoService.getInstance();
@@ -45,6 +48,7 @@ public class DashboardFrame extends JFrame {
     private MenuLateral menuLateral;
     private boolean menuAberto = false;
     private JLabel tituloClassificacao;
+    private JComboBox<String> comboFaseClassificacao;
     private JComboBox<String> comboCampeonatoClassificacao;
     private DefaultTableModel modeloClassificacao;
     private JTable tabelaClassificacao;
@@ -285,6 +289,15 @@ public class DashboardFrame extends JFrame {
         tituloClassificacao.setFont(Tema.FONTE_TITULO);
         tituloClassificacao.setForeground(Tema.COR_TEXTO_PRINCIPAL);
 
+        comboFaseClassificacao = new JComboBox<>(new String[]{"Fase de Grupos", "Fase Eliminatoria"});
+        comboFaseClassificacao.setFont(Tema.FONTE_CARD_TITULO);
+        comboFaseClassificacao.setForeground(Tema.COR_TEXTO_PRINCIPAL);
+        comboFaseClassificacao.setBackground(Tema.COR_BOTAO_SECUNDARIO);
+        comboFaseClassificacao.setFocusable(false);
+        comboFaseClassificacao.setPreferredSize(new Dimension(170, 34));
+        comboFaseClassificacao.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        comboFaseClassificacao.addActionListener(e -> selecionarFaseClassificacao());
+
         comboCampeonatoClassificacao = new JComboBox<>(
                 CampeonatoRepositorio.listarNomesCampeonatosParaClassificacao().toArray(new String[0])
         );
@@ -300,8 +313,14 @@ public class DashboardFrame extends JFrame {
         topo.setOpaque(false);
         topo.setBorder(BorderFactory.createEmptyBorder(0, 0, Tema.ESPACAMENTO_PEQUENO, 0));
         limparSelecaoAoClicar(topo);
+
+        JPanel filtros = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
+        filtros.setOpaque(false);
+        filtros.add(comboFaseClassificacao);
+        filtros.add(comboCampeonatoClassificacao);
+
         topo.add(tituloClassificacao, BorderLayout.WEST);
-        topo.add(comboCampeonatoClassificacao, BorderLayout.EAST);
+        topo.add(filtros, BorderLayout.EAST);
 
         String[] colunas = {"#", "Equipa", "Golos", "Jog.", "Pts"};
         modeloClassificacao = criarModeloNaoEditavel(colunas);
@@ -388,8 +407,10 @@ public class DashboardFrame extends JFrame {
 
         String[] colunas = {"Data", "Jogo", "Estadio"};
         DefaultTableModel model = criarModeloNaoEditavel(colunas);
+        proximosJogosVisiveis.clear();
 
         for (Jogo jogo : listarJogosPorEstado("Agendado")) {
+            proximosJogosVisiveis.add(jogo);
             model.addRow(new Object[]{
                     formatarData(jogo.getData()),
                     jogo.getNomeJogo(),
@@ -399,6 +420,7 @@ public class DashboardFrame extends JFrame {
 
         JTable tabela = new JTable(model);
         configurarTabela(tabela, 1);
+        adicionarDuploCliqueJogo(tabela, proximosJogosVisiveis);
         tabelasDashboard.add(tabela);
 
         JScrollPane scroll = new JScrollPane(tabela);
@@ -414,8 +436,10 @@ public class DashboardFrame extends JFrame {
 
         String[] colunas = {"Data", "Jogo", "Estadio", "Resultado"};
         DefaultTableModel model = criarModeloNaoEditavel(colunas);
+        ultimosJogosVisiveis.clear();
 
         for (Jogo jogo : listarJogosPorEstado("Realizado")) {
+            ultimosJogosVisiveis.add(jogo);
             model.addRow(new Object[]{
                     formatarData(jogo.getData()),
                     jogo.getNomeJogo(),
@@ -426,6 +450,7 @@ public class DashboardFrame extends JFrame {
 
         JTable tabela = new JTable(model);
         configurarTabela(tabela, 1);
+        adicionarDuploCliqueJogo(tabela, ultimosJogosVisiveis);
         tabelasDashboard.add(tabela);
 
         JScrollPane scroll = new JScrollPane(tabela);
@@ -461,6 +486,32 @@ public class DashboardFrame extends JFrame {
         TableStyle.aplicarTabelaLimpa(tabela, colunaEsquerda);
         tabela.setRowHeight(34);
         tabela.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+    }
+
+    private void adicionarDuploCliqueJogo(JTable tabela, List<Jogo> jogosVisiveis) {
+        tabela.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent e) {
+                if (e.getClickCount() != 2) {
+                    return;
+                }
+
+                int linha = tabela.getSelectedRow();
+                if (linha < 0) {
+                    return;
+                }
+
+                int linhaModelo = tabela.convertRowIndexToModel(linha);
+                if (linhaModelo >= 0 && linhaModelo < jogosVisiveis.size()) {
+                    new DetalheJogoFrame(jogosVisiveis.get(linhaModelo), () ->
+                            SwingUtilities.invokeLater(() -> {
+                                carregarReceitas();
+                                atualizarClassificacao();
+                            })
+                    );
+                }
+            }
+        });
     }
 
     private void configurarTabelaGrupo(JTable tabela) {
@@ -515,7 +566,17 @@ public class DashboardFrame extends JFrame {
         atualizarClassificacao();
     }
 
+    private void selecionarFaseClassificacao() {
+        indiceGrupoClassificacao = 0;
+        atualizarGruposClassificacao();
+        atualizarClassificacao();
+    }
+
     private void navegarGrupoClassificacao(int direcao) {
+        if (isFaseEliminatoriaSelecionada()) {
+            return;
+        }
+
         if (gruposClassificacao.isEmpty()) {
             return;
         }
@@ -532,6 +593,13 @@ public class DashboardFrame extends JFrame {
     }
 
     private void atualizarGruposClassificacao() {
+        if (isFaseEliminatoriaSelecionada()) {
+            gruposClassificacao = new ArrayList<>();
+            gruposClassificacao.add("Eliminatoria");
+            indiceGrupoClassificacao = 0;
+            return;
+        }
+
         gruposClassificacao = listarGruposDoCampeonato(getCampeonatoClassificacaoSelecionado());
 
         if (gruposClassificacao.isEmpty()) {
@@ -554,7 +622,11 @@ public class DashboardFrame extends JFrame {
         String campeonato = getCampeonatoClassificacaoSelecionado();
         String grupo = getGrupoClassificacaoSelecionado();
 
-        tituloClassificacao.setText("Classificacao Grupo " + valorOuTraco(grupo));
+        if (isFaseEliminatoriaSelecionada()) {
+            tituloClassificacao.setText("Classificacao Eliminatoria");
+        } else {
+            tituloClassificacao.setText("Classificacao Grupo " + valorOuTraco(grupo));
+        }
 
         List<Equipa> equipas = listarEquipasClassificacao(campeonato, grupo);
         equipasClassificacaoVisiveis.addAll(equipas);
@@ -591,7 +663,48 @@ public class DashboardFrame extends JFrame {
     }
 
     private List<Equipa> listarEquipasClassificacao(String campeonato, String grupo) {
+        if (isFaseEliminatoriaSelecionada()) {
+            return listarEquipasEliminatoria(campeonato);
+        }
+
         return DashboardLogic.ordenarClassificacao(equipaService.listarEquipas(), campeonato, grupo);
+    }
+
+    private List<Equipa> listarEquipasEliminatoria(String campeonato) {
+        List<Equipa> equipas = new ArrayList<>();
+        Campeonato campeonatoSelecionado = CampeonatoRepositorio.procurarPorNome(campeonato);
+
+        if (campeonatoSelecionado == null
+                || campeonatoSelecionado.getEquipasEliminatorias() == null
+                || campeonatoSelecionado.getEquipasEliminatorias().isEmpty()) {
+            return equipas;
+        }
+
+        for (String nomeEquipa : campeonatoSelecionado.getEquipasEliminatorias()) {
+            Equipa equipa = procurarEquipaDoCampeonato(nomeEquipa, campeonato);
+            if (equipa != null) {
+                equipas.add(equipa);
+            }
+        }
+
+        return equipas;
+    }
+
+    private Equipa procurarEquipaDoCampeonato(String nomeEquipa, String campeonato) {
+        for (Equipa equipa : equipaService.listarEquipas()) {
+            if (textoIgual(equipa.getNome(), nomeEquipa)
+                    && textoIgual(equipa.getCampeonato(), campeonato)) {
+                return equipa;
+            }
+        }
+
+        return null;
+    }
+
+    private boolean isFaseEliminatoriaSelecionada() {
+        return comboFaseClassificacao != null
+                && comboFaseClassificacao.getSelectedItem() != null
+                && comboFaseClassificacao.getSelectedItem().toString().toLowerCase(Locale.ROOT).contains("eliminatoria");
     }
 
     private String getCampeonatoClassificacaoSelecionado() {

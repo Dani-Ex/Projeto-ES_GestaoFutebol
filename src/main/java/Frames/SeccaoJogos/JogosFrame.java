@@ -276,7 +276,9 @@ public class JogosFrame extends JFrame {
                     tabelaProximos.clearSelection();
                 }
 
-                abrirDetalheJogo(tabela, proximos);
+                if (e.getClickCount() == 2) {
+                    abrirDetalheJogo(tabela, proximos);
+                }
             }
         });
 
