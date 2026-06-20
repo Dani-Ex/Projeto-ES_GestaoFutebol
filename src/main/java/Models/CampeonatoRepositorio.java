@@ -599,14 +599,37 @@ public class CampeonatoRepositorio {
         return String.format("J%03d", maior + 1);
     }
 
+    /*
+     * Cria um jogo apenas quando as regras do campeonato o permitem.
+     * Esta validação fica no repositório para impedir que outro ecrã
+     * consiga contornar as regras de passagem direta ou fase fechada.
+     */
     public static boolean adicionarJogo(Campeonato campeonato, Jogo jogo) {
         if (campeonato == null || jogo == null) {
             return false;
         }
 
+        String bloqueio = motivoBloqueioCriacaoJogo(
+                campeonato,
+                jogo.getFaseGrupo(),
+                jogo.getEquipaA(),
+                jogo.getEquipaB()
+        );
+
+        if (!bloqueio.isEmpty()) {
+            return false;
+        }
+
         for (Campeonato existente : campeonatos) {
+            if (existente == null || existente.getJogos() == null) {
+                continue;
+            }
+
             for (Jogo jogoExistente : existente.getJogos()) {
-                if (jogoExistente.getId().equalsIgnoreCase(jogo.getId())) {
+                if (jogoExistente != null
+                        && jogoExistente.getId() != null
+                        && jogo.getId() != null
+                        && jogoExistente.getId().equalsIgnoreCase(jogo.getId())) {
                     return false;
                 }
             }
@@ -615,6 +638,490 @@ public class CampeonatoRepositorio {
         campeonato.getJogos().add(jogo);
         salvar();
         return true;
+    }
+
+    public static String motivoBloqueioRegistoResultado(Jogo jogo) {
+        if (jogo == null) {
+            return "Seleciona um jogo válido.";
+        }
+
+        String estado = jogo.getEstado() == null ? "" : jogo.getEstado().trim();
+
+        if (estado.equalsIgnoreCase("Realizado")
+                || estado.equalsIgnoreCase("Finalizado")) {
+            return "Este jogo já tem um resultado registado.";
+        }
+
+        if (!estado.equalsIgnoreCase("Agendado")) {
+            return "Não é possível registar resultado num jogo com estado \""
+                    + (estado.isEmpty() ? "-" : estado)
+                    + "\".";
+        }
+
+        return "";
+    }
+
+    /*
+     * Guarda o resultado do jogo. Quando o jogo for a Final e houver vencedor,
+     * o campeonato passa automaticamente para o estado Finalizado.
+     */
+    public static boolean registarResultadoJogo(
+            String idJogo,
+            int golosEquipaA,
+            int golosEquipaB
+    ) {
+        if (idJogo == null || idJogo.trim().isEmpty()
+                || golosEquipaA < 0 || golosEquipaB < 0) {
+            return false;
+        }
+
+        for (Campeonato campeonato : campeonatos) {
+            if (campeonato == null || campeonato.getJogos() == null) {
+                continue;
+            }
+
+            for (int i = 0; i < campeonato.getJogos().size(); i++) {
+                Jogo jogo = campeonato.getJogos().get(i);
+
+                if (jogo == null || jogo.getId() == null
+                        || !jogo.getId().equalsIgnoreCase(idJogo.trim())) {
+                    continue;
+                }
+
+                if (!motivoBloqueioRegistoResultado(jogo).isEmpty()) {
+                    return false;
+                }
+
+                /*
+                 * Em qualquer jogo eliminatório tem de existir vencedor.
+                 * Introduz o resultado final após prolongamento ou penáltis.
+                 */
+                if (ehJogoEliminatorio(jogo) && golosEquipaA == golosEquipaB) {
+                    return false;
+                }
+
+                Jogo atualizado = new Jogo(
+                        jogo.getId(),
+                        jogo.getData(),
+                        jogo.getHora(),
+                        jogo.getEquipaA(),
+                        jogo.getEquipaB(),
+                        jogo.getEstadio(),
+                        jogo.getFaseGrupo(),
+                        "Realizado",
+                        golosEquipaA + "-" + golosEquipaB,
+                        jogo.getCampeonato()
+                );
+
+                campeonato.getJogos().set(i, atualizado);
+
+                /*
+                 * Só a Final pode terminar o campeonato.
+                 */
+                if (ehFinalEliminatoria(atualizado)) {
+                    finalizarCampeonatoPelaFinal(campeonato);
+                }
+
+                salvar();
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /*
+     * Devolve o nome do campeão quando a Final está realizada e tem vencedor.
+     * Caso contrário devolve uma String vazia.
+     */
+    public static String obterCampeao(Campeonato campeonato) {
+        if (campeonato == null || campeonato.getJogos() == null) {
+            return "";
+        }
+
+        for (Jogo jogo : campeonato.getJogos()) {
+            if (!ehFinalEliminatoria(jogo) || !jogoFoiRealizado(jogo)) {
+                continue;
+            }
+
+            int[] resultado = lerResultado(jogo.getResultado());
+
+            if (resultado == null || resultado[0] == resultado[1]) {
+                return "";
+            }
+
+            return resultado[0] > resultado[1]
+                    ? jogo.getEquipaA()
+                    : jogo.getEquipaB();
+        }
+
+        return "";
+    }
+
+    /*
+     * É chamado automaticamente depois de guardar o resultado da Final.
+     * O Campeonato só muda para Finalizado quando a Final tiver vencedor.
+     */
+    public static boolean finalizarCampeonatoPelaFinal(Campeonato campeonato) {
+        if (campeonato == null) {
+            return false;
+        }
+
+        if (campeonato.isFinalizado()) {
+            return true;
+        }
+
+        String campeao = obterCampeao(campeonato);
+
+        if (campeao.isEmpty()) {
+            return false;
+        }
+
+        /*
+         * O próprio modelo garante que apenas um campeonato iniciado
+         * pode ser finalizado.
+         */
+        return campeonato.finalizarCampeonato();
+    }
+
+    private static boolean ehJogoEliminatorio(Jogo jogo) {
+        return jogo != null
+                && obterTamanhoRondaEliminatoria(jogo.getFaseGrupo()) > 0;
+    }
+
+    private static boolean ehFinalEliminatoria(Jogo jogo) {
+        return jogo != null
+                && obterTamanhoRondaEliminatoria(jogo.getFaseGrupo()) == 2;
+    }
+
+    private static boolean jogoFoiRealizado(Jogo jogo) {
+        if (jogo == null || jogo.getEstado() == null) {
+            return false;
+        }
+
+        return jogo.getEstado().equalsIgnoreCase("Realizado")
+                || jogo.getEstado().equalsIgnoreCase("Finalizado");
+    }
+
+    private static int[] lerResultado(String resultado) {
+        if (resultado == null) {
+            return null;
+        }
+
+        try {
+            String[] partes = resultado.trim()
+                    .replace(" ", "")
+                    .split("-");
+
+            if (partes.length != 2) {
+                return null;
+            }
+
+            int golosA = Integer.parseInt(partes[0]);
+            int golosB = Integer.parseInt(partes[1]);
+
+            if (golosA < 0 || golosB < 0) {
+                return null;
+            }
+
+            return new int[]{golosA, golosB};
+
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    }
+
+    public static String motivoBloqueioEliminacaoJogo(Jogo jogo) {
+        if (jogo == null) {
+            return "Seleciona um jogo válido.";
+        }
+
+        String estado = jogo.getEstado() == null ? "" : jogo.getEstado().trim();
+
+        if (!estado.equalsIgnoreCase("Agendado")) {
+            return "Não é possível eliminar este jogo porque o seu estado é \""
+                    + (estado.isEmpty() ? "-" : estado)
+                    + "\".";
+        }
+
+        return "";
+    }
+
+    public static boolean eliminarJogoNaoRealizado(String idJogo) {
+        if (idJogo == null || idJogo.trim().isEmpty()) {
+            return false;
+        }
+
+        for (Campeonato campeonato : campeonatos) {
+            if (campeonato == null || campeonato.getJogos() == null) {
+                continue;
+            }
+
+            for (int i = 0; i < campeonato.getJogos().size(); i++) {
+                Jogo jogo = campeonato.getJogos().get(i);
+
+                if (jogo == null || jogo.getId() == null
+                        || !jogo.getId().equalsIgnoreCase(idJogo.trim())) {
+                    continue;
+                }
+
+                if (!motivoBloqueioEliminacaoJogo(jogo).isEmpty()) {
+                    return false;
+                }
+
+                campeonato.getJogos().remove(i);
+                salvar();
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /*
+     * Quando a fase de grupos é fechada, todos os jogos daquele grupo que ainda
+     * estavam agendados passam para Encerrado. Não recebem resultado e deixam
+     * de aparecer como próximos jogos.
+     */
+    public static int encerrarJogosDeGruposNaoRealizados(Campeonato campeonato) {
+        if (campeonato == null
+                || campeonato.getJogos() == null
+                || campeonato.getGrupos() == null
+                || campeonato.getGrupos().isEmpty()) {
+            return 0;
+        }
+
+        int total = 0;
+
+        for (int i = 0; i < campeonato.getJogos().size(); i++) {
+            Jogo jogo = campeonato.getJogos().get(i);
+
+            if (!ehJogoDaFaseDeGrupos(campeonato, jogo)
+                    || !jogoEstaAgendado(jogo)) {
+                continue;
+            }
+
+            Jogo encerrado = new Jogo(
+                    jogo.getId(),
+                    jogo.getData(),
+                    jogo.getHora(),
+                    jogo.getEquipaA(),
+                    jogo.getEquipaB(),
+                    jogo.getEstadio(),
+                    jogo.getFaseGrupo(),
+                    "Encerrado",
+                    "-",
+                    jogo.getCampeonato()
+            );
+
+            campeonato.getJogos().set(i, encerrado);
+            total++;
+        }
+
+        if (total > 0) {
+            salvar();
+        }
+
+        return total;
+    }
+
+    /*
+     * As equipas no início da lista de classificadas são as que recebem a
+     * passagem direta. Exemplo: 6 classificadas precisam de uma chave de 8,
+     * por isso as 2 primeiras passam diretamente para as meias-finais.
+     */
+    public static List<String> obterEquipasComPassagemDireta(Campeonato campeonato) {
+        List<String> diretas = new ArrayList<>();
+
+        if (campeonato == null
+                || campeonato.getEquipasEliminatorias() == null
+                || campeonato.getEquipasEliminatorias().isEmpty()) {
+            return diretas;
+        }
+
+        List<String> classificadas = new ArrayList<>(
+                campeonato.getEquipasEliminatorias()
+        );
+
+        int tamanhoChave = proximaPotenciaDeDois(classificadas.size());
+        int quantidadeDiretas = tamanhoChave - classificadas.size();
+
+        for (int i = 0; i < quantidadeDiretas && i < classificadas.size(); i++) {
+            String equipa = classificadas.get(i);
+
+            if (equipa != null && !equipa.trim().isEmpty()) {
+                diretas.add(equipa.trim());
+            }
+        }
+
+        return diretas;
+    }
+
+    public static String motivoBloqueioCriacaoJogo(
+            Campeonato campeonato,
+            String fase,
+            String equipaA,
+            String equipaB
+    ) {
+        if (campeonato == null) {
+            return "Seleciona um campeonato válido.";
+        }
+
+        if (ehFaseDeGrupos(campeonato, fase)
+                && campeonato.isFaseGruposTerminada()) {
+            return "A fase de grupos já terminou. Não podes criar mais jogos de grupos.";
+        }
+
+        int tamanhoRonda = obterTamanhoRondaEliminatoria(fase);
+
+        if (tamanhoRonda <= 0) {
+            return "";
+        }
+
+        List<String> diretas = obterEquipasComPassagemDireta(campeonato);
+
+        if (diretas.isEmpty()) {
+            return "";
+        }
+
+        int tamanhoPrimeiraRonda = proximaPotenciaDeDois(
+                campeonato.getEquipasEliminatorias().size()
+        );
+
+        /*
+         * A passagem direta bloqueia somente a primeira ronda. Com 6 equipas
+         * classificadas, esta ronda é a chave de 8 / Quartos de Final.
+         */
+        if (tamanhoRonda != tamanhoPrimeiraRonda) {
+            return "";
+        }
+
+        String equipaDireta = encontrarEquipaDireta(diretas, equipaA);
+
+        if (equipaDireta == null) {
+            equipaDireta = encontrarEquipaDireta(diretas, equipaB);
+        }
+
+        if (equipaDireta != null) {
+            return "A equipa \"" + equipaDireta
+                    + "\" tem passagem direta e só pode entrar na ronda seguinte.";
+        }
+
+        return "";
+    }
+
+    private static boolean ehJogoDaFaseDeGrupos(Campeonato campeonato, Jogo jogo) {
+        return jogo != null && ehFaseDeGrupos(campeonato, jogo.getFaseGrupo());
+    }
+
+    private static boolean ehFaseDeGrupos(Campeonato campeonato, String fase) {
+        if (campeonato == null
+                || campeonato.getGrupos() == null
+                || fase == null) {
+            return false;
+        }
+
+        for (String nomeGrupo : campeonato.getGrupos().keySet()) {
+            if (nomeGrupo != null && nomeGrupo.equalsIgnoreCase(fase.trim())) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static boolean jogoEstaAgendado(Jogo jogo) {
+        return jogo != null
+                && jogo.getEstado() != null
+                && jogo.getEstado().trim().equalsIgnoreCase("Agendado");
+    }
+
+    private static String encontrarEquipaDireta(
+            List<String> diretas,
+            String equipa
+    ) {
+        if (equipa == null) {
+            return null;
+        }
+
+        for (String direta : diretas) {
+            if (direta.equalsIgnoreCase(equipa.trim())) {
+                return direta;
+            }
+        }
+
+        return null;
+    }
+
+    private static int obterTamanhoRondaEliminatoria(String fase) {
+        if (fase == null || fase.trim().isEmpty()) {
+            return -1;
+        }
+
+        String texto = fase.trim();
+
+        if (texto.startsWith("ELIM:")) {
+            String[] partes = texto.split(":", 3);
+
+            if (partes.length >= 2) {
+                try {
+                    return Integer.parseInt(partes[1]);
+                } catch (NumberFormatException ignored) {
+                }
+            }
+        }
+
+        String normalizado = normalizarTexto(fase);
+
+        if (normalizado.contains("dezasseis")
+                || normalizado.contains("16 avos")
+                || normalizado.contains("16-avos")) {
+            return 32;
+        }
+
+        if (normalizado.contains("oitavo")) {
+            return 16;
+        }
+
+        if (normalizado.contains("quarto")) {
+            return 8;
+        }
+
+        if (normalizado.contains("meia") || normalizado.contains("semi")) {
+            return 4;
+        }
+
+        if (normalizado.equals("final") || normalizado.endsWith(" final")) {
+            return 2;
+        }
+
+        return -1;
+    }
+
+    private static int proximaPotenciaDeDois(int numero) {
+        int potencia = 1;
+
+        while (potencia < Math.max(2, numero)) {
+            potencia *= 2;
+        }
+
+        return potencia;
+    }
+
+    private static String normalizarTexto(String texto) {
+        return texto == null ? "" : texto
+                .toLowerCase()
+                .replace("á", "a")
+                .replace("à", "a")
+                .replace("ã", "a")
+                .replace("â", "a")
+                .replace("é", "e")
+                .replace("ê", "e")
+                .replace("í", "i")
+                .replace("ó", "o")
+                .replace("ô", "o")
+                .replace("õ", "o")
+                .replace("ú", "u");
     }
 
     public static void salvar() {

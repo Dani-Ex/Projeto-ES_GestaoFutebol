@@ -71,7 +71,7 @@ public class NovoJogoFrame extends JFrame {
         JPanel topo = new JPanel(new BorderLayout());
         topo.setOpaque(false);
 
-        JButton btnMenu = new JButton("=");
+        JButton btnMenu = new JButton("☰");
         btnMenu.setFocusPainted(false);
         btnMenu.setBorderPainted(false);
         btnMenu.setContentAreaFilled(false);
@@ -308,6 +308,22 @@ public class NovoJogoFrame extends JFrame {
 
         if (fase.isEmpty()) {
             mostrarErro("Indica a fase ou o grupo do jogo.");
+            return;
+        }
+
+        /*
+         * Impede criar um jogo na primeira ronda eliminatória
+         * para uma equipa que recebeu passagem direta.
+         */
+        String bloqueioCriacao = CampeonatoRepositorio.motivoBloqueioCriacaoJogo(
+                campeonato,
+                fase,
+                equipaA,
+                equipaB
+        );
+
+        if (!bloqueioCriacao.isEmpty()) {
+            mostrarErro(bloqueioCriacao);
             return;
         }
 

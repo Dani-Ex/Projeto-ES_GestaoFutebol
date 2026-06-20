@@ -10,6 +10,16 @@ public class EliminatoriasFrame extends JFrame {
 
     public EliminatoriasFrame(Campeonato campeonato) {
 
+        if (campeonato == null) {
+            JOptionPane.showMessageDialog(
+                    null,
+                    "Não foi possível abrir as eliminatórias.",
+                    "Erro",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            return;
+        }
+
         if (!campeonato.isFaseGruposTerminada()) {
             JOptionPane.showMessageDialog(
                     null,
@@ -17,21 +27,25 @@ public class EliminatoriasFrame extends JFrame {
                     "Erro",
                     JOptionPane.ERROR_MESSAGE
             );
+            new GruposFrame(campeonato);
             return;
         }
 
-        if (campeonato.getEquipasEliminatorias() == null || campeonato.getEquipasEliminatorias().isEmpty()) {
+        if (campeonato.getEquipasEliminatorias() == null
+                || campeonato.getEquipasEliminatorias().isEmpty()) {
             JOptionPane.showMessageDialog(
                     null,
                     "Ainda não existem equipas classificadas para as eliminatórias.",
                     "Erro",
                     JOptionPane.ERROR_MESSAGE
             );
+            new GruposFrame(campeonato);
             return;
         }
 
         setTitle("Eliminatórias - " + campeonato.getNome());
         setSize(1250, 780);
+        setMinimumSize(new Dimension(1080, 680));
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
@@ -47,8 +61,9 @@ public class EliminatoriasFrame extends JFrame {
                     repaint();
                 },
                 pagina -> {
-                    if (pagina.equals("grupos")) {
+                    if ("grupos".equalsIgnoreCase(pagina)) {
                         dispose();
+                        new GruposFrame(campeonato);
                     }
                 }
         );

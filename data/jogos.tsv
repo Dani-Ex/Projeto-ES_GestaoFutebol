@@ -1,16 +1,18 @@
-J016	2026-09-01	20:00	Braga Norte	Porto Azul	Estadio Jose Alvalade	Fase de grupos	Agendado	-	Liga Configuracao 2026
-J001	2026-09-01	18:00	Faro Sul	Lisboa Verde	Estadio Jose Alvalade	Grupo A	Agendado	-	Liga Configuracao 2026
-J002	2026-09-01	18:00	Faro Sul	Braga Norte	Estadio do Dragao	Grupo A	Agendado	-	Liga Configuracao 2026
-J003	2026-09-02	18:00	Faro Sul	Porto Azul	Estadio Jose Alvalade	Grupo A	Agendado	-	Liga Configuracao 2026
-J004	2026-09-02	18:00	Lisboa Verde	Braga Norte	Estadio do Dragao	Grupo A	Agendado	-	Liga Configuracao 2026
-J005	2026-09-03	18:00	Lisboa Verde	Porto Azul	Estadio Jose Alvalade	Grupo A	Agendado	-	Liga Configuracao 2026
-J006	2026-09-03	18:00	Braga Norte	Porto Azul	Estadio do Dragao	Grupo A	Agendado	-	Liga Configuracao 2026
+J016	2026-09-01	20:00	Braga Norte	Porto Azul	Estadio Jose Alvalade	Fase de grupos	Realizado	1-0	Liga Configuracao 2026
+J001	2026-09-01	18:00	Faro Sul	Lisboa Verde	Estadio Jose Alvalade	Grupo A	Realizado	1-0	Liga Configuracao 2026
+J002	2026-09-01	18:00	Faro Sul	Braga Norte	Estadio do Dragao	Grupo A	Realizado	1-0	Liga Configuracao 2026
+J003	2026-09-02	18:00	Faro Sul	Porto Azul	Estadio Jose Alvalade	Grupo A	Realizado	1-0	Liga Configuracao 2026
+J004	2026-09-02	18:00	Lisboa Verde	Braga Norte	Estadio do Dragao	Grupo A	Realizado	1-0	Liga Configuracao 2026
+J005	2026-09-03	18:00	Lisboa Verde	Porto Azul	Estadio Jose Alvalade	Grupo A	Realizado	1-0	Liga Configuracao 2026
+J006	2026-09-03	18:00	Braga Norte	Porto Azul	Estadio do Dragao	Grupo A	Realizado	1-0	Liga Configuracao 2026
+ELI-LIGA-CONFIGURACAO-2026-001	2026-09-19	20:00	Braga Norte	Faro Sul	Estadio Jose Alvalade	ELIM:2:Final	Realizado	1-0	Liga Configuracao 2026
 J001	2026-06-03	20:00	Lisboa Norte	Porto Ribeira	Estadio da Luz	Grupo A	Realizado	2-1	Liga Atlantica 2026
 J002	2026-06-07	18:00	Coimbra Estrela	Setubal Mar	Estadio Jose Alvalade	Grupo A	Realizado	1-1	Liga Atlantica 2026
 J003	2026-06-23	20:30	Lisboa Norte	Coimbra Estrela	Estadio da Luz	Grupo A	Agendado	-	Liga Atlantica 2026
 J004	2026-06-27	19:00	Porto Ribeira	Setubal Mar	Estadio Jose Alvalade	Grupo A	Agendado	-	Liga Atlantica 2026
 J005	2026-07-01	20:00	Lisboa Norte	Setubal Mar	Estadio da Luz	Grupo A	Agendado	-	Liga Atlantica 2026
 J006	2026-07-03	20:00	Porto Ribeira	Coimbra Estrela	Estadio Jose Alvalade	Grupo A	Agendado	-	Liga Atlantica 2026
+ELI-LIGA-ATLANTICA-2026-001	2026-07-07	20:00	Coimbra Estrela	Lisboa Norte	Estadio da Luz	ELIM:2:Final	Realizado	1-0	Liga Atlantica 2026
 J007	2026-03-03	18:00	Norte Real	Sul Clube	Estadio do Dragao	Grupo A	Realizado	3-2	Taca Finalizada 2026
 J008	2026-03-07	18:00	Ilhas FC	Interior SC	Estadio da Luz	Grupo A	Realizado	0-1	Taca Finalizada 2026
 J009	2026-03-11	20:00	Norte Real	Ilhas FC	Estadio do Dragao	Grupo A	Realizado	2-0	Taca Finalizada 2026
@@ -20,3 +22,45 @@ J012	2026-03-20	19:00	Sul Clube	Ilhas FC	Estadio da Luz	Grupo A	Realizado	4-1	Ta
 J013	2026-03-25	20:30	Norte Real	Interior SC	Estadio do Dragao	Meia-final	Realizado	2-1	Taca Finalizada 2026
 J014	2026-03-26	20:30	Sul Clube	Ilhas FC	Estadio da Luz	Meia-final	Realizado	1-0	Taca Finalizada 2026
 J015	2026-04-04	21:00	Norte Real	Sul Clube	Estadio do Dragao	Final	Realizado	2-0	Taca Finalizada 2026
+ELI-TACA-FINALIZADA-2026-001	2026-03-24	20:00	Norte Real	Sul Clube	Estadio do Dragao	ELIM:2:Final	Realizado	1-0	Taca Finalizada 2026
+J001	2026-05-01	18:00	Portugal	Marrocos	sgrsfg	Grupo A	Agendado	-	Mundial 2026
+J002	2026-05-01	18:00	Portugal	holanda	sdfsggfh	Grupo A	Agendado	-	Mundial 2026
+J003	2026-05-01	18:00	Portugal	belgica	hjkhklh	Grupo A	Agendado	-	Mundial 2026
+J004	2026-05-01	18:00	Marrocos	holanda	dvbdfyrty	Grupo A	Agendado	-	Mundial 2026
+J005	2026-05-02	18:00	Marrocos	belgica	sgrsfg	Grupo A	Agendado	-	Mundial 2026
+J006	2026-05-02	18:00	holanda	belgica	sdfsggfh	Grupo A	Agendado	-	Mundial 2026
+J007	2026-05-02	18:00	haiti	japao	hjkhklh	Grupo B	Agendado	-	Mundial 2026
+J008	2026-05-02	18:00	haiti	Brazil	dvbdfyrty	Grupo B	Agendado	-	Mundial 2026
+J009	2026-05-03	18:00	haiti	coreia	sgrsfg	Grupo B	Agendado	-	Mundial 2026
+J010	2026-05-03	18:00	japao	Brazil	sdfsggfh	Grupo B	Agendado	-	Mundial 2026
+J011	2026-05-03	18:00	japao	coreia	hjkhklh	Grupo B	Agendado	-	Mundial 2026
+J012	2026-05-03	18:00	Brazil	coreia	dvbdfyrty	Grupo B	Agendado	-	Mundial 2026
+J013	2026-05-04	18:00	Espanha	Alemanha	sgrsfg	Grupo C	Agendado	-	Mundial 2026
+J014	2026-05-04	18:00	Espanha	franca	sdfsggfh	Grupo C	Agendado	-	Mundial 2026
+J015	2026-05-04	18:00	Espanha	Congo	hjkhklh	Grupo C	Agendado	-	Mundial 2026
+J016	2026-05-04	18:00	Alemanha	franca	dvbdfyrty	Grupo C	Agendado	-	Mundial 2026
+J017	2026-05-05	18:00	Alemanha	Congo	sgrsfg	Grupo C	Agendado	-	Mundial 2026
+J018	2026-05-05	18:00	franca	Congo	sdfsggfh	Grupo C	Agendado	-	Mundial 2026
+ELI-MUNDIAL-2026-001	2026-05-11	20:00	belgica	BYE	sgrsfg	ELIM:8:Quartos de Final	Agendado	-	Mundial 2026
+ELI-MUNDIAL-2026-002	2026-05-11	20:00	holanda	BYE	sgrsfg	ELIM:8:Quartos de Final	Realizado	0-1	Mundial 2026
+ELI-MUNDIAL-2026-003	2026-05-11	20:00	Brazil	coreia	sgrsfg	ELIM:8:Quartos de Final	Realizado	0-1	Mundial 2026
+ELI-MUNDIAL-2026-004	2026-05-11	20:00	Alemanha	Congo	sgrsfg	ELIM:8:Quartos de Final	Realizado	1-0	Mundial 2026
+J001	2026-01-01	18:00	italia	brazil	drgdrg	Grupo A	Encerrado	-	Mundial 2027
+J002	2026-01-01	18:00	italia	Alemanha	sdgfhjfg	Grupo A	Encerrado	-	Mundial 2027
+J003	2026-01-01	18:00	italia	holanda	hjkhjk	Grupo A	Encerrado	-	Mundial 2027
+J004	2026-01-01	18:00	brazil	Alemanha	tuyjyfj	Grupo A	Encerrado	-	Mundial 2027
+J005	2026-01-02	18:00	brazil	holanda	drgdrg	Grupo A	Encerrado	-	Mundial 2027
+J006	2026-01-02	18:00	Alemanha	holanda	sdgfhjfg	Grupo A	Encerrado	-	Mundial 2027
+J007	2026-01-02	18:00	Portugal	belgica	hjkhjk	Grupo B	Encerrado	-	Mundial 2027
+J008	2026-01-02	18:00	Portugal	marrocos	tuyjyfj	Grupo B	Encerrado	-	Mundial 2027
+J009	2026-01-03	18:00	Portugal	espanha	drgdrg	Grupo B	Encerrado	-	Mundial 2027
+J010	2026-01-03	18:00	belgica	marrocos	sdgfhjfg	Grupo B	Encerrado	-	Mundial 2027
+J011	2026-01-03	18:00	belgica	espanha	hjkhjk	Grupo B	Encerrado	-	Mundial 2027
+J012	2026-01-03	18:00	marrocos	espanha	tuyjyfj	Grupo B	Encerrado	-	Mundial 2027
+J013	2026-01-04	18:00	argentina	congo	drgdrg	Grupo C	Encerrado	-	Mundial 2027
+J014	2026-01-04	18:00	argentina	franca	sdgfhjfg	Grupo C	Encerrado	-	Mundial 2027
+J015	2026-01-04	18:00	argentina	haiti	hjkhjk	Grupo C	Encerrado	-	Mundial 2027
+J016	2026-01-04	18:00	congo	franca	tuyjyfj	Grupo C	Encerrado	-	Mundial 2027
+J017	2026-01-05	18:00	congo	haiti	drgdrg	Grupo C	Encerrado	-	Mundial 2027
+J018	2026-01-05	18:00	franca	haiti	sdgfhjfg	Grupo C	Encerrado	-	Mundial 2027
+J2026005	2026-01-01	20:00	Alemanha	belgica	drgdrg	Semifinal	Agendado	-	Mundial 2027
