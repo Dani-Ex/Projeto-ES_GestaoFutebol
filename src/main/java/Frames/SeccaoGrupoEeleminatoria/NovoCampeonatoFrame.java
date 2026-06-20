@@ -1,8 +1,9 @@
-package GrupoEeleminatoria;
+package Frames.SeccaoGrupoEeleminatoria;
 
 import Design.MenuLateral;
-import Frames.CampeonatosFrame;
 import Models.Campeonato;
+import Models.CampeonatoRepositorio;
+
 import java.time.temporal.ChronoUnit;
 
 import javax.swing.*;

@@ -2,7 +2,7 @@ package Frames.seccaoEstadios;
 
 import Design.MenuLateral;
 import Frames.CampeonatosFrame;
-import GrupoEeleminatoria.CampeonatoRepositorio;
+import Models.CampeonatoRepositorio;
 import Models.Campeonato;
 import Models.Estadio;
 

@@ -1,7 +1,7 @@
 package Frames.seccaoEstadios;
 
 import Design.MenuLateral;
-import GrupoEeleminatoria.CampeonatoRepositorio;
+import Models.CampeonatoRepositorio;
 import Models.Estadio;
 
 import javax.swing.*;

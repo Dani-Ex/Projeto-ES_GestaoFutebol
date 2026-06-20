@@ -5,7 +5,7 @@ import Design.FormUtils;
 import Design.RoundedButton;
 import Design.RoundedPanel;
 import Design.Tema;
-import GrupoEeleminatoria.CampeonatoRepositorio;
+import Models.CampeonatoRepositorio;
 import Models.Equipa;
 import Models.EquipaService;
 

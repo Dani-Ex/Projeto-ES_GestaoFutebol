@@ -1,9 +1,10 @@
-package GrupoEeleminatoria;
+package Frames.SeccaoGrupoEeleminatoria;
 
 import Design.MenuLateral;
 import Frames.CampeonatosFrame;
 import Models.Campeonato;
 import Models.CalendarioJogosService;
+import Models.CampeonatoRepositorio;
 import Models.Jogo;
 
 import javax.swing.*;
