@@ -1,0 +1,2738 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>F:/Uni/Ainet-Projeto/src/main/java</OriginalElement>
+  <nodes>
+    <node x="5202.0" y="2074.5">Design.RoundedBorder</node>
+    <node x="678.5" y="7250.5">Frames.SeccaoDashboard.DashboardFrame.ResumoFinanceiro</node>
+    <node x="-89.0" y="6814.5">Frames.SeccaoDashboard.DashboardFrame.PontoGrafico</node>
+    <node x="945.0" y="7214.5">Frames.SeccaoDashboard.DashboardFrame.ReceitaJogo</node>
+    <node x="4059.5" y="766.5">Frames.SeccaoCampeonatos.PaginaEliminatorias.MatchCard</node>
+    <node x="4476.0" y="2062.5">Models.Jogadores.JogadorService</node>
+    <node x="4823.0" y="8344.0">Design.TableStyle</node>
+    <node x="4550.0" y="8326.5">Design.ModernScrollBarUI</node>
+    <node x="2253.5" y="1622.5">Models.Bilheteria.BilheteriaService.Precos</node>
+    <node x="3239.0" y="2002.5">Models.Bilheteria.Bilhete</node>
+    <node x="1755.5" y="3554.5">Frames.SeccaoFinancas.EditarReceitaFrame.ResumoBilheteira</node>
+    <node x="5597.5" y="4682.5">Frames.SeccaoEquipas.NovaEquipaFrame</node>
+    <node x="2071.0" y="2062.5">Models.Jogos.JogoService</node>
+    <node x="4912.0" y="4610.5">Frames.SeccaoJogadores.PerfilJogadorFrame</node>
+    <node x="4875.0" y="5314.5">Frames.SeccaoJogadores.JogadoresFrame</node>
+    <node x="6542.5" y="2802.5">Frames.SeccaoEquipas.EditarJogadoresFrame.BotaoRemoverEditor</node>
+    <node x="7924.5" y="6814.5">Frames.SeccaoRegras.RegrasFrame</node>
+    <node x="5395.5" y="3302.5">Frames.SeccaoJogadores.EditarJogadorFrame</node>
+    <node x="1076.5" y="4718.5">Frames.SeccaoJogos.DetalheJogoFrame</node>
+    <node x="2636.5" y="4634.5">Frames.SeccaoFinancas.NovaReceitaFrame</node>
+    <node x="5681.5" y="2826.5">Design.PlaceholderTextField</node>
+    <node x="1427.0" y="3494.5">Models.Jogos.EventoJogoService</node>
+    <node x="2835.5" y="3554.5">Frames.SeccaoFinancas.NovaReceitaFrame.ResumoBilheteira</node>
+    <node x="4536.0" y="7304.0">Design.MenuLateral</node>
+    <node x="75.5" y="7094.5">Frames.SeccaoDashboard.DashboardFrame.ResumoBilheteira</node>
+    <node x="1836.5" y="4634.5">Frames.SeccaoFinancas.EditarReceitaFrame</node>
+    <node x="6197.5" y="4586.5">Frames.SeccaoEquipas.EditarJogadoresFrame</node>
+    <node x="1023.5" y="3530.5">Models.Financas.ReceitaService</node>
+    <node x="3272.5" y="3422.5">Frames.SeccaoEstadios.EditarEstadioFrame</node>
+    <node x="3672.5" y="3434.5">Frames.SeccaoEstadios.NovoEstadioFrame</node>
+    <node x="6125.5" y="1942.5">Models.Equipas.Equipa</node>
+    <node x="3984.0" y="2062.5">Frames.SeccaoCampeonatos.PaginaEliminatorias.BracketCanvas</node>
+    <node x="4427.5" y="5338.5">Frames.SeccaoCampeonatos.GruposFrame</node>
+    <node x="1595.5" y="4754.5">Frames.SeccaoFinancas.FinancasFrame.ResumoBilheteira</node>
+    <node x="6392.0" y="3584.0">Frames.SeccaoEquipas.EditarJogadoresFrame.BotaoRemoverRenderer</node>
+    <node x="1209.5" y="5170.5">Frames.SeccaoFinancas.FinancasFrame</node>
+    <node x="8170.5" y="2942.5">Design.Tema</node>
+    <node x="4462.0" y="8204.0">Design.FocusUtils</node>
+    <node x="4168.5" y="8344.0">app</node>
+    <node x="7284.5" y="5422.5">Frames.SeccaoEquipas.ConsultaEquipaFrame</node>
+    <node x="1385.0" y="4694.5">Frames.SeccaoFinancas.FinancasFrame.ReceitaJogo</node>
+    <node x="3877.0" y="1034.5">Models.Estadios.Estadio</node>
+    <node x="4675.5" y="8150.5">Frames.SeccaoDashboard.DashboardFrame.TipoGraficoLucro</node>
+    <node x="3721.5" y="4574.5">Frames.SeccaoBilheteria.BilheteriaFrame</node>
+    <node x="4515.5" y="4682.5">Frames.SeccaoCampeonatos.GruposFrame.EstatisticaEquipa</node>
+    <node x="6900.0" y="3518.5">Models.Equipas.EquipaService</node>
+    <node x="4319.5" y="8344.0">Models.Dashboard.DashboardLogic</node>
+    <node x="4228.5" y="8204.0">Models.Utils.TextUtils</node>
+    <node x="5948.0" y="5942.5">Frames.SeccaoEquipas.EquipasFrame</node>
+    <node x="4752.0" y="374.5">Design.RoundedPanel</node>
+    <node x="4229.5" y="4784.0">Frames.SeccaoCampeonatos.EliminatoriasFrame</node>
+    <node x="4362.5" y="6730.5">Frames.SeccaoEstadios.EstadiosFrame</node>
+    <node x="2377.0" y="-13.5">Models.Jogos.Jogo</node>
+    <node x="4430.0" y="3458.5">Frames.SeccaoCampeonatos.PaginaEliminatorias</node>
+    <node x="356.0" y="4610.5">Frames.SeccaoJogos.NovoJogoFrame</node>
+    <node x="2156.0" y="3446.5">Models.Bilheteria.BilheteriaService</node>
+    <node x="7096.5" y="1858.5">Models.Campeonatos.Campeonato</node>
+    <node x="4802.0" y="2086.5">Design.RoundedButton</node>
+    <node x="4187.0" y="1106.5">Frames.SeccaoCampeonatos.PaginaEliminatorias.ModeloBracket</node>
+    <node x="4929.5" y="564.0">Models.Campeonatos.CalendarioJogosService</node>
+    <node x="4444.0" y="6434.5">Frames.SeccaoEstadios.EstadiosFrame.AssociacaoEstadio</node>
+    <node x="6279.5" y="5882.5">Frames.SeccaoCampeonatos.NovoCampeonatoFrame</node>
+    <node x="5995.5" y="3458.5">Models.Campeonatos.CampeonatoRepositorio</node>
+    <node x="-121.0" y="7238.5">Frames.SeccaoDashboard.DashboardFrame.GraficoLucro</node>
+    <node x="1419.5" y="1526.5">Models.Jogos.EventoJogo</node>
+    <node x="7057.5" y="4670.5">Frames.SeccaoEquipas.EditarEquipaFrame</node>
+    <node x="1309.5" y="2038.5">Models.Financas.Receita</node>
+    <node x="4357.0" y="7602.5">Frames.SeccaoDashboard.DashboardFrame</node>
+    <node x="3047.0" y="5350.5">Frames.SeccaoEstatisticas.EstadisticasFrame</node>
+    <node x="548.5" y="3554.5">Frames.SeccaoJogos.NovoJogoFrame.PainelArredondado</node>
+    <node x="5345.5" y="4784.0">Design.FormUtils</node>
+    <node x="6419.5" y="6350.5">Frames.SeccaoCampeonatos.CampeonatosFrame</node>
+    <node x="5041.0" y="854.5">Models.Jogadores.Jogador</node>
+    <node x="596.5" y="5410.5">Frames.SeccaoJogos.JogosFrame</node>
+    <node x="7763.5" y="3410.5">Frames.SeccaoCampeonatos.EditarCampeonatoFrame</node>
+    <node x="4607.5" y="498.5">Frames.SeccaoCampeonatos.PaginaEliminatorias.NoJogo</node>
+    <node x="2637.5" y="3566.5">Frames.SeccaoFinancas.NovaReceitaFrame.JogoOpcao</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="Frames.SeccaoFinancas.FinancasFrame" target="Models.Financas.ReceitaService" relationship="TO_ONE">
+      <point x="-89.25" y="-307.5" />
+      <point x="1298.75" y="5118.0" />
+      <point x="1308.0" y="5118.0" />
+      <point x="1308.0" y="4938.0" />
+      <point x="968.0" y="4938.0" />
+      <point x="968.0" y="4278.0" />
+      <point x="1408.0" y="4278.0" />
+      <point x="1408.0" y="3678.0" />
+      <point x="1008.0" y="3678.0" />
+      <point x="1008.0" y="3498.0" />
+      <point x="1075.75" y="3498.0" />
+      <point x="-52.25" y="-67.5" />
+    </edge>
+    <edge source="Frames.SeccaoEstadios.EstadiosFrame.AssociacaoEstadio" target="Frames.SeccaoEstadios.EstadiosFrame" relationship="INNER_CLASS">
+      <point x="52.0" y="43.5" />
+      <point x="4600.0" y="6698.0" />
+      <point x="4610.75" y="6698.0" />
+      <point x="82.75" y="-127.5" />
+    </edge>
+    <edge source="Frames.SeccaoEquipas.EditarJogadoresFrame.BotaoRemoverRenderer" target="Design.RoundedButton" relationship="GENERALIZATION">
+      <point x="0.0" y="-14.0" />
+      <point x="6508.0" y="2538.0" />
+      <point x="4945.333333333333" y="2538.0" />
+      <point x="57.333333333333314" y="31.5" />
+    </edge>
+    <edge source="Frames.SeccaoCampeonatos.PaginaEliminatorias.NoJogo" target="Models.Jogos.Jogo" relationship="TO_ONE">
+      <point x="0.0" y="-79.5" />
+      <point x="4688.0" y="338.0" />
+      <point x="2708.0" y="338.0" />
+      <point x="2708.0" y="318.0" />
+      <point x="2513.5" y="318.0" />
+      <point x="45.5" y="151.5" />
+    </edge>
+    <edge source="Frames.SeccaoFinancas.EditarReceitaFrame" target="Design.RoundedPanel" relationship="CREATE">
+      <point x="0.0" y="-163.5" />
+      <point x="1988.0" y="4598.0" />
+      <point x="1968.0" y="4598.0" />
+      <point x="1968.0" y="738.0" />
+      <point x="4848.0" y="738.0" />
+      <point x="0.0" y="43.5" />
+    </edge>
+    <edge source="Frames.SeccaoCampeonatos.NovoCampeonatoFrame" target="Models.Campeonatos.Campeonato" relationship="CREATE">
+      <point x="0.0" y="175.5" />
+      <point x="6428.0" y="6258.0" />
+      <point x="5928.0" y="6258.0" />
+      <point x="5928.0" y="5718.0" />
+      <point x="7708.0" y="5718.0" />
+      <point x="7708.0" y="2498.0" />
+      <point x="7228.0" y="2498.0" />
+      <point x="0.0" y="259.5" />
+    </edge>
+    <edge source="Frames.SeccaoCampeonatos.GruposFrame" target="Design.RoundedButton" relationship="CREATE">
+      <point x="-93.66666666666666" y="-139.5" />
+      <point x="4474.333333333333" y="5318.0" />
+      <point x="4468.0" y="5318.0" />
+      <point x="4468.0" y="4938.0" />
+      <point x="4488.0" y="4938.0" />
+      <point x="4488.0" y="3778.0" />
+      <point x="4728.0" y="3778.0" />
+      <point x="4728.0" y="2638.0" />
+      <point x="4768.0" y="2638.0" />
+      <point x="4768.0" y="2178.0" />
+      <point x="4888.0" y="2178.0" />
+      <point x="0.0" y="31.5" />
+    </edge>
+    <edge source="Frames.SeccaoEquipas.NovaEquipaFrame" target="Design.PlaceholderTextField" relationship="TO_ONE">
+      <point x="75.25" y="-115.5" />
+      <point x="5823.25" y="4658.0" />
+      <point x="5848.0" y="4658.0" />
+      <point x="5848.0" y="2918.0" />
+      <point x="5841.25" y="2918.0" />
+      <point x="53.25" y="31.5" />
+    </edge>
+    <edge source="Frames.SeccaoDashboard.DashboardFrame" target="Frames.SeccaoDashboard.DashboardFrame.ReceitaJogo" relationship="TO_MANY">
+      <point x="127.33333333333334" y="-235.5" />
+      <point x="4675.333333333333" y="7578.0" />
+      <point x="5248.0" y="7578.0" />
+      <point x="5248.0" y="7458.0" />
+      <point x="1083.333333333333" y="7458.0" />
+      <point x="55.333333333333314" y="103.5" />
+    </edge>
+    <edge source="Frames.SeccaoDashboard.DashboardFrame" target="Models.Equipas.EquipaService" relationship="TO_ONE">
+      <point x="127.33333333333334" y="-235.5" />
+      <point x="4675.333333333333" y="7578.0" />
+      <point x="5248.0" y="7578.0" />
+      <point x="5248.0" y="7458.0" />
+      <point x="7548.0" y="7458.0" />
+      <point x="7548.0" y="4518.0" />
+      <point x="6868.0" y="4518.0" />
+      <point x="6868.0" y="3498.0" />
+      <point x="7122.0" y="3498.0" />
+      <point x="74.0" y="-79.5" />
+    </edge>
+    <edge source="Frames.SeccaoDashboard.DashboardFrame" target="Models.Bilheteria.BilheteriaService" relationship="CREATE">
+      <point x="0.0" y="-235.5" />
+      <point x="4548.0" y="7578.0" />
+      <point x="4508.0" y="7578.0" />
+      <point x="4508.0" y="7478.0" />
+      <point x="2248.0" y="7478.0" />
+      <point x="2248.0" y="4558.0" />
+      <point x="2128.0" y="4558.0" />
+      <point x="2128.0" y="3378.0" />
+      <point x="2376.0" y="3378.0" />
+      <point x="88.0" y="-151.5" />
+    </edge>
+    <edge source="Frames.SeccaoJogadores.JogadoresFrame" target="Models.Jogadores.Jogador" relationship="TO_MANY">
+      <point x="0.0" y="-163.5" />
+      <point x="5008.0" y="5278.0" />
+      <point x="4888.0" y="5278.0" />
+      <point x="4888.0" y="2358.0" />
+      <point x="5008.0" y="2358.0" />
+      <point x="5008.0" y="1758.0" />
+      <point x="5088.0" y="1758.0" />
+      <point x="5088.0" y="1458.0" />
+      <point x="5094.5" y="1458.0" />
+      <point x="-53.5" y="283.5" />
+    </edge>
+    <edge source="Frames.SeccaoDashboard.DashboardFrame.TipoGraficoLucro" target="Frames.SeccaoDashboard.DashboardFrame" relationship="INNER_CLASS">
+      <point x="0.0" y="-67.5" />
+      <point x="4768.0" y="7518.0" />
+      <point x="4420.666666666667" y="7518.0" />
+      <point x="-127.33333333333337" y="-235.5" />
+    </edge>
+    <edge source="Frames.SeccaoEquipas.EquipasFrame" target="Design.MenuLateral" relationship="TO_ONE">
+      <point x="0.0" y="-115.5" />
+      <point x="6088.0" y="5918.0" />
+      <point x="6248.0" y="5918.0" />
+      <point x="6248.0" y="7058.0" />
+      <point x="4648.0" y="7058.0" />
+      <point x="4648.0" y="7278.0" />
+      <point x="4644.0" y="7278.0" />
+      <point x="36.0" y="-14.0" />
+    </edge>
+    <edge source="Frames.SeccaoEquipas.EditarEquipaFrame" target="Design.RoundedButton" relationship="CREATE">
+      <point x="75.25" y="-127.5" />
+      <point x="7283.25" y="4638.0" />
+      <point x="7348.0" y="4638.0" />
+      <point x="7348.0" y="2638.0" />
+      <point x="4768.0" y="2638.0" />
+      <point x="4768.0" y="2178.0" />
+      <point x="4888.0" y="2178.0" />
+      <point x="0.0" y="31.5" />
+    </edge>
+    <edge source="Frames.SeccaoJogos.JogosFrame" target="Design.MenuLateral" relationship="CREATE">
+      <point x="0.0" y="67.5" />
+      <point x="728.0" y="7078.0" />
+      <point x="4528.0" y="7078.0" />
+      <point x="4528.0" y="7258.0" />
+      <point x="4572.0" y="7258.0" />
+      <point x="-36.0" y="-14.0" />
+    </edge>
+    <edge source="Design.MenuLateral" target="Frames.SeccaoJogos.JogosFrame" relationship="CREATE">
+      <point x="-36.0" y="-14.0" />
+      <point x="4572.0" y="7278.0" />
+      <point x="4568.0" y="7278.0" />
+      <point x="4568.0" y="7038.0" />
+      <point x="768.0" y="7038.0" />
+      <point x="768.0" y="6038.0" />
+      <point x="728.0" y="6038.0" />
+      <point x="0.0" y="67.5" />
+    </edge>
+    <edge source="Frames.SeccaoEquipas.EquipasFrame" target="Design.PlaceholderTextField" relationship="TO_ONE">
+      <point x="0.0" y="-115.5" />
+      <point x="6088.0" y="4438.0" />
+      <point x="5848.0" y="4438.0" />
+      <point x="5848.0" y="2918.0" />
+      <point x="5841.25" y="2918.0" />
+      <point x="53.25" y="31.5" />
+    </edge>
+    <edge source="Frames.SeccaoCampeonatos.EditarCampeonatoFrame" target="Design.MenuLateral" relationship="CREATE">
+      <point x="0.0" y="187.5" />
+      <point x="7908.0" y="7078.0" />
+      <point x="4528.0" y="7078.0" />
+      <point x="4528.0" y="7258.0" />
+      <point x="4572.0" y="7258.0" />
+      <point x="-36.0" y="-14.0" />
+    </edge>
+    <edge source="Models.Jogadores.JogadorService" target="Models.Jogadores.Jogador" relationship="CREATE">
+      <point x="56.0" y="-55.5" />
+      <point x="4644.0" y="1798.0" />
+      <point x="5208.0" y="1798.0" />
+      <point x="5208.0" y="1458.0" />
+      <point x="5201.5" y="1458.0" />
+      <point x="53.5" y="283.5" />
+    </edge>
+    <edge source="Frames.SeccaoJogadores.EditarJogadorFrame" target="Models.Jogadores.Jogador" relationship="TO_ONE">
+      <point x="76.25" y="-295.5" />
+      <point x="5624.25" y="2618.0" />
+      <point x="5628.0" y="2618.0" />
+      <point x="5628.0" y="1758.0" />
+      <point x="5088.0" y="1758.0" />
+      <point x="5088.0" y="1458.0" />
+      <point x="5094.5" y="1458.0" />
+      <point x="-53.5" y="283.5" />
+    </edge>
+    <edge source="Frames.SeccaoEstadios.EditarEstadioFrame" target="Design.RoundedButton" relationship="CREATE">
+      <point x="0.0" y="175.5" />
+      <point x="3388.0" y="3798.0" />
+      <point x="3248.0" y="3798.0" />
+      <point x="3248.0" y="2298.0" />
+      <point x="4768.0" y="2298.0" />
+      <point x="4768.0" y="2178.0" />
+      <point x="4888.0" y="2178.0" />
+      <point x="0.0" y="31.5" />
+    </edge>
+    <edge source="Frames.SeccaoJogadores.EditarJogadorFrame" target="Design.RoundedBorder" relationship="CREATE">
+      <point x="-76.25" y="-295.5" />
+      <point x="5471.75" y="3258.0" />
+      <point x="5248.0" y="3258.0" />
+      <point x="5248.0" y="2558.0" />
+      <point x="5168.0" y="2558.0" />
+      <point x="5168.0" y="2198.0" />
+      <point x="5288.0" y="2198.0" />
+      <point x="0.0" y="43.5" />
+    </edge>
+    <edge source="Frames.SeccaoFinancas.NovaReceitaFrame" target="Models.Financas.ReceitaService" relationship="TO_ONE">
+      <point x="-101.0" y="-163.5" />
+      <point x="2687.0" y="4598.0" />
+      <point x="2528.0" y="4598.0" />
+      <point x="2528.0" y="4218.0" />
+      <point x="1408.0" y="4218.0" />
+      <point x="1408.0" y="3678.0" />
+      <point x="1008.0" y="3678.0" />
+      <point x="1008.0" y="3498.0" />
+      <point x="1075.75" y="3498.0" />
+      <point x="-52.25" y="-67.5" />
+    </edge>
+    <edge source="Frames.SeccaoEquipas.EditarJogadoresFrame" target="Models.Jogadores.Jogador" relationship="CREATE">
+      <point x="113.66666666666666" y="-211.5" />
+      <point x="6481.666666666667" y="4558.0" />
+      <point x="7168.0" y="4558.0" />
+      <point x="7168.0" y="3698.0" />
+      <point x="7268.0" y="3698.0" />
+      <point x="7268.0" y="2618.0" />
+      <point x="6988.0" y="2618.0" />
+      <point x="6988.0" y="1798.0" />
+      <point x="5208.0" y="1798.0" />
+      <point x="5208.0" y="1458.0" />
+      <point x="5201.5" y="1458.0" />
+      <point x="53.5" y="283.5" />
+    </edge>
+    <edge source="Frames.SeccaoBilheteria.BilheteriaFrame" target="Design.RoundedPanel" relationship="CREATE">
+      <point x="0.0" y="223.5" />
+      <point x="3868.0" y="5058.0" />
+      <point x="3688.0" y="5058.0" />
+      <point x="3688.0" y="4498.0" />
+      <point x="4008.0" y="4498.0" />
+      <point x="4008.0" y="4478.0" />
+      <point x="4088.0" y="4478.0" />
+      <point x="4088.0" y="2618.0" />
+      <point x="3728.0" y="2618.0" />
+      <point x="3728.0" y="738.0" />
+      <point x="4848.0" y="738.0" />
+      <point x="0.0" y="43.5" />
+    </edge>
+    <edge source="Frames.SeccaoDashboard.DashboardFrame.ResumoFinanceiro" target="Frames.SeccaoDashboard.DashboardFrame" relationship="INNER_CLASS">
+      <point x="-54.75" y="67.5" />
+      <point x="733.25" y="7498.0" />
+      <point x="128.0" y="7498.0" />
+      <point x="128.0" y="7538.0" />
+      <point x="4420.666666666667" y="7538.0" />
+      <point x="-127.33333333333337" y="-235.5" />
+    </edge>
+    <edge source="Frames.SeccaoEquipas.EditarJogadoresFrame" target="Models.Equipas.EquipaService" relationship="TO_ONE">
+      <point x="0.0" y="-211.5" />
+      <point x="6368.0" y="4498.0" />
+      <point x="6868.0" y="4498.0" />
+      <point x="6868.0" y="3498.0" />
+      <point x="7122.0" y="3498.0" />
+      <point x="74.0" y="-79.5" />
+    </edge>
+    <edge source="Design.FormUtils" target="Design.RoundedBorder" relationship="CREATE">
+      <point x="0.0" y="-14.0" />
+      <point x="5408.0" y="4758.0" />
+      <point x="5368.0" y="4758.0" />
+      <point x="5368.0" y="3998.0" />
+      <point x="5128.0" y="3998.0" />
+      <point x="5128.0" y="2698.0" />
+      <point x="5168.0" y="2698.0" />
+      <point x="5168.0" y="2198.0" />
+      <point x="5288.0" y="2198.0" />
+      <point x="0.0" y="43.5" />
+    </edge>
+    <edge source="Frames.SeccaoDashboard.DashboardFrame" target="Models.Jogos.JogoService" relationship="TO_ONE">
+      <point x="127.33333333333334" y="-235.5" />
+      <point x="4675.333333333333" y="7578.0" />
+      <point x="5248.0" y="7578.0" />
+      <point x="5248.0" y="7458.0" />
+      <point x="928.0" y="7458.0" />
+      <point x="928.0" y="3738.0" />
+      <point x="888.0" y="3738.0" />
+      <point x="888.0" y="2678.0" />
+      <point x="2168.0" y="2678.0" />
+      <point x="0.0" y="55.5" />
+    </edge>
+    <edge source="Frames.SeccaoEquipas.EquipasFrame" target="Design.RoundedPanel" relationship="CREATE">
+      <point x="0.0" y="115.5" />
+      <point x="6088.0" y="6278.0" />
+      <point x="5328.0" y="6278.0" />
+      <point x="5328.0" y="5698.0" />
+      <point x="7668.0" y="5698.0" />
+      <point x="7668.0" y="738.0" />
+      <point x="4848.0" y="738.0" />
+      <point x="0.0" y="43.5" />
+    </edge>
+    <edge source="Frames.SeccaoFinancas.NovaReceitaFrame" target="Design.PlaceholderTextField" relationship="TO_ONE">
+      <point x="-101.0" y="-163.5" />
+      <point x="2687.0" y="4598.0" />
+      <point x="2528.0" y="4598.0" />
+      <point x="2528.0" y="4418.0" />
+      <point x="5848.0" y="4418.0" />
+      <point x="5848.0" y="2918.0" />
+      <point x="5841.25" y="2918.0" />
+      <point x="53.25" y="31.5" />
+    </edge>
+    <edge source="Models.Jogos.EventoJogoService" target="Models.Jogos.JogoService" relationship="TO_ONE">
+      <point x="70.5" y="-103.5" />
+      <point x="1638.5" y="3458.0" />
+      <point x="2088.0" y="3458.0" />
+      <point x="2088.0" y="2198.0" />
+      <point x="2168.0" y="2198.0" />
+      <point x="0.0" y="55.5" />
+    </edge>
+    <edge source="Frames.SeccaoFinancas.FinancasFrame" target="Models.Bilheteria.BilheteriaService" relationship="CREATE">
+      <point x="0.0" y="307.5" />
+      <point x="1388.0" y="5818.0" />
+      <point x="2168.0" y="5818.0" />
+      <point x="2168.0" y="4978.0" />
+      <point x="1808.0" y="4978.0" />
+      <point x="1808.0" y="4558.0" />
+      <point x="2128.0" y="4558.0" />
+      <point x="2128.0" y="3378.0" />
+      <point x="2376.0" y="3378.0" />
+      <point x="88.0" y="-151.5" />
+    </edge>
+    <edge source="Frames.SeccaoEstadios.EstadiosFrame" target="Frames.SeccaoEstadios.NovoEstadioFrame" relationship="CREATE">
+      <point x="0.0" y="127.5" />
+      <point x="4528.0" y="7018.0" />
+      <point x="4328.0" y="7018.0" />
+      <point x="4328.0" y="6838.0" />
+      <point x="4088.0" y="6838.0" />
+      <point x="4088.0" y="4118.0" />
+      <point x="3848.0" y="4118.0" />
+      <point x="0.0" y="163.5" />
+    </edge>
+    <edge source="Frames.SeccaoBilheteria.BilheteriaFrame" target="Design.RoundedButton" relationship="TO_ONE">
+      <point x="0.0" y="-223.5" />
+      <point x="3868.0" y="4518.0" />
+      <point x="4048.0" y="4518.0" />
+      <point x="4048.0" y="4438.0" />
+      <point x="4248.0" y="4438.0" />
+      <point x="4248.0" y="2398.0" />
+      <point x="4830.666666666667" y="2398.0" />
+      <point x="-57.33333333333333" y="31.5" />
+    </edge>
+    <edge source="Frames.SeccaoDashboard.DashboardFrame" target="Frames.SeccaoDashboard.DashboardFrame.ResumoFinanceiro" relationship="CREATE">
+      <point x="0.0" y="-235.5" />
+      <point x="4548.0" y="7578.0" />
+      <point x="4508.0" y="7578.0" />
+      <point x="4508.0" y="7478.0" />
+      <point x="842.75" y="7478.0" />
+      <point x="54.75" y="67.5" />
+    </edge>
+    <edge source="Frames.SeccaoCampeonatos.PaginaEliminatorias" target="Frames.SeccaoCampeonatos.PaginaEliminatorias.BracketCanvas" relationship="CREATE">
+      <point x="0.0" y="-139.5" />
+      <point x="4548.0" y="3398.0" />
+      <point x="4288.0" y="3398.0" />
+      <point x="4288.0" y="2378.0" />
+      <point x="4368.0" y="2378.0" />
+      <point x="4368.0" y="2018.0" />
+      <point x="4260.0" y="2018.0" />
+      <point x="92.0" y="-55.5" />
+    </edge>
+    <edge source="Frames.SeccaoEquipas.EditarJogadoresFrame" target="Models.Jogadores.Jogador" relationship="TO_MANY">
+      <point x="0.0" y="-211.5" />
+      <point x="6368.0" y="2618.0" />
+      <point x="6388.0" y="2618.0" />
+      <point x="6388.0" y="1758.0" />
+      <point x="5088.0" y="1758.0" />
+      <point x="5088.0" y="1458.0" />
+      <point x="5094.5" y="1458.0" />
+      <point x="-53.5" y="283.5" />
+    </edge>
+    <edge source="Frames.SeccaoEstatisticas.EstadisticasFrame" target="Models.Jogadores.Jogador" relationship="TO_MANY">
+      <point x="0.0" y="-127.5" />
+      <point x="3188.0" y="4818.0" />
+      <point x="3308.0" y="4818.0" />
+      <point x="3308.0" y="4738.0" />
+      <point x="3528.0" y="4738.0" />
+      <point x="3528.0" y="1758.0" />
+      <point x="5088.0" y="1758.0" />
+      <point x="5088.0" y="1458.0" />
+      <point x="5094.5" y="1458.0" />
+      <point x="-53.5" y="283.5" />
+    </edge>
+    <edge source="Models.Jogos.EventoJogoService" target="Models.Jogos.EventoJogo" relationship="CREATE">
+      <point x="-70.5" y="-103.5" />
+      <point x="1497.5" y="2618.0" />
+      <point x="1508.0" y="2618.0" />
+      <point x="0.0" y="151.5" />
+    </edge>
+    <edge source="Frames.SeccaoCampeonatos.EditarCampeonatoFrame" target="Design.RoundedButton" relationship="CREATE">
+      <point x="0.0" y="187.5" />
+      <point x="7908.0" y="3818.0" />
+      <point x="8068.0" y="3818.0" />
+      <point x="8068.0" y="2518.0" />
+      <point x="4768.0" y="2518.0" />
+      <point x="4768.0" y="2178.0" />
+      <point x="4888.0" y="2178.0" />
+      <point x="0.0" y="31.5" />
+    </edge>
+    <edge source="Frames.SeccaoFinancas.NovaReceitaFrame" target="Design.RoundedBorder" relationship="CREATE">
+      <point x="0.0" y="-163.5" />
+      <point x="2788.0" y="3698.0" />
+      <point x="3048.0" y="3698.0" />
+      <point x="3048.0" y="2698.0" />
+      <point x="5168.0" y="2698.0" />
+      <point x="5168.0" y="2198.0" />
+      <point x="5288.0" y="2198.0" />
+      <point x="0.0" y="43.5" />
+    </edge>
+    <edge source="Frames.SeccaoEquipas.EditarJogadoresFrame" target="Design.PlaceholderTextField" relationship="TO_ONE">
+      <point x="0.0" y="-211.5" />
+      <point x="6368.0" y="4398.0" />
+      <point x="5848.0" y="4398.0" />
+      <point x="5848.0" y="2918.0" />
+      <point x="5841.25" y="2918.0" />
+      <point x="53.25" y="31.5" />
+    </edge>
+    <edge source="Frames.SeccaoJogadores.JogadoresFrame" target="Design.MenuLateral" relationship="TO_ONE">
+      <point x="0.0" y="-163.5" />
+      <point x="5008.0" y="5258.0" />
+      <point x="4848.0" y="5258.0" />
+      <point x="4848.0" y="6038.0" />
+      <point x="4888.0" y="6038.0" />
+      <point x="4888.0" y="7058.0" />
+      <point x="4648.0" y="7058.0" />
+      <point x="4648.0" y="7278.0" />
+      <point x="4644.0" y="7278.0" />
+      <point x="36.0" y="-14.0" />
+    </edge>
+    <edge source="Frames.SeccaoJogos.NovoJogoFrame" target="Design.MenuLateral" relationship="CREATE">
+      <point x="0.0" y="187.5" />
+      <point x="528.0" y="7078.0" />
+      <point x="4528.0" y="7078.0" />
+      <point x="4528.0" y="7258.0" />
+      <point x="4572.0" y="7258.0" />
+      <point x="-36.0" y="-14.0" />
+    </edge>
+    <edge source="Frames.SeccaoFinancas.FinancasFrame" target="Design.MenuLateral" relationship="TO_ONE">
+      <point x="-89.25" y="-307.5" />
+      <point x="1298.75" y="5138.0" />
+      <point x="1188.0" y="5138.0" />
+      <point x="1188.0" y="7058.0" />
+      <point x="4648.0" y="7058.0" />
+      <point x="4648.0" y="7278.0" />
+      <point x="4644.0" y="7278.0" />
+      <point x="36.0" y="-14.0" />
+    </edge>
+    <edge source="Frames.SeccaoEquipas.EditarJogadoresFrame.BotaoRemoverEditor" target="Design.RoundedButton" relationship="CREATE">
+      <point x="0.0" y="-55.5" />
+      <point x="6648.0" y="2638.0" />
+      <point x="4768.0" y="2638.0" />
+      <point x="4768.0" y="2178.0" />
+      <point x="4888.0" y="2178.0" />
+      <point x="0.0" y="31.5" />
+    </edge>
+    <edge source="Frames.SeccaoCampeonatos.CampeonatosFrame" target="Frames.SeccaoCampeonatos.NovoCampeonatoFrame" relationship="CREATE">
+      <point x="0.0" y="127.5" />
+      <point x="6528.0" y="6658.0" />
+      <point x="6388.0" y="6658.0" />
+      <point x="6388.0" y="6298.0" />
+      <point x="6428.0" y="6298.0" />
+      <point x="0.0" y="175.5" />
+    </edge>
+    <edge source="Frames.SeccaoDashboard.DashboardFrame" target="Frames.SeccaoJogos.DetalheJogoFrame" relationship="CREATE">
+      <point x="0.0" y="-235.5" />
+      <point x="4548.0" y="7578.0" />
+      <point x="4508.0" y="7578.0" />
+      <point x="4508.0" y="7478.0" />
+      <point x="1128.0" y="7478.0" />
+      <point x="1128.0" y="5458.0" />
+      <point x="1048.0" y="5458.0" />
+      <point x="1048.0" y="4678.0" />
+      <point x="1273.75" y="4678.0" />
+      <point x="65.75" y="-79.5" />
+    </edge>
+    <edge source="Frames.SeccaoFinancas.FinancasFrame.ResumoBilheteira" target="Frames.SeccaoFinancas.FinancasFrame" relationship="INNER_CLASS">
+      <point x="-46.25" y="43.5" />
+      <point x="1641.75" y="5118.0" />
+      <point x="1468.0" y="5118.0" />
+      <point x="1468.0" y="5138.0" />
+      <point x="1477.25" y="5138.0" />
+      <point x="89.25" y="-307.5" />
+    </edge>
+    <edge source="Frames.SeccaoCampeonatos.PaginaEliminatorias.MatchCard" target="Design.RoundedPanel" relationship="GENERALIZATION">
+      <point x="34.25" y="-31.5" />
+      <point x="4162.25" y="698.0" />
+      <point x="4784.0" y="698.0" />
+      <point x="-64.0" y="43.5" />
+    </edge>
+    <edge source="Frames.SeccaoFinancas.NovaReceitaFrame" target="Models.Bilheteria.BilheteriaService" relationship="CREATE">
+      <point x="0.0" y="-163.5" />
+      <point x="2788.0" y="4178.0" />
+      <point x="2128.0" y="4178.0" />
+      <point x="2128.0" y="3378.0" />
+      <point x="2376.0" y="3378.0" />
+      <point x="88.0" y="-151.5" />
+    </edge>
+    <edge source="Frames.SeccaoFinancas.NovaReceitaFrame" target="Models.Jogos.JogoService" relationship="TO_ONE">
+      <point x="-101.0" y="-163.5" />
+      <point x="2687.0" y="4598.0" />
+      <point x="2528.0" y="4598.0" />
+      <point x="2528.0" y="3718.0" />
+      <point x="2488.0" y="3718.0" />
+      <point x="2488.0" y="2678.0" />
+      <point x="2168.0" y="2678.0" />
+      <point x="0.0" y="55.5" />
+    </edge>
+    <edge source="Frames.SeccaoEstadios.EstadiosFrame" target="Frames.SeccaoEstadios.EstadiosFrame.AssociacaoEstadio" relationship="TO_MANY">
+      <point x="-82.75" y="-127.5" />
+      <point x="4445.25" y="6698.0" />
+      <point x="4428.0" y="6698.0" />
+      <point x="4428.0" y="6398.0" />
+      <point x="4548.0" y="6398.0" />
+      <point x="0.0" y="-43.5" />
+    </edge>
+    <edge source="Frames.SeccaoFinancas.EditarReceitaFrame" target="Design.PlaceholderTextField" relationship="TO_ONE">
+      <point x="101.0" y="-163.5" />
+      <point x="2089.0" y="4598.0" />
+      <point x="2088.0" y="4598.0" />
+      <point x="2088.0" y="4378.0" />
+      <point x="5848.0" y="4378.0" />
+      <point x="5848.0" y="2918.0" />
+      <point x="5841.25" y="2918.0" />
+      <point x="53.25" y="31.5" />
+    </edge>
+    <edge source="Frames.SeccaoFinancas.NovaReceitaFrame" target="Models.Financas.Receita" relationship="CREATE">
+      <point x="0.0" y="-163.5" />
+      <point x="2788.0" y="3698.0" />
+      <point x="2528.0" y="3698.0" />
+      <point x="2528.0" y="3358.0" />
+      <point x="1728.0" y="3358.0" />
+      <point x="1728.0" y="2218.0" />
+      <point x="1427.25" y="2218.0" />
+      <point x="39.25" y="79.5" />
+    </edge>
+    <edge source="Frames.SeccaoCampeonatos.PaginaEliminatorias.NoJogo" target="Frames.SeccaoCampeonatos.PaginaEliminatorias" relationship="INNER_CLASS">
+      <point x="-40.25" y="79.5" />
+      <point x="4647.75" y="678.0" />
+      <point x="3848.0" y="678.0" />
+      <point x="3848.0" y="2478.0" />
+      <point x="4168.0" y="2478.0" />
+      <point x="4168.0" y="3418.0" />
+      <point x="4469.333333333333" y="3418.0" />
+      <point x="-78.66666666666666" y="-139.5" />
+    </edge>
+    <edge source="Frames.SeccaoDashboard.DashboardFrame.PontoGrafico" target="Frames.SeccaoDashboard.DashboardFrame" relationship="INNER_CLASS">
+      <point x="-51.33333333333333" y="43.5" />
+      <point x="-63.33333333333333" y="7218.0" />
+      <point x="-152.0" y="7218.0" />
+      <point x="-152.0" y="7498.0" />
+      <point x="128.0" y="7498.0" />
+      <point x="128.0" y="7538.0" />
+      <point x="4420.666666666667" y="7538.0" />
+      <point x="-127.33333333333337" y="-235.5" />
+    </edge>
+    <edge source="Models.Bilheteria.BilheteriaService" target="Models.Jogos.Jogo" relationship="CREATE">
+      <point x="88.0" y="-151.5" />
+      <point x="2376.0" y="3418.0" />
+      <point x="2428.0" y="3418.0" />
+      <point x="2428.0" y="318.0" />
+      <point x="2422.5" y="318.0" />
+      <point x="-45.5" y="151.5" />
+    </edge>
+    <edge source="Frames.SeccaoBilheteria.BilheteriaFrame" target="Design.MenuLateral" relationship="CREATE">
+      <point x="0.0" y="223.5" />
+      <point x="3868.0" y="7078.0" />
+      <point x="4528.0" y="7078.0" />
+      <point x="4528.0" y="7258.0" />
+      <point x="4572.0" y="7258.0" />
+      <point x="-36.0" y="-14.0" />
+    </edge>
+    <edge source="Design.MenuLateral" target="Frames.SeccaoBilheteria.BilheteriaFrame" relationship="CREATE">
+      <point x="-36.0" y="-14.0" />
+      <point x="4572.0" y="7278.0" />
+      <point x="4568.0" y="7278.0" />
+      <point x="4568.0" y="7038.0" />
+      <point x="3908.0" y="7038.0" />
+      <point x="3908.0" y="5438.0" />
+      <point x="3868.0" y="5438.0" />
+      <point x="0.0" y="223.5" />
+    </edge>
+    <edge source="Frames.SeccaoCampeonatos.PaginaEliminatorias" target="Frames.SeccaoCampeonatos.PaginaEliminatorias.NoJogo" relationship="CREATE">
+      <point x="0.0" y="-139.5" />
+      <point x="4548.0" y="3398.0" />
+      <point x="4288.0" y="3398.0" />
+      <point x="4288.0" y="2378.0" />
+      <point x="4728.0" y="2378.0" />
+      <point x="4728.0" y="718.0" />
+      <point x="4728.25" y="718.0" />
+      <point x="40.25" y="79.5" />
+    </edge>
+    <edge source="Frames.SeccaoEstatisticas.EstadisticasFrame" target="Models.Jogos.JogoService" relationship="TO_ONE">
+      <point x="0.0" y="-127.5" />
+      <point x="3188.0" y="4818.0" />
+      <point x="3128.0" y="4818.0" />
+      <point x="3128.0" y="2678.0" />
+      <point x="2168.0" y="2678.0" />
+      <point x="0.0" y="55.5" />
+    </edge>
+    <edge source="Frames.SeccaoEstatisticas.EstadisticasFrame" target="Frames.SeccaoJogos.DetalheJogoFrame" relationship="CREATE">
+      <point x="0.0" y="127.5" />
+      <point x="3188.0" y="5638.0" />
+      <point x="3348.0" y="5638.0" />
+      <point x="3348.0" y="5098.0" />
+      <point x="1048.0" y="5098.0" />
+      <point x="1048.0" y="4678.0" />
+      <point x="1273.75" y="4678.0" />
+      <point x="65.75" y="-79.5" />
+    </edge>
+    <edge source="Models.Bilheteria.BilheteriaService" target="Models.Estadios.Estadio" relationship="CREATE">
+      <point x="88.0" y="-151.5" />
+      <point x="2376.0" y="3418.0" />
+      <point x="2428.0" y="3418.0" />
+      <point x="2428.0" y="2258.0" />
+      <point x="2468.0" y="2258.0" />
+      <point x="2468.0" y="1738.0" />
+      <point x="3208.0" y="1738.0" />
+      <point x="3208.0" y="1278.0" />
+      <point x="3922.5" y="1278.0" />
+      <point x="-45.5" y="103.5" />
+    </edge>
+    <edge source="Frames.SeccaoFinancas.FinancasFrame" target="Frames.SeccaoFinancas.NovaReceitaFrame" relationship="CREATE">
+      <point x="0.0" y="307.5" />
+      <point x="1388.0" y="5818.0" />
+      <point x="2168.0" y="5818.0" />
+      <point x="2168.0" y="4978.0" />
+      <point x="2488.0" y="4978.0" />
+      <point x="2488.0" y="4578.0" />
+      <point x="2788.0" y="4578.0" />
+      <point x="0.0" y="-163.5" />
+    </edge>
+    <edge source="Frames.SeccaoDashboard.DashboardFrame.GraficoLucro" target="Frames.SeccaoDashboard.DashboardFrame.PontoGrafico" relationship="TO_MANY">
+      <point x="0.0" y="-79.5" />
+      <point x="0.0" y="43.5" />
+    </edge>
+    <edge source="Frames.SeccaoEquipas.EquipasFrame" target="Frames.SeccaoEquipas.NovaEquipaFrame" relationship="CREATE">
+      <point x="0.0" y="115.5" />
+      <point x="6088.0" y="6278.0" />
+      <point x="5328.0" y="6278.0" />
+      <point x="5328.0" y="5698.0" />
+      <point x="5568.0" y="5698.0" />
+      <point x="5568.0" y="4638.0" />
+      <point x="5672.75" y="4638.0" />
+      <point x="-75.25" y="-115.5" />
+    </edge>
+    <edge source="Frames.SeccaoFinancas.EditarReceitaFrame" target="Frames.SeccaoFinancas.EditarReceitaFrame.ResumoBilheteira" relationship="CREATE">
+      <point x="0.0" y="-163.5" />
+      <point x="1988.0" y="4598.0" />
+      <point x="1968.0" y="4598.0" />
+      <point x="1968.0" y="3678.0" />
+      <point x="1894.25" y="3678.0" />
+      <point x="46.25" y="43.5" />
+    </edge>
+    <edge source="Frames.SeccaoJogadores.JogadoresFrame" target="Design.RoundedPanel" relationship="CREATE">
+      <point x="0.0" y="163.5" />
+      <point x="5008.0" y="5678.0" />
+      <point x="5288.0" y="5678.0" />
+      <point x="5288.0" y="4038.0" />
+      <point x="5088.0" y="4038.0" />
+      <point x="5088.0" y="2618.0" />
+      <point x="5168.0" y="2618.0" />
+      <point x="5168.0" y="1718.0" />
+      <point x="5288.0" y="1718.0" />
+      <point x="5288.0" y="738.0" />
+      <point x="4848.0" y="738.0" />
+      <point x="0.0" y="43.5" />
+    </edge>
+    <edge source="Frames.SeccaoCampeonatos.EditarCampeonatoFrame" target="Design.RoundedBorder" relationship="CREATE">
+      <point x="0.0" y="187.5" />
+      <point x="7908.0" y="3818.0" />
+      <point x="8068.0" y="3818.0" />
+      <point x="8068.0" y="2478.0" />
+      <point x="5168.0" y="2478.0" />
+      <point x="5168.0" y="2198.0" />
+      <point x="5288.0" y="2198.0" />
+      <point x="0.0" y="43.5" />
+    </edge>
+    <edge source="Frames.SeccaoDashboard.DashboardFrame.ResumoBilheteira" target="Frames.SeccaoDashboard.DashboardFrame" relationship="INNER_CLASS">
+      <point x="-46.25" y="43.5" />
+      <point x="121.75" y="7498.0" />
+      <point x="128.0" y="7498.0" />
+      <point x="128.0" y="7538.0" />
+      <point x="4420.666666666667" y="7538.0" />
+      <point x="-127.33333333333337" y="-235.5" />
+    </edge>
+    <edge source="Frames.SeccaoJogos.DetalheJogoFrame" target="Design.RoundedPanel" relationship="CREATE">
+      <point x="65.75" y="-79.5" />
+      <point x="1273.75" y="4658.0" />
+      <point x="1288.0" y="4658.0" />
+      <point x="1288.0" y="2618.0" />
+      <point x="1148.0" y="2618.0" />
+      <point x="1148.0" y="738.0" />
+      <point x="4848.0" y="738.0" />
+      <point x="0.0" y="43.5" />
+    </edge>
+    <edge source="Frames.SeccaoEquipas.NovaEquipaFrame" target="Models.Equipas.EquipaService" relationship="TO_ONE">
+      <point x="75.25" y="-115.5" />
+      <point x="5823.25" y="4658.0" />
+      <point x="5848.0" y="4658.0" />
+      <point x="5848.0" y="4458.0" />
+      <point x="6868.0" y="4458.0" />
+      <point x="6868.0" y="3498.0" />
+      <point x="7122.0" y="3498.0" />
+      <point x="74.0" y="-79.5" />
+    </edge>
+    <edge source="Frames.SeccaoEquipas.NovaEquipaFrame" target="Design.RoundedPanel" relationship="CREATE">
+      <point x="-75.25" y="-115.5" />
+      <point x="5672.75" y="4658.0" />
+      <point x="5568.0" y="4658.0" />
+      <point x="5568.0" y="3938.0" />
+      <point x="5328.0" y="3938.0" />
+      <point x="5328.0" y="2618.0" />
+      <point x="5408.0" y="2618.0" />
+      <point x="5408.0" y="738.0" />
+      <point x="4848.0" y="738.0" />
+      <point x="0.0" y="43.5" />
+    </edge>
+    <edge source="Frames.SeccaoEquipas.EquipasFrame" target="Models.Campeonatos.Campeonato" relationship="TO_ONE">
+      <point x="0.0" y="-115.5" />
+      <point x="6088.0" y="5858.0" />
+      <point x="7828.0" y="5858.0" />
+      <point x="7828.0" y="4778.0" />
+      <point x="8108.0" y="4778.0" />
+      <point x="8108.0" y="2738.0" />
+      <point x="7068.0" y="2738.0" />
+      <point x="7068.0" y="1838.0" />
+      <point x="7228.0" y="1838.0" />
+      <point x="0.0" y="-259.5" />
+    </edge>
+    <edge source="Frames.SeccaoEquipas.EditarJogadoresFrame" target="Models.Jogadores.JogadorService" relationship="TO_ONE">
+      <point x="0.0" y="-211.5" />
+      <point x="6368.0" y="3718.0" />
+      <point x="6328.0" y="3718.0" />
+      <point x="6328.0" y="2658.0" />
+      <point x="3168.0" y="2658.0" />
+      <point x="3168.0" y="2278.0" />
+      <point x="3968.0" y="2278.0" />
+      <point x="3968.0" y="1978.0" />
+      <point x="4532.0" y="1978.0" />
+      <point x="-56.0" y="-55.5" />
+    </edge>
+    <edge source="Frames.SeccaoDashboard.DashboardFrame" target="Frames.SeccaoDashboard.DashboardFrame.PontoGrafico" relationship="CREATE">
+      <point x="0.0" y="-235.5" />
+      <point x="4548.0" y="7578.0" />
+      <point x="4508.0" y="7578.0" />
+      <point x="4508.0" y="7478.0" />
+      <point x="288.0" y="7478.0" />
+      <point x="288.0" y="7078.0" />
+      <point x="39.333333333333314" y="7078.0" />
+      <point x="51.333333333333314" y="43.5" />
+    </edge>
+    <edge source="Frames.SeccaoEquipas.EquipasFrame" target="Design.RoundedBorder" relationship="CREATE">
+      <point x="0.0" y="115.5" />
+      <point x="6088.0" y="6278.0" />
+      <point x="5328.0" y="6278.0" />
+      <point x="5328.0" y="5698.0" />
+      <point x="5488.0" y="5698.0" />
+      <point x="5488.0" y="3958.0" />
+      <point x="5168.0" y="3958.0" />
+      <point x="5168.0" y="2198.0" />
+      <point x="5288.0" y="2198.0" />
+      <point x="0.0" y="43.5" />
+    </edge>
+    <edge source="Frames.SeccaoEquipas.EditarEquipaFrame" target="Models.Equipas.Equipa" relationship="TO_ONE">
+      <point x="-75.25" y="-127.5" />
+      <point x="7132.75" y="4638.0" />
+      <point x="7128.0" y="4638.0" />
+      <point x="7128.0" y="4438.0" />
+      <point x="7428.0" y="4438.0" />
+      <point x="7428.0" y="2138.0" />
+      <point x="7388.0" y="2138.0" />
+      <point x="7388.0" y="1818.0" />
+      <point x="6228.0" y="1818.0" />
+      <point x="0.0" y="-175.5" />
+    </edge>
+    <edge source="Frames.SeccaoJogos.JogosFrame" target="Frames.SeccaoJogos.DetalheJogoFrame" relationship="CREATE">
+      <point x="0.0" y="67.5" />
+      <point x="728.0" y="5578.0" />
+      <point x="568.0" y="5578.0" />
+      <point x="568.0" y="5358.0" />
+      <point x="1048.0" y="5358.0" />
+      <point x="1048.0" y="4678.0" />
+      <point x="1273.75" y="4678.0" />
+      <point x="65.75" y="-79.5" />
+    </edge>
+    <edge source="Design.MenuLateral" target="Frames.SeccaoEstadios.EstadiosFrame" relationship="CREATE">
+      <point x="-36.0" y="-14.0" />
+      <point x="4572.0" y="7278.0" />
+      <point x="4568.0" y="7278.0" />
+      <point x="4568.0" y="7038.0" />
+      <point x="4528.0" y="7038.0" />
+      <point x="0.0" y="127.5" />
+    </edge>
+    <edge source="Frames.SeccaoEstadios.EstadiosFrame" target="Design.MenuLateral" relationship="CREATE">
+      <point x="0.0" y="127.5" />
+      <point x="4528.0" y="7258.0" />
+      <point x="4572.0" y="7258.0" />
+      <point x="-36.0" y="-14.0" />
+    </edge>
+    <edge source="Frames.SeccaoDashboard.DashboardFrame" target="Frames.SeccaoDashboard.DashboardFrame.GraficoLucro" relationship="CREATE">
+      <point x="0.0" y="-235.5" />
+      <point x="4548.0" y="7578.0" />
+      <point x="4508.0" y="7578.0" />
+      <point x="4508.0" y="7478.0" />
+      <point x="42.5" y="7478.0" />
+      <point x="54.5" y="79.5" />
+    </edge>
+    <edge source="Frames.SeccaoEstatisticas.EstadisticasFrame" target="Design.RoundedPanel" relationship="CREATE">
+      <point x="0.0" y="127.5" />
+      <point x="3188.0" y="5638.0" />
+      <point x="3348.0" y="5638.0" />
+      <point x="3348.0" y="4778.0" />
+      <point x="3568.0" y="4778.0" />
+      <point x="3568.0" y="738.0" />
+      <point x="4848.0" y="738.0" />
+      <point x="0.0" y="43.5" />
+    </edge>
+    <edge source="Frames.SeccaoEquipas.EditarJogadoresFrame" target="Frames.SeccaoEquipas.EditarJogadoresFrame.BotaoRemoverEditor" relationship="CREATE">
+      <point x="113.66666666666666" y="-211.5" />
+      <point x="6481.666666666667" y="4558.0" />
+      <point x="7168.0" y="4558.0" />
+      <point x="7168.0" y="3698.0" />
+      <point x="7228.0" y="3698.0" />
+      <point x="7228.0" y="2778.0" />
+      <point x="6648.0" y="2778.0" />
+      <point x="0.0" y="-55.5" />
+    </edge>
+    <edge source="Frames.SeccaoCampeonatos.NovoCampeonatoFrame" target="Design.MenuLateral" relationship="CREATE">
+      <point x="0.0" y="175.5" />
+      <point x="6428.0" y="6338.0" />
+      <point x="6348.0" y="6338.0" />
+      <point x="6348.0" y="7078.0" />
+      <point x="4528.0" y="7078.0" />
+      <point x="4528.0" y="7258.0" />
+      <point x="4572.0" y="7258.0" />
+      <point x="-36.0" y="-14.0" />
+    </edge>
+    <edge source="Frames.SeccaoEquipas.ConsultaEquipaFrame" target="Design.RoundedPanel" relationship="CREATE">
+      <point x="-61.75" y="-55.5" />
+      <point x="7346.25" y="5398.0" />
+      <point x="7348.0" y="5398.0" />
+      <point x="7348.0" y="5038.0" />
+      <point x="7428.0" y="5038.0" />
+      <point x="7428.0" y="4458.0" />
+      <point x="7468.0" y="4458.0" />
+      <point x="7468.0" y="738.0" />
+      <point x="4848.0" y="738.0" />
+      <point x="0.0" y="43.5" />
+    </edge>
+    <edge source="Design.MenuLateral" target="Frames.SeccaoRegras.RegrasFrame" relationship="CREATE">
+      <point x="-36.0" y="-14.0" />
+      <point x="4572.0" y="7278.0" />
+      <point x="4568.0" y="7278.0" />
+      <point x="4568.0" y="7038.0" />
+      <point x="7976.25" y="7038.0" />
+      <point x="-51.75" y="43.5" />
+    </edge>
+    <edge source="Frames.SeccaoRegras.RegrasFrame" target="Design.MenuLateral" relationship="CREATE">
+      <point x="-51.75" y="43.5" />
+      <point x="7976.25" y="7078.0" />
+      <point x="4528.0" y="7078.0" />
+      <point x="4528.0" y="7258.0" />
+      <point x="4572.0" y="7258.0" />
+      <point x="-36.0" y="-14.0" />
+    </edge>
+    <edge source="Frames.SeccaoEquipas.EditarJogadoresFrame.BotaoRemoverEditor" target="Frames.SeccaoEquipas.EditarJogadoresFrame" relationship="INNER_CLASS">
+      <point x="0.0" y="55.5" />
+      <point x="6648.0" y="4478.0" />
+      <point x="6248.0" y="4478.0" />
+      <point x="6248.0" y="4558.0" />
+      <point x="6254.333333333333" y="4558.0" />
+      <point x="-113.66666666666663" y="-211.5" />
+    </edge>
+    <edge source="Frames.SeccaoEquipas.ConsultaEquipaFrame" target="Models.Equipas.Equipa" relationship="TO_ONE">
+      <point x="61.75" y="-55.5" />
+      <point x="7469.75" y="5398.0" />
+      <point x="7468.0" y="5398.0" />
+      <point x="7468.0" y="5378.0" />
+      <point x="7508.0" y="5378.0" />
+      <point x="7508.0" y="4498.0" />
+      <point x="7548.0" y="4498.0" />
+      <point x="7548.0" y="2758.0" />
+      <point x="7428.0" y="2758.0" />
+      <point x="7428.0" y="2138.0" />
+      <point x="7388.0" y="2138.0" />
+      <point x="7388.0" y="1818.0" />
+      <point x="6228.0" y="1818.0" />
+      <point x="0.0" y="-175.5" />
+    </edge>
+    <edge source="Models.Financas.ReceitaService" target="Models.Financas.Receita" relationship="CREATE">
+      <point x="52.25" y="-67.5" />
+      <point x="1180.25" y="3358.0" />
+      <point x="1728.0" y="3358.0" />
+      <point x="1728.0" y="2218.0" />
+      <point x="1427.25" y="2218.0" />
+      <point x="39.25" y="79.5" />
+    </edge>
+    <edge source="Frames.SeccaoCampeonatos.CampeonatosFrame" target="Design.RoundedButton" relationship="CREATE">
+      <point x="0.0" y="127.5" />
+      <point x="6528.0" y="6658.0" />
+      <point x="6388.0" y="6658.0" />
+      <point x="6388.0" y="6298.0" />
+      <point x="4808.0" y="6298.0" />
+      <point x="4808.0" y="2638.0" />
+      <point x="4768.0" y="2638.0" />
+      <point x="4768.0" y="2178.0" />
+      <point x="4888.0" y="2178.0" />
+      <point x="0.0" y="31.5" />
+    </edge>
+    <edge source="Frames.SeccaoCampeonatos.CampeonatosFrame" target="Frames.SeccaoCampeonatos.GruposFrame" relationship="CREATE">
+      <point x="0.0" y="127.5" />
+      <point x="6528.0" y="6658.0" />
+      <point x="6388.0" y="6658.0" />
+      <point x="6388.0" y="6298.0" />
+      <point x="4848.0" y="6298.0" />
+      <point x="4848.0" y="5718.0" />
+      <point x="4728.0" y="5718.0" />
+      <point x="4728.0" y="5278.0" />
+      <point x="4474.333333333333" y="5278.0" />
+      <point x="-93.66666666666666" y="-139.5" />
+    </edge>
+    <edge source="Frames.SeccaoJogadores.PerfilJogadorFrame" target="Models.Jogadores.Jogador" relationship="TO_ONE">
+      <point x="-68.0" y="-187.5" />
+      <point x="4980.0" y="4578.0" />
+      <point x="4968.0" y="4578.0" />
+      <point x="4968.0" y="2478.0" />
+      <point x="5088.0" y="2478.0" />
+      <point x="5088.0" y="1458.0" />
+      <point x="5094.5" y="1458.0" />
+      <point x="-53.5" y="283.5" />
+    </edge>
+    <edge source="Frames.SeccaoEquipas.EquipasFrame" target="Design.PlaceholderTextField" relationship="CREATE">
+      <point x="0.0" y="115.5" />
+      <point x="6088.0" y="6278.0" />
+      <point x="5328.0" y="6278.0" />
+      <point x="5328.0" y="3918.0" />
+      <point x="5734.75" y="3918.0" />
+      <point x="-53.25" y="31.5" />
+    </edge>
+    <edge source="Models.Campeonatos.CampeonatoRepositorio" target="Models.Campeonatos.Campeonato" relationship="CREATE">
+      <point x="76.25" y="-139.5" />
+      <point x="6224.25" y="3438.0" />
+      <point x="6228.0" y="3438.0" />
+      <point x="6228.0" y="2598.0" />
+      <point x="7228.0" y="2598.0" />
+      <point x="0.0" y="259.5" />
+    </edge>
+    <edge source="Frames.SeccaoCampeonatos.PaginaEliminatorias" target="Design.RoundedButton" relationship="CREATE">
+      <point x="0.0" y="-139.5" />
+      <point x="4548.0" y="3398.0" />
+      <point x="4288.0" y="3398.0" />
+      <point x="4288.0" y="2438.0" />
+      <point x="4768.0" y="2438.0" />
+      <point x="4768.0" y="2178.0" />
+      <point x="4888.0" y="2178.0" />
+      <point x="0.0" y="31.5" />
+    </edge>
+    <edge source="Frames.SeccaoBilheteria.BilheteriaFrame" target="Models.Bilheteria.Bilhete" relationship="TO_MANY">
+      <point x="0.0" y="-223.5" />
+      <point x="3868.0" y="4518.0" />
+      <point x="4048.0" y="4518.0" />
+      <point x="4048.0" y="4438.0" />
+      <point x="4208.0" y="4438.0" />
+      <point x="4208.0" y="2598.0" />
+      <point x="3402.5" y="2598.0" />
+      <point x="54.5" y="115.5" />
+    </edge>
+    <edge source="Frames.SeccaoDashboard.DashboardFrame" target="Frames.SeccaoDashboard.DashboardFrame.ResumoBilheteira" relationship="CREATE">
+      <point x="0.0" y="-235.5" />
+      <point x="4548.0" y="7578.0" />
+      <point x="4508.0" y="7578.0" />
+      <point x="4508.0" y="7478.0" />
+      <point x="214.25" y="7478.0" />
+      <point x="46.25" y="43.5" />
+    </edge>
+    <edge source="Frames.SeccaoDashboard.DashboardFrame.GraficoLucro" target="Frames.SeccaoDashboard.DashboardFrame" relationship="INNER_CLASS">
+      <point x="-54.5" y="79.5" />
+      <point x="-66.5" y="7498.0" />
+      <point x="128.0" y="7498.0" />
+      <point x="128.0" y="7538.0" />
+      <point x="4420.666666666667" y="7538.0" />
+      <point x="-127.33333333333337" y="-235.5" />
+    </edge>
+    <edge source="Frames.SeccaoJogos.NovoJogoFrame" target="Models.Jogos.Jogo" relationship="CREATE">
+      <point x="0.0" y="187.5" />
+      <point x="528.0" y="5018.0" />
+      <point x="728.0" y="5018.0" />
+      <point x="728.0" y="4598.0" />
+      <point x="688.0" y="4598.0" />
+      <point x="688.0" y="3678.0" />
+      <point x="528.0" y="3678.0" />
+      <point x="528.0" y="358.0" />
+      <point x="2428.0" y="358.0" />
+      <point x="2428.0" y="318.0" />
+      <point x="2422.5" y="318.0" />
+      <point x="-45.5" y="151.5" />
+    </edge>
+    <edge source="Frames.SeccaoEstatisticas.EstadisticasFrame" target="Models.Jogos.Jogo" relationship="TO_MANY">
+      <point x="0.0" y="-127.5" />
+      <point x="3188.0" y="4818.0" />
+      <point x="3168.0" y="4818.0" />
+      <point x="3168.0" y="2618.0" />
+      <point x="3128.0" y="2618.0" />
+      <point x="3128.0" y="338.0" />
+      <point x="2708.0" y="338.0" />
+      <point x="2708.0" y="318.0" />
+      <point x="2513.5" y="318.0" />
+      <point x="45.5" y="151.5" />
+    </edge>
+    <edge source="Models.Jogos.JogoService" target="Models.Jogos.Jogo" relationship="CREATE">
+      <point x="0.0" y="-55.5" />
+      <point x="2168.0" y="358.0" />
+      <point x="2428.0" y="358.0" />
+      <point x="2428.0" y="318.0" />
+      <point x="2422.5" y="318.0" />
+      <point x="-45.5" y="151.5" />
+    </edge>
+    <edge source="Frames.SeccaoEstadios.EstadiosFrame" target="Frames.SeccaoEstadios.EstadiosFrame.AssociacaoEstadio" relationship="CREATE">
+      <point x="0.0" y="127.5" />
+      <point x="4528.0" y="7018.0" />
+      <point x="4328.0" y="7018.0" />
+      <point x="4328.0" y="6838.0" />
+      <point x="4088.0" y="6838.0" />
+      <point x="4088.0" y="6558.0" />
+      <point x="4496.0" y="6558.0" />
+      <point x="-52.0" y="43.5" />
+    </edge>
+    <edge source="Frames.SeccaoEstadios.NovoEstadioFrame" target="Models.Estadios.Estadio" relationship="CREATE">
+      <point x="0.0" y="163.5" />
+      <point x="3848.0" y="3798.0" />
+      <point x="3648.0" y="3798.0" />
+      <point x="3648.0" y="2318.0" />
+      <point x="3688.0" y="2318.0" />
+      <point x="3688.0" y="1738.0" />
+      <point x="3208.0" y="1738.0" />
+      <point x="3208.0" y="1278.0" />
+      <point x="3922.5" y="1278.0" />
+      <point x="-45.5" y="103.5" />
+    </edge>
+    <edge source="Frames.SeccaoEquipas.ConsultaEquipaFrame" target="Models.Jogadores.Jogador" relationship="TO_MANY">
+      <point x="61.75" y="-55.5" />
+      <point x="7469.75" y="5398.0" />
+      <point x="7468.0" y="5398.0" />
+      <point x="7468.0" y="4478.0" />
+      <point x="7508.0" y="4478.0" />
+      <point x="7508.0" y="1758.0" />
+      <point x="5088.0" y="1758.0" />
+      <point x="5088.0" y="1458.0" />
+      <point x="5094.5" y="1458.0" />
+      <point x="-53.5" y="283.5" />
+    </edge>
+    <edge source="Frames.SeccaoCampeonatos.PaginaEliminatorias.BracketCanvas" target="Frames.SeccaoCampeonatos.PaginaEliminatorias.ModeloBracket" relationship="TO_ONE">
+      <point x="-92.0" y="-55.5" />
+      <point x="4076.0" y="1338.0" />
+      <point x="4328.0" y="1338.0" />
+      <point x="0.0" y="31.5" />
+    </edge>
+    <edge source="Frames.SeccaoFinancas.NovaReceitaFrame" target="Frames.SeccaoFinancas.NovaReceitaFrame.JogoOpcao" relationship="TO_MANY">
+      <point x="-101.0" y="-163.5" />
+      <point x="2687.0" y="4598.0" />
+      <point x="2528.0" y="4598.0" />
+      <point x="2528.0" y="3718.0" />
+      <point x="2608.0" y="3718.0" />
+      <point x="2608.0" y="3538.0" />
+      <point x="2708.0" y="3538.0" />
+      <point x="0.0" y="-31.5" />
+    </edge>
+    <edge source="Models.Campeonatos.CampeonatoRepositorio" target="Models.Estadios.Estadio" relationship="TO_MANY">
+      <point x="-76.25" y="-139.5" />
+      <point x="6071.75" y="3438.0" />
+      <point x="6068.0" y="3438.0" />
+      <point x="6068.0" y="1778.0" />
+      <point x="4008.0" y="1778.0" />
+      <point x="4008.0" y="1278.0" />
+      <point x="4013.5" y="1278.0" />
+      <point x="45.5" y="103.5" />
+    </edge>
+    <edge source="Frames.SeccaoBilheteria.BilheteriaFrame" target="Design.MenuLateral" relationship="TO_ONE">
+      <point x="0.0" y="-223.5" />
+      <point x="3868.0" y="4538.0" />
+      <point x="4048.0" y="4538.0" />
+      <point x="4048.0" y="5458.0" />
+      <point x="3828.0" y="5458.0" />
+      <point x="3828.0" y="7058.0" />
+      <point x="4648.0" y="7058.0" />
+      <point x="4648.0" y="7278.0" />
+      <point x="4644.0" y="7278.0" />
+      <point x="36.0" y="-14.0" />
+    </edge>
+    <edge source="Frames.SeccaoCampeonatos.NovoCampeonatoFrame" target="Design.RoundedBorder" relationship="CREATE">
+      <point x="0.0" y="175.5" />
+      <point x="6428.0" y="6258.0" />
+      <point x="5928.0" y="6258.0" />
+      <point x="5928.0" y="2698.0" />
+      <point x="5168.0" y="2698.0" />
+      <point x="5168.0" y="2198.0" />
+      <point x="5288.0" y="2198.0" />
+      <point x="0.0" y="43.5" />
+    </edge>
+    <edge source="Frames.SeccaoEquipas.EditarJogadoresFrame" target="Models.Equipas.Equipa" relationship="TO_ONE">
+      <point x="0.0" y="-211.5" />
+      <point x="6368.0" y="3718.0" />
+      <point x="6788.0" y="3718.0" />
+      <point x="6788.0" y="2758.0" />
+      <point x="7428.0" y="2758.0" />
+      <point x="7428.0" y="2138.0" />
+      <point x="7388.0" y="2138.0" />
+      <point x="7388.0" y="1818.0" />
+      <point x="6228.0" y="1818.0" />
+      <point x="0.0" y="-175.5" />
+    </edge>
+    <edge source="Frames.SeccaoRegras.RegrasFrame" target="Design.RoundedPanel" relationship="CREATE">
+      <point x="-51.75" y="43.5" />
+      <point x="7976.25" y="7098.0" />
+      <point x="8508.0" y="7098.0" />
+      <point x="8508.0" y="738.0" />
+      <point x="4848.0" y="738.0" />
+      <point x="0.0" y="43.5" />
+    </edge>
+    <edge source="Models.Jogos.EventoJogoService" target="Models.Jogadores.JogadorService" relationship="TO_ONE">
+      <point x="70.5" y="-103.5" />
+      <point x="1638.5" y="3458.0" />
+      <point x="2088.0" y="3458.0" />
+      <point x="2088.0" y="2298.0" />
+      <point x="3168.0" y="2298.0" />
+      <point x="3168.0" y="2278.0" />
+      <point x="3968.0" y="2278.0" />
+      <point x="3968.0" y="1978.0" />
+      <point x="4532.0" y="1978.0" />
+      <point x="-56.0" y="-55.5" />
+    </edge>
+    <edge source="Frames.SeccaoEquipas.EditarEquipaFrame" target="Design.RoundedPanel" relationship="CREATE">
+      <point x="75.25" y="-127.5" />
+      <point x="7283.25" y="4638.0" />
+      <point x="7348.0" y="4638.0" />
+      <point x="7348.0" y="4498.0" />
+      <point x="7388.0" y="4498.0" />
+      <point x="7388.0" y="2718.0" />
+      <point x="7428.0" y="2718.0" />
+      <point x="7428.0" y="738.0" />
+      <point x="4848.0" y="738.0" />
+      <point x="0.0" y="43.5" />
+    </edge>
+    <edge source="Frames.SeccaoEstatisticas.EstadisticasFrame" target="Design.MenuLateral" relationship="CREATE">
+      <point x="0.0" y="127.5" />
+      <point x="3188.0" y="6018.0" />
+      <point x="3148.0" y="6018.0" />
+      <point x="3148.0" y="7078.0" />
+      <point x="4528.0" y="7078.0" />
+      <point x="4528.0" y="7258.0" />
+      <point x="4572.0" y="7258.0" />
+      <point x="-36.0" y="-14.0" />
+    </edge>
+    <edge source="Frames.SeccaoRegras.RegrasFrame" target="Design.MenuLateral" relationship="TO_ONE">
+      <point x="51.75" y="43.5" />
+      <point x="8079.75" y="7058.0" />
+      <point x="4648.0" y="7058.0" />
+      <point x="4648.0" y="7278.0" />
+      <point x="4644.0" y="7278.0" />
+      <point x="36.0" y="-14.0" />
+    </edge>
+    <edge source="Design.MenuLateral" target="Frames.SeccaoEstatisticas.EstadisticasFrame" relationship="CREATE">
+      <point x="-36.0" y="-14.0" />
+      <point x="4572.0" y="7278.0" />
+      <point x="4568.0" y="7278.0" />
+      <point x="4568.0" y="7038.0" />
+      <point x="3188.0" y="7038.0" />
+      <point x="0.0" y="127.5" />
+    </edge>
+    <edge source="Frames.SeccaoFinancas.NovaReceitaFrame" target="Models.Bilheteria.BilheteriaService" relationship="TO_ONE">
+      <point x="-101.0" y="-163.5" />
+      <point x="2687.0" y="4598.0" />
+      <point x="2528.0" y="4598.0" />
+      <point x="2528.0" y="4198.0" />
+      <point x="2448.0" y="4198.0" />
+      <point x="2448.0" y="3398.0" />
+      <point x="2200.0" y="3398.0" />
+      <point x="-88.0" y="-151.5" />
+    </edge>
+    <edge source="Models.Bilheteria.BilheteriaService" target="Models.Bilheteria.Bilhete" relationship="CREATE">
+      <point x="88.0" y="-151.5" />
+      <point x="2376.0" y="3418.0" />
+      <point x="2428.0" y="3418.0" />
+      <point x="2428.0" y="2258.0" />
+      <point x="3293.5" y="2258.0" />
+      <point x="-54.5" y="115.5" />
+    </edge>
+    <edge source="Frames.SeccaoEstadios.EstadiosFrame.AssociacaoEstadio" target="Models.Estadios.Estadio" relationship="TO_ONE">
+      <point x="0.0" y="-43.5" />
+      <point x="4548.0" y="6318.0" />
+      <point x="3608.0" y="6318.0" />
+      <point x="3608.0" y="1778.0" />
+      <point x="4008.0" y="1778.0" />
+      <point x="4008.0" y="1278.0" />
+      <point x="4013.5" y="1278.0" />
+      <point x="45.5" y="103.5" />
+    </edge>
+    <edge source="Frames.SeccaoEquipas.NovaEquipaFrame" target="Design.RoundedButton" relationship="CREATE">
+      <point x="-75.25" y="-115.5" />
+      <point x="5672.75" y="4658.0" />
+      <point x="5568.0" y="4658.0" />
+      <point x="5568.0" y="3938.0" />
+      <point x="5208.0" y="3938.0" />
+      <point x="5208.0" y="2638.0" />
+      <point x="4768.0" y="2638.0" />
+      <point x="4768.0" y="2178.0" />
+      <point x="4888.0" y="2178.0" />
+      <point x="0.0" y="31.5" />
+    </edge>
+    <edge source="Frames.SeccaoCampeonatos.EditarCampeonatoFrame" target="Design.RoundedPanel" relationship="CREATE">
+      <point x="0.0" y="187.5" />
+      <point x="7908.0" y="3818.0" />
+      <point x="8068.0" y="3818.0" />
+      <point x="8068.0" y="738.0" />
+      <point x="4848.0" y="738.0" />
+      <point x="0.0" y="43.5" />
+    </edge>
+    <edge source="Models.Campeonatos.Campeonato" target="Models.Jogos.Jogo" relationship="TO_MANY">
+      <point x="0.0" y="-259.5" />
+      <point x="7228.0" y="338.0" />
+      <point x="2708.0" y="338.0" />
+      <point x="2708.0" y="318.0" />
+      <point x="2513.5" y="318.0" />
+      <point x="45.5" y="151.5" />
+    </edge>
+    <edge source="Frames.SeccaoCampeonatos.EliminatoriasFrame" target="Design.MenuLateral" relationship="CREATE">
+      <point x="0.0" y="14.0" />
+      <point x="4328.0" y="5258.0" />
+      <point x="4168.0" y="5258.0" />
+      <point x="4168.0" y="7078.0" />
+      <point x="4528.0" y="7078.0" />
+      <point x="4528.0" y="7258.0" />
+      <point x="4572.0" y="7258.0" />
+      <point x="-36.0" y="-14.0" />
+    </edge>
+    <edge source="Frames.SeccaoJogadores.JogadoresFrame" target="Design.RoundedButton" relationship="CREATE">
+      <point x="0.0" y="163.5" />
+      <point x="5008.0" y="5678.0" />
+      <point x="5288.0" y="5678.0" />
+      <point x="5288.0" y="5118.0" />
+      <point x="5248.0" y="5118.0" />
+      <point x="5248.0" y="4078.0" />
+      <point x="4848.0" y="4078.0" />
+      <point x="4848.0" y="2638.0" />
+      <point x="4768.0" y="2638.0" />
+      <point x="4768.0" y="2178.0" />
+      <point x="4888.0" y="2178.0" />
+      <point x="0.0" y="31.5" />
+    </edge>
+    <edge source="Frames.SeccaoFinancas.NovaReceitaFrame" target="Design.RoundedButton" relationship="CREATE">
+      <point x="0.0" y="-163.5" />
+      <point x="2788.0" y="3698.0" />
+      <point x="2808.0" y="3698.0" />
+      <point x="2808.0" y="2638.0" />
+      <point x="4768.0" y="2638.0" />
+      <point x="4768.0" y="2178.0" />
+      <point x="4888.0" y="2178.0" />
+      <point x="0.0" y="31.5" />
+    </edge>
+    <edge source="Frames.SeccaoCampeonatos.NovoCampeonatoFrame" target="Design.RoundedPanel" relationship="CREATE">
+      <point x="0.0" y="175.5" />
+      <point x="6428.0" y="6258.0" />
+      <point x="5928.0" y="6258.0" />
+      <point x="5928.0" y="5718.0" />
+      <point x="8468.0" y="5718.0" />
+      <point x="8468.0" y="738.0" />
+      <point x="4848.0" y="738.0" />
+      <point x="0.0" y="43.5" />
+    </edge>
+    <edge source="Frames.SeccaoEstadios.EstadiosFrame" target="Design.RoundedPanel" relationship="CREATE">
+      <point x="0.0" y="127.5" />
+      <point x="4528.0" y="7018.0" />
+      <point x="4328.0" y="7018.0" />
+      <point x="4328.0" y="6838.0" />
+      <point x="4088.0" y="6838.0" />
+      <point x="4088.0" y="6558.0" />
+      <point x="4128.0" y="6558.0" />
+      <point x="4128.0" y="4458.0" />
+      <point x="4288.0" y="4458.0" />
+      <point x="4288.0" y="2458.0" />
+      <point x="3808.0" y="2458.0" />
+      <point x="3808.0" y="738.0" />
+      <point x="4848.0" y="738.0" />
+      <point x="0.0" y="43.5" />
+    </edge>
+    <edge source="Frames.SeccaoJogos.DetalheJogoFrame" target="Design.RoundedButton" relationship="CREATE">
+      <point x="65.75" y="-79.5" />
+      <point x="1273.75" y="4658.0" />
+      <point x="1288.0" y="4658.0" />
+      <point x="1288.0" y="4638.0" />
+      <point x="1328.0" y="4638.0" />
+      <point x="1328.0" y="2638.0" />
+      <point x="4768.0" y="2638.0" />
+      <point x="4768.0" y="2178.0" />
+      <point x="4888.0" y="2178.0" />
+      <point x="0.0" y="31.5" />
+    </edge>
+    <edge source="Frames.SeccaoCampeonatos.PaginaEliminatorias.ModeloBracket" target="Frames.SeccaoCampeonatos.PaginaEliminatorias" relationship="INNER_CLASS">
+      <point x="-94.0" y="31.5" />
+      <point x="4234.0" y="1298.0" />
+      <point x="3888.0" y="1298.0" />
+      <point x="3888.0" y="2478.0" />
+      <point x="4168.0" y="2478.0" />
+      <point x="4168.0" y="3418.0" />
+      <point x="4469.333333333333" y="3418.0" />
+      <point x="-78.66666666666666" y="-139.5" />
+    </edge>
+    <edge source="Frames.SeccaoJogos.DetalheJogoFrame" target="Models.Jogos.EventoJogoService" relationship="TO_ONE">
+      <point x="-65.75" y="-79.5" />
+      <point x="1142.25" y="4698.0" />
+      <point x="1148.0" y="4698.0" />
+      <point x="1148.0" y="3698.0" />
+      <point x="1408.0" y="3698.0" />
+      <point x="1408.0" y="3438.0" />
+      <point x="1638.5" y="3438.0" />
+      <point x="70.5" y="-103.5" />
+    </edge>
+    <edge source="Frames.SeccaoCampeonatos.PaginaEliminatorias" target="Frames.SeccaoCampeonatos.PaginaEliminatorias.ModeloBracket" relationship="CREATE">
+      <point x="0.0" y="-139.5" />
+      <point x="4548.0" y="3398.0" />
+      <point x="4288.0" y="3398.0" />
+      <point x="4288.0" y="2378.0" />
+      <point x="4448.0" y="2378.0" />
+      <point x="4448.0" y="1718.0" />
+      <point x="4428.0" y="1718.0" />
+      <point x="4428.0" y="1198.0" />
+      <point x="4422.0" y="1198.0" />
+      <point x="94.0" y="31.5" />
+    </edge>
+    <edge source="Frames.SeccaoJogadores.JogadoresFrame" target="Design.MenuLateral" relationship="CREATE">
+      <point x="0.0" y="163.5" />
+      <point x="5008.0" y="5758.0" />
+      <point x="4288.0" y="5758.0" />
+      <point x="4288.0" y="7078.0" />
+      <point x="4528.0" y="7078.0" />
+      <point x="4528.0" y="7258.0" />
+      <point x="4572.0" y="7258.0" />
+      <point x="-36.0" y="-14.0" />
+    </edge>
+    <edge source="Design.MenuLateral" target="Frames.SeccaoJogadores.JogadoresFrame" relationship="CREATE">
+      <point x="-36.0" y="-14.0" />
+      <point x="4572.0" y="7278.0" />
+      <point x="4568.0" y="7278.0" />
+      <point x="4568.0" y="7038.0" />
+      <point x="4728.0" y="7038.0" />
+      <point x="4728.0" y="6018.0" />
+      <point x="5008.0" y="6018.0" />
+      <point x="0.0" y="163.5" />
+    </edge>
+    <edge source="Frames.SeccaoEstadios.NovoEstadioFrame" target="Design.RoundedButton" relationship="CREATE">
+      <point x="0.0" y="163.5" />
+      <point x="3848.0" y="3798.0" />
+      <point x="3648.0" y="3798.0" />
+      <point x="3648.0" y="2358.0" />
+      <point x="4768.0" y="2358.0" />
+      <point x="4768.0" y="2178.0" />
+      <point x="4888.0" y="2178.0" />
+      <point x="0.0" y="31.5" />
+    </edge>
+    <edge source="Design.MenuLateral" target="Frames.SeccaoFinancas.FinancasFrame" relationship="CREATE">
+      <point x="-36.0" y="-14.0" />
+      <point x="4572.0" y="7278.0" />
+      <point x="4568.0" y="7278.0" />
+      <point x="4568.0" y="7038.0" />
+      <point x="1428.0" y="7038.0" />
+      <point x="1428.0" y="6038.0" />
+      <point x="1388.0" y="6038.0" />
+      <point x="0.0" y="307.5" />
+    </edge>
+    <edge source="Frames.SeccaoFinancas.FinancasFrame" target="Design.MenuLateral" relationship="CREATE">
+      <point x="0.0" y="307.5" />
+      <point x="1388.0" y="7078.0" />
+      <point x="4528.0" y="7078.0" />
+      <point x="4528.0" y="7258.0" />
+      <point x="4572.0" y="7258.0" />
+      <point x="-36.0" y="-14.0" />
+    </edge>
+    <edge source="Models.Bilheteria.BilheteriaService.Precos" target="Models.Bilheteria.BilheteriaService" relationship="INNER_CLASS">
+      <point x="-37.25" y="55.5" />
+      <point x="2290.75" y="2618.0" />
+      <point x="2288.0" y="2618.0" />
+      <point x="0.0" y="-151.5" />
+    </edge>
+    <edge source="Frames.SeccaoFinancas.EditarReceitaFrame" target="Models.Jogos.JogoService" relationship="TO_ONE">
+      <point x="101.0" y="-163.5" />
+      <point x="2089.0" y="4598.0" />
+      <point x="2088.0" y="4598.0" />
+      <point x="2088.0" y="4238.0" />
+      <point x="2048.0" y="4238.0" />
+      <point x="2048.0" y="2678.0" />
+      <point x="2168.0" y="2678.0" />
+      <point x="0.0" y="55.5" />
+    </edge>
+    <edge source="Frames.SeccaoJogadores.EditarJogadorFrame" target="Design.RoundedPanel" relationship="CREATE">
+      <point x="-76.25" y="-295.5" />
+      <point x="5471.75" y="3258.0" />
+      <point x="5248.0" y="3258.0" />
+      <point x="5248.0" y="2598.0" />
+      <point x="5448.0" y="2598.0" />
+      <point x="5448.0" y="738.0" />
+      <point x="4848.0" y="738.0" />
+      <point x="0.0" y="43.5" />
+    </edge>
+    <edge source="Frames.SeccaoEquipas.EditarJogadoresFrame.BotaoRemoverRenderer" target="Frames.SeccaoEquipas.EditarJogadoresFrame" relationship="INNER_CLASS">
+      <point x="-58.0" y="14.0" />
+      <point x="6450.0" y="4478.0" />
+      <point x="6248.0" y="4478.0" />
+      <point x="6248.0" y="4558.0" />
+      <point x="6254.333333333333" y="4558.0" />
+      <point x="-113.66666666666663" y="-211.5" />
+    </edge>
+    <edge source="Frames.SeccaoJogos.JogosFrame" target="Models.Jogos.Jogo" relationship="TO_MANY">
+      <point x="0.0" y="-67.5" />
+      <point x="728.0" y="5378.0" />
+      <point x="848.0" y="5378.0" />
+      <point x="848.0" y="2618.0" />
+      <point x="808.0" y="2618.0" />
+      <point x="808.0" y="338.0" />
+      <point x="2708.0" y="338.0" />
+      <point x="2708.0" y="318.0" />
+      <point x="2513.5" y="318.0" />
+      <point x="45.5" y="151.5" />
+    </edge>
+    <edge source="Frames.SeccaoBilheteria.BilheteriaFrame" target="Design.RoundedBorder" relationship="CREATE">
+      <point x="0.0" y="223.5" />
+      <point x="3868.0" y="5058.0" />
+      <point x="3688.0" y="5058.0" />
+      <point x="3688.0" y="4498.0" />
+      <point x="4008.0" y="4498.0" />
+      <point x="4008.0" y="4478.0" />
+      <point x="4368.0" y="4478.0" />
+      <point x="4368.0" y="2698.0" />
+      <point x="5168.0" y="2698.0" />
+      <point x="5168.0" y="2198.0" />
+      <point x="5288.0" y="2198.0" />
+      <point x="0.0" y="43.5" />
+    </edge>
+    <edge source="Frames.SeccaoFinancas.FinancasFrame" target="Frames.SeccaoFinancas.FinancasFrame.ReceitaJogo" relationship="CREATE">
+      <point x="0.0" y="307.5" />
+      <point x="1388.0" y="5818.0" />
+      <point x="2168.0" y="5818.0" />
+      <point x="2168.0" y="4978.0" />
+      <point x="1523.3333333333333" y="4978.0" />
+      <point x="55.333333333333314" y="103.5" />
+    </edge>
+    <edge source="Design.FormUtils" target="Design.PlaceholderTextField" relationship="CREATE">
+      <point x="0.0" y="-14.0" />
+      <point x="5408.0" y="4758.0" />
+      <point x="5368.0" y="4758.0" />
+      <point x="5368.0" y="3978.0" />
+      <point x="5328.0" y="3978.0" />
+      <point x="5328.0" y="3918.0" />
+      <point x="5734.75" y="3918.0" />
+      <point x="-53.25" y="31.5" />
+    </edge>
+    <edge source="Frames.SeccaoFinancas.FinancasFrame.ReceitaJogo" target="Frames.SeccaoFinancas.FinancasFrame" relationship="INNER_CLASS">
+      <point x="0.0" y="103.5" />
+      <point x="1468.0" y="5138.0" />
+      <point x="1477.25" y="5138.0" />
+      <point x="89.25" y="-307.5" />
+    </edge>
+    <edge source="app" target="Frames.SeccaoDashboard.DashboardFrame" relationship="CREATE">
+      <point x="0.0" y="-14.0" />
+      <point x="4208.0" y="7558.0" />
+      <point x="4548.0" y="7558.0" />
+      <point x="0.0" y="-235.5" />
+    </edge>
+    <edge source="Frames.SeccaoCampeonatos.CampeonatosFrame" target="Design.RoundedPanel" relationship="CREATE">
+      <point x="0.0" y="127.5" />
+      <point x="6528.0" y="6658.0" />
+      <point x="6388.0" y="6658.0" />
+      <point x="6388.0" y="6298.0" />
+      <point x="8148.0" y="6298.0" />
+      <point x="8148.0" y="738.0" />
+      <point x="4848.0" y="738.0" />
+      <point x="0.0" y="43.5" />
+    </edge>
+    <edge source="Frames.SeccaoCampeonatos.PaginaEliminatorias.BracketCanvas" target="Design.RoundedPanel" relationship="CREATE">
+      <point x="92.0" y="-55.5" />
+      <point x="4260.0" y="2038.0" />
+      <point x="4268.0" y="2038.0" />
+      <point x="4268.0" y="1218.0" />
+      <point x="4488.0" y="1218.0" />
+      <point x="4488.0" y="738.0" />
+      <point x="4848.0" y="738.0" />
+      <point x="0.0" y="43.5" />
+    </edge>
+    <edge source="Frames.SeccaoFinancas.FinancasFrame" target="Design.RoundedButton" relationship="CREATE">
+      <point x="0.0" y="307.5" />
+      <point x="1388.0" y="5818.0" />
+      <point x="2168.0" y="5818.0" />
+      <point x="2168.0" y="4978.0" />
+      <point x="2208.0" y="4978.0" />
+      <point x="2208.0" y="4198.0" />
+      <point x="2088.0" y="4198.0" />
+      <point x="2088.0" y="2638.0" />
+      <point x="4768.0" y="2638.0" />
+      <point x="4768.0" y="2178.0" />
+      <point x="4888.0" y="2178.0" />
+      <point x="0.0" y="31.5" />
+    </edge>
+    <edge source="Frames.SeccaoFinancas.FinancasFrame" target="Frames.SeccaoFinancas.FinancasFrame.ReceitaJogo" relationship="TO_MANY">
+      <point x="-89.25" y="-307.5" />
+      <point x="1298.75" y="5118.0" />
+      <point x="1308.0" y="5118.0" />
+      <point x="1308.0" y="4938.0" />
+      <point x="1412.6666666666667" y="4938.0" />
+      <point x="-55.33333333333333" y="103.5" />
+    </edge>
+    <edge source="Frames.SeccaoDashboard.DashboardFrame" target="Design.RoundedPanel" relationship="CREATE">
+      <point x="0.0" y="-235.5" />
+      <point x="4548.0" y="7578.0" />
+      <point x="4508.0" y="7578.0" />
+      <point x="4508.0" y="7478.0" />
+      <point x="328.0" y="7478.0" />
+      <point x="328.0" y="738.0" />
+      <point x="4848.0" y="738.0" />
+      <point x="0.0" y="43.5" />
+    </edge>
+    <edge source="Frames.SeccaoFinancas.NovaReceitaFrame.JogoOpcao" target="Frames.SeccaoFinancas.NovaReceitaFrame" relationship="INNER_CLASS">
+      <point x="35.25" y="31.5" />
+      <point x="2743.25" y="3678.0" />
+      <point x="2888.0" y="3678.0" />
+      <point x="2888.0" y="4598.0" />
+      <point x="2889.0" y="4598.0" />
+      <point x="101.0" y="-163.5" />
+    </edge>
+    <edge source="Frames.SeccaoEquipas.ConsultaEquipaFrame" target="Design.RoundedButton" relationship="CREATE">
+      <point x="-61.75" y="-55.5" />
+      <point x="7346.25" y="5398.0" />
+      <point x="7348.0" y="5398.0" />
+      <point x="7348.0" y="5038.0" />
+      <point x="6168.0" y="5038.0" />
+      <point x="6168.0" y="4418.0" />
+      <point x="5968.0" y="4418.0" />
+      <point x="5968.0" y="2638.0" />
+      <point x="4768.0" y="2638.0" />
+      <point x="4768.0" y="2178.0" />
+      <point x="4888.0" y="2178.0" />
+      <point x="0.0" y="31.5" />
+    </edge>
+    <edge source="Frames.SeccaoEstadios.NovoEstadioFrame" target="Design.MenuLateral" relationship="CREATE">
+      <point x="0.0" y="163.5" />
+      <point x="3848.0" y="4478.0" />
+      <point x="3648.0" y="4478.0" />
+      <point x="3648.0" y="7078.0" />
+      <point x="4528.0" y="7078.0" />
+      <point x="4528.0" y="7258.0" />
+      <point x="4572.0" y="7258.0" />
+      <point x="-36.0" y="-14.0" />
+    </edge>
+    <edge source="Models.Campeonatos.CampeonatoRepositorio" target="Models.Estadios.Estadio" relationship="CREATE">
+      <point x="76.25" y="-139.5" />
+      <point x="6224.25" y="3438.0" />
+      <point x="6228.0" y="3438.0" />
+      <point x="6228.0" y="2318.0" />
+      <point x="6108.0" y="2318.0" />
+      <point x="6108.0" y="1738.0" />
+      <point x="3208.0" y="1738.0" />
+      <point x="3208.0" y="1278.0" />
+      <point x="3922.5" y="1278.0" />
+      <point x="-45.5" y="103.5" />
+    </edge>
+    <edge source="Frames.SeccaoBilheteria.BilheteriaFrame" target="Models.Bilheteria.BilheteriaService" relationship="CREATE">
+      <point x="0.0" y="223.5" />
+      <point x="3868.0" y="5058.0" />
+      <point x="3688.0" y="5058.0" />
+      <point x="3688.0" y="4498.0" />
+      <point x="4008.0" y="4498.0" />
+      <point x="4008.0" y="4158.0" />
+      <point x="2128.0" y="4158.0" />
+      <point x="2128.0" y="3378.0" />
+      <point x="2376.0" y="3378.0" />
+      <point x="88.0" y="-151.5" />
+    </edge>
+    <edge source="Models.Campeonatos.CampeonatoRepositorio" target="Models.Jogos.Jogo" relationship="CREATE">
+      <point x="76.25" y="-139.5" />
+      <point x="6224.25" y="3438.0" />
+      <point x="6228.0" y="3438.0" />
+      <point x="6228.0" y="2318.0" />
+      <point x="6348.0" y="2318.0" />
+      <point x="6348.0" y="358.0" />
+      <point x="2428.0" y="358.0" />
+      <point x="2428.0" y="318.0" />
+      <point x="2422.5" y="318.0" />
+      <point x="-45.5" y="151.5" />
+    </edge>
+    <edge source="Frames.SeccaoFinancas.NovaReceitaFrame" target="Frames.SeccaoFinancas.NovaReceitaFrame.JogoOpcao" relationship="CREATE">
+      <point x="0.0" y="-163.5" />
+      <point x="2788.0" y="3698.0" />
+      <point x="2672.75" y="3698.0" />
+      <point x="-35.25" y="31.5" />
+    </edge>
+    <edge source="Frames.SeccaoCampeonatos.GruposFrame" target="Models.Campeonatos.Campeonato" relationship="TO_ONE">
+      <point x="93.66666666666666" y="-139.5" />
+      <point x="4661.666666666667" y="5258.0" />
+      <point x="4728.0" y="5258.0" />
+      <point x="4728.0" y="4018.0" />
+      <point x="5288.0" y="4018.0" />
+      <point x="5288.0" y="2738.0" />
+      <point x="7068.0" y="2738.0" />
+      <point x="7068.0" y="1838.0" />
+      <point x="7228.0" y="1838.0" />
+      <point x="0.0" y="-259.5" />
+    </edge>
+    <edge source="Frames.SeccaoFinancas.FinancasFrame" target="Models.Bilheteria.BilheteriaService" relationship="TO_ONE">
+      <point x="-89.25" y="-307.5" />
+      <point x="1298.75" y="5118.0" />
+      <point x="1308.0" y="5118.0" />
+      <point x="1308.0" y="4938.0" />
+      <point x="1368.0" y="4938.0" />
+      <point x="1368.0" y="4318.0" />
+      <point x="2448.0" y="4318.0" />
+      <point x="2448.0" y="3398.0" />
+      <point x="2200.0" y="3398.0" />
+      <point x="-88.0" y="-151.5" />
+    </edge>
+    <edge source="Frames.SeccaoFinancas.EditarReceitaFrame.ResumoBilheteira" target="Frames.SeccaoFinancas.EditarReceitaFrame" relationship="INNER_CLASS">
+      <point x="-46.25" y="43.5" />
+      <point x="1801.75" y="4538.0" />
+      <point x="1887.0" y="4538.0" />
+      <point x="-101.0" y="-163.5" />
+    </edge>
+    <edge source="Frames.SeccaoJogadores.PerfilJogadorFrame" target="Design.RoundedPanel" relationship="TO_ONE">
+      <point x="-68.0" y="-187.5" />
+      <point x="4980.0" y="4578.0" />
+      <point x="4968.0" y="4578.0" />
+      <point x="4968.0" y="4558.0" />
+      <point x="4928.0" y="4558.0" />
+      <point x="4928.0" y="2438.0" />
+      <point x="5048.0" y="2438.0" />
+      <point x="5048.0" y="1718.0" />
+      <point x="4968.0" y="1718.0" />
+      <point x="4968.0" y="718.0" />
+      <point x="4912.0" y="718.0" />
+      <point x="64.0" y="43.5" />
+    </edge>
+    <edge source="Frames.SeccaoFinancas.EditarReceitaFrame" target="Models.Financas.Receita" relationship="CREATE">
+      <point x="0.0" y="-163.5" />
+      <point x="1988.0" y="4598.0" />
+      <point x="1968.0" y="4598.0" />
+      <point x="1968.0" y="3678.0" />
+      <point x="1728.0" y="3678.0" />
+      <point x="1728.0" y="2218.0" />
+      <point x="1427.25" y="2218.0" />
+      <point x="39.25" y="79.5" />
+    </edge>
+    <edge source="Frames.SeccaoDashboard.DashboardFrame" target="Models.Equipas.Equipa" relationship="TO_MANY">
+      <point x="127.33333333333334" y="-235.5" />
+      <point x="4675.333333333333" y="7578.0" />
+      <point x="5248.0" y="7578.0" />
+      <point x="5248.0" y="7458.0" />
+      <point x="7628.0" y="7458.0" />
+      <point x="7628.0" y="2758.0" />
+      <point x="7428.0" y="2758.0" />
+      <point x="7428.0" y="2138.0" />
+      <point x="7388.0" y="2138.0" />
+      <point x="7388.0" y="1818.0" />
+      <point x="6228.0" y="1818.0" />
+      <point x="0.0" y="-175.5" />
+    </edge>
+    <edge source="Frames.SeccaoEstadios.EstadiosFrame" target="Design.RoundedButton" relationship="CREATE">
+      <point x="0.0" y="127.5" />
+      <point x="4528.0" y="7018.0" />
+      <point x="4328.0" y="7018.0" />
+      <point x="4328.0" y="6838.0" />
+      <point x="4088.0" y="6838.0" />
+      <point x="4088.0" y="6558.0" />
+      <point x="4208.0" y="6558.0" />
+      <point x="4208.0" y="5098.0" />
+      <point x="4168.0" y="5098.0" />
+      <point x="4168.0" y="4738.0" />
+      <point x="4328.0" y="4738.0" />
+      <point x="4328.0" y="2638.0" />
+      <point x="4768.0" y="2638.0" />
+      <point x="4768.0" y="2178.0" />
+      <point x="4888.0" y="2178.0" />
+      <point x="0.0" y="31.5" />
+    </edge>
+    <edge source="Frames.SeccaoEquipas.NovaEquipaFrame" target="Models.Equipas.Equipa" relationship="CREATE">
+      <point x="-75.25" y="-115.5" />
+      <point x="5672.75" y="4658.0" />
+      <point x="5568.0" y="4658.0" />
+      <point x="5568.0" y="3938.0" />
+      <point x="5248.0" y="3938.0" />
+      <point x="5248.0" y="2718.0" />
+      <point x="6228.0" y="2718.0" />
+      <point x="0.0" y="175.5" />
+    </edge>
+    <edge source="Design.MenuLateral" target="Frames.SeccaoEquipas.EquipasFrame" relationship="CREATE">
+      <point x="-36.0" y="-14.0" />
+      <point x="4572.0" y="7278.0" />
+      <point x="4568.0" y="7278.0" />
+      <point x="4568.0" y="7038.0" />
+      <point x="6088.0" y="7038.0" />
+      <point x="0.0" y="115.5" />
+    </edge>
+    <edge source="Frames.SeccaoEquipas.EquipasFrame" target="Design.MenuLateral" relationship="CREATE">
+      <point x="0.0" y="115.5" />
+      <point x="6088.0" y="6338.0" />
+      <point x="6048.0" y="6338.0" />
+      <point x="6048.0" y="7078.0" />
+      <point x="4528.0" y="7078.0" />
+      <point x="4528.0" y="7258.0" />
+      <point x="4572.0" y="7258.0" />
+      <point x="-36.0" y="-14.0" />
+    </edge>
+    <edge source="Frames.SeccaoCampeonatos.PaginaEliminatorias" target="Models.Campeonatos.Campeonato" relationship="TO_ONE">
+      <point x="78.66666666666666" y="-139.5" />
+      <point x="4626.666666666667" y="3438.0" />
+      <point x="4628.0" y="3438.0" />
+      <point x="4628.0" y="2458.0" />
+      <point x="7068.0" y="2458.0" />
+      <point x="7068.0" y="1838.0" />
+      <point x="7228.0" y="1838.0" />
+      <point x="0.0" y="-259.5" />
+    </edge>
+    <edge source="Frames.SeccaoFinancas.EditarReceitaFrame" target="Models.Bilheteria.BilheteriaService" relationship="CREATE">
+      <point x="0.0" y="-163.5" />
+      <point x="1988.0" y="4598.0" />
+      <point x="1968.0" y="4598.0" />
+      <point x="1968.0" y="4338.0" />
+      <point x="2128.0" y="4338.0" />
+      <point x="2128.0" y="3378.0" />
+      <point x="2376.0" y="3378.0" />
+      <point x="88.0" y="-151.5" />
+    </edge>
+    <edge source="Frames.SeccaoEquipas.ConsultaEquipaFrame" target="Frames.SeccaoEquipas.EditarEquipaFrame" relationship="CREATE">
+      <point x="-61.75" y="-55.5" />
+      <point x="7346.25" y="5398.0" />
+      <point x="7348.0" y="5398.0" />
+      <point x="7348.0" y="5038.0" />
+      <point x="7028.0" y="5038.0" />
+      <point x="7028.0" y="4618.0" />
+      <point x="7283.25" y="4618.0" />
+      <point x="75.25" y="-127.5" />
+    </edge>
+    <edge source="Frames.SeccaoEquipas.ConsultaEquipaFrame" target="Frames.SeccaoJogadores.PerfilJogadorFrame" relationship="CREATE">
+      <point x="-61.75" y="-55.5" />
+      <point x="7346.25" y="5398.0" />
+      <point x="7348.0" y="5398.0" />
+      <point x="7348.0" y="5098.0" />
+      <point x="5208.0" y="5098.0" />
+      <point x="5208.0" y="4578.0" />
+      <point x="5116.0" y="4578.0" />
+      <point x="68.0" y="-187.5" />
+    </edge>
+    <edge source="Frames.SeccaoJogadores.PerfilJogadorFrame" target="Frames.SeccaoJogadores.EditarJogadorFrame" relationship="CREATE">
+      <point x="68.0" y="-187.5" />
+      <point x="5116.0" y="4558.0" />
+      <point x="5108.0" y="4558.0" />
+      <point x="5108.0" y="3618.0" />
+      <point x="5368.0" y="3618.0" />
+      <point x="5368.0" y="3278.0" />
+      <point x="5471.75" y="3278.0" />
+      <point x="-76.25" y="-295.5" />
+    </edge>
+    <edge source="Frames.SeccaoEstadios.EditarEstadioFrame" target="Design.RoundedBorder" relationship="CREATE">
+      <point x="0.0" y="175.5" />
+      <point x="3388.0" y="3798.0" />
+      <point x="3248.0" y="3798.0" />
+      <point x="3248.0" y="2338.0" />
+      <point x="5168.0" y="2338.0" />
+      <point x="5168.0" y="2198.0" />
+      <point x="5288.0" y="2198.0" />
+      <point x="0.0" y="43.5" />
+    </edge>
+    <edge source="Frames.SeccaoEquipas.EditarJogadoresFrame" target="Design.RoundedPanel" relationship="CREATE">
+      <point x="113.66666666666666" y="-211.5" />
+      <point x="6481.666666666667" y="4558.0" />
+      <point x="7168.0" y="4558.0" />
+      <point x="7168.0" y="3698.0" />
+      <point x="7308.0" y="3698.0" />
+      <point x="7308.0" y="2538.0" />
+      <point x="7028.0" y="2538.0" />
+      <point x="7028.0" y="738.0" />
+      <point x="4848.0" y="738.0" />
+      <point x="0.0" y="43.5" />
+    </edge>
+    <edge source="Models.Bilheteria.BilheteriaService" target="Models.Jogos.JogoService" relationship="TO_ONE">
+      <point x="-88.0" y="-151.5" />
+      <point x="2200.0" y="2678.0" />
+      <point x="2168.0" y="2678.0" />
+      <point x="0.0" y="55.5" />
+    </edge>
+    <edge source="Frames.SeccaoFinancas.FinancasFrame" target="Models.Jogos.JogoService" relationship="TO_ONE">
+      <point x="-89.25" y="-307.5" />
+      <point x="1298.75" y="5118.0" />
+      <point x="1308.0" y="5118.0" />
+      <point x="1308.0" y="4938.0" />
+      <point x="1008.0" y="4938.0" />
+      <point x="1008.0" y="3718.0" />
+      <point x="928.0" y="3718.0" />
+      <point x="928.0" y="2678.0" />
+      <point x="2168.0" y="2678.0" />
+      <point x="0.0" y="55.5" />
+    </edge>
+    <edge source="Frames.SeccaoFinancas.NovaReceitaFrame" target="Design.RoundedPanel" relationship="CREATE">
+      <point x="0.0" y="-163.5" />
+      <point x="2788.0" y="3698.0" />
+      <point x="2568.0" y="3698.0" />
+      <point x="2568.0" y="738.0" />
+      <point x="4848.0" y="738.0" />
+      <point x="0.0" y="43.5" />
+    </edge>
+    <edge source="Frames.SeccaoCampeonatos.PaginaEliminatorias.BracketCanvas" target="Frames.SeccaoCampeonatos.PaginaEliminatorias.ModeloBracket" relationship="CREATE">
+      <point x="92.0" y="-55.5" />
+      <point x="4260.0" y="2038.0" />
+      <point x="4268.0" y="2038.0" />
+      <point x="4268.0" y="1698.0" />
+      <point x="4428.0" y="1698.0" />
+      <point x="4428.0" y="1198.0" />
+      <point x="4422.0" y="1198.0" />
+      <point x="94.0" y="31.5" />
+    </edge>
+    <edge source="Frames.SeccaoCampeonatos.NovoCampeonatoFrame" target="Design.RoundedButton" relationship="CREATE">
+      <point x="0.0" y="175.5" />
+      <point x="6428.0" y="6258.0" />
+      <point x="5928.0" y="6258.0" />
+      <point x="5928.0" y="5718.0" />
+      <point x="5528.0" y="5718.0" />
+      <point x="5528.0" y="4058.0" />
+      <point x="5048.0" y="4058.0" />
+      <point x="5048.0" y="2638.0" />
+      <point x="4768.0" y="2638.0" />
+      <point x="4768.0" y="2178.0" />
+      <point x="4888.0" y="2178.0" />
+      <point x="0.0" y="31.5" />
+    </edge>
+    <edge source="Frames.SeccaoEstadios.EditarEstadioFrame" target="Models.Estadios.Estadio" relationship="CREATE">
+      <point x="0.0" y="175.5" />
+      <point x="3388.0" y="3798.0" />
+      <point x="3248.0" y="3798.0" />
+      <point x="3248.0" y="2598.0" />
+      <point x="3208.0" y="2598.0" />
+      <point x="3208.0" y="1278.0" />
+      <point x="3922.5" y="1278.0" />
+      <point x="-45.5" y="103.5" />
+    </edge>
+    <edge source="Frames.SeccaoCampeonatos.CampeonatosFrame" target="Design.MenuLateral" relationship="CREATE">
+      <point x="0.0" y="127.5" />
+      <point x="6528.0" y="7078.0" />
+      <point x="4528.0" y="7078.0" />
+      <point x="4528.0" y="7258.0" />
+      <point x="4572.0" y="7258.0" />
+      <point x="-36.0" y="-14.0" />
+    </edge>
+    <edge source="Frames.SeccaoCampeonatos.CampeonatosFrame" target="Frames.SeccaoCampeonatos.EditarCampeonatoFrame" relationship="CREATE">
+      <point x="0.0" y="127.5" />
+      <point x="6528.0" y="6658.0" />
+      <point x="6388.0" y="6658.0" />
+      <point x="6388.0" y="6298.0" />
+      <point x="7868.0" y="6298.0" />
+      <point x="7868.0" y="4758.0" />
+      <point x="7908.0" y="4758.0" />
+      <point x="0.0" y="187.5" />
+    </edge>
+    <edge source="Design.MenuLateral" target="Frames.SeccaoCampeonatos.CampeonatosFrame" relationship="CREATE">
+      <point x="-36.0" y="-14.0" />
+      <point x="4572.0" y="7278.0" />
+      <point x="4568.0" y="7278.0" />
+      <point x="4568.0" y="7038.0" />
+      <point x="6488.0" y="7038.0" />
+      <point x="6488.0" y="6638.0" />
+      <point x="6528.0" y="6638.0" />
+      <point x="0.0" y="127.5" />
+    </edge>
+    <edge source="Frames.SeccaoEstadios.EstadiosFrame" target="Frames.SeccaoCampeonatos.CampeonatosFrame" relationship="CREATE">
+      <point x="0.0" y="127.5" />
+      <point x="4528.0" y="7018.0" />
+      <point x="4328.0" y="7018.0" />
+      <point x="4328.0" y="6838.0" />
+      <point x="4088.0" y="6838.0" />
+      <point x="4088.0" y="6678.0" />
+      <point x="6488.0" y="6678.0" />
+      <point x="6488.0" y="6638.0" />
+      <point x="6528.0" y="6638.0" />
+      <point x="0.0" y="127.5" />
+    </edge>
+    <edge source="Models.Equipas.EquipaService" target="Models.Equipas.Equipa" relationship="TO_MANY">
+      <point x="74.0" y="-79.5" />
+      <point x="7122.0" y="2758.0" />
+      <point x="7428.0" y="2758.0" />
+      <point x="7428.0" y="2138.0" />
+      <point x="7388.0" y="2138.0" />
+      <point x="7388.0" y="1818.0" />
+      <point x="6228.0" y="1818.0" />
+      <point x="0.0" y="-175.5" />
+    </edge>
+    <edge source="Frames.SeccaoJogos.JogosFrame" target="Design.RoundedPanel" relationship="CREATE">
+      <point x="0.0" y="67.5" />
+      <point x="728.0" y="5578.0" />
+      <point x="568.0" y="5578.0" />
+      <point x="568.0" y="5038.0" />
+      <point x="768.0" y="5038.0" />
+      <point x="768.0" y="738.0" />
+      <point x="4848.0" y="738.0" />
+      <point x="0.0" y="43.5" />
+    </edge>
+    <edge source="Frames.SeccaoCampeonatos.EditarCampeonatoFrame" target="Models.Campeonatos.Campeonato" relationship="TO_ONE">
+      <point x="0.0" y="-187.5" />
+      <point x="7908.0" y="2738.0" />
+      <point x="7068.0" y="2738.0" />
+      <point x="7068.0" y="1838.0" />
+      <point x="7228.0" y="1838.0" />
+      <point x="0.0" y="-259.5" />
+    </edge>
+    <edge source="Models.Equipas.Equipa" target="Models.Jogadores.Jogador" relationship="TO_MANY">
+      <point x="0.0" y="-175.5" />
+      <point x="6228.0" y="1758.0" />
+      <point x="5088.0" y="1758.0" />
+      <point x="5088.0" y="1458.0" />
+      <point x="5094.5" y="1458.0" />
+      <point x="-53.5" y="283.5" />
+    </edge>
+    <edge source="Frames.SeccaoFinancas.FinancasFrame" target="Frames.SeccaoFinancas.EditarReceitaFrame" relationship="CREATE">
+      <point x="0.0" y="307.5" />
+      <point x="1388.0" y="5818.0" />
+      <point x="2168.0" y="5818.0" />
+      <point x="2168.0" y="4578.0" />
+      <point x="1988.0" y="4578.0" />
+      <point x="0.0" y="-163.5" />
+    </edge>
+    <edge source="Frames.SeccaoDashboard.DashboardFrame" target="Design.MenuLateral" relationship="TO_ONE">
+      <point x="127.33333333333334" y="-235.5" />
+      <point x="4675.333333333333" y="7578.0" />
+      <point x="5248.0" y="7578.0" />
+      <point x="5248.0" y="7258.0" />
+      <point x="4644.0" y="7258.0" />
+      <point x="36.0" y="-14.0" />
+    </edge>
+    <edge source="Frames.SeccaoFinancas.NovaReceitaFrame.JogoOpcao" target="Models.Jogos.Jogo" relationship="TO_ONE">
+      <point x="0.0" y="-31.5" />
+      <point x="2708.0" y="318.0" />
+      <point x="2513.5" y="318.0" />
+      <point x="45.5" y="151.5" />
+    </edge>
+    <edge source="Frames.SeccaoEstatisticas.EstadisticasFrame" target="Design.MenuLateral" relationship="TO_ONE">
+      <point x="0.0" y="-127.5" />
+      <point x="3188.0" y="5318.0" />
+      <point x="3028.0" y="5318.0" />
+      <point x="3028.0" y="6038.0" />
+      <point x="3228.0" y="6038.0" />
+      <point x="3228.0" y="7058.0" />
+      <point x="4648.0" y="7058.0" />
+      <point x="4648.0" y="7278.0" />
+      <point x="4644.0" y="7278.0" />
+      <point x="36.0" y="-14.0" />
+    </edge>
+    <edge source="Frames.SeccaoFinancas.NovaReceitaFrame" target="Frames.SeccaoFinancas.NovaReceitaFrame.ResumoBilheteira" relationship="CREATE">
+      <point x="0.0" y="-163.5" />
+      <point x="2788.0" y="3698.0" />
+      <point x="2881.75" y="3698.0" />
+      <point x="-46.25" y="43.5" />
+    </edge>
+    <edge source="Frames.SeccaoFinancas.EditarReceitaFrame" target="Design.RoundedButton" relationship="CREATE">
+      <point x="0.0" y="-163.5" />
+      <point x="1988.0" y="4598.0" />
+      <point x="1968.0" y="4598.0" />
+      <point x="1968.0" y="3678.0" />
+      <point x="2008.0" y="3678.0" />
+      <point x="2008.0" y="2638.0" />
+      <point x="4768.0" y="2638.0" />
+      <point x="4768.0" y="2178.0" />
+      <point x="4888.0" y="2178.0" />
+      <point x="0.0" y="31.5" />
+    </edge>
+    <edge source="Frames.SeccaoCampeonatos.PaginaEliminatorias.MatchCard" target="Frames.SeccaoCampeonatos.PaginaEliminatorias" relationship="INNER_CLASS">
+      <point x="-34.25" y="31.5" />
+      <point x="4093.75" y="1318.0" />
+      <point x="3928.0" y="1318.0" />
+      <point x="3928.0" y="2478.0" />
+      <point x="4168.0" y="2478.0" />
+      <point x="4168.0" y="3418.0" />
+      <point x="4469.333333333333" y="3418.0" />
+      <point x="-78.66666666666666" y="-139.5" />
+    </edge>
+    <edge source="Frames.SeccaoFinancas.FinancasFrame" target="Design.RoundedPanel" relationship="CREATE">
+      <point x="0.0" y="307.5" />
+      <point x="1388.0" y="5818.0" />
+      <point x="2168.0" y="5818.0" />
+      <point x="2168.0" y="4978.0" />
+      <point x="1568.0" y="4978.0" />
+      <point x="1568.0" y="4298.0" />
+      <point x="1368.0" y="4298.0" />
+      <point x="1368.0" y="2578.0" />
+      <point x="1288.0" y="2578.0" />
+      <point x="1288.0" y="738.0" />
+      <point x="4848.0" y="738.0" />
+      <point x="0.0" y="43.5" />
+    </edge>
+    <edge source="Frames.SeccaoBilheteria.BilheteriaFrame" target="Models.Bilheteria.BilheteriaService" relationship="TO_ONE">
+      <point x="0.0" y="-223.5" />
+      <point x="3868.0" y="4518.0" />
+      <point x="4048.0" y="4518.0" />
+      <point x="4048.0" y="4138.0" />
+      <point x="2448.0" y="4138.0" />
+      <point x="2448.0" y="3398.0" />
+      <point x="2200.0" y="3398.0" />
+      <point x="-88.0" y="-151.5" />
+    </edge>
+    <edge source="Frames.SeccaoJogadores.EditarJogadorFrame" target="Design.RoundedButton" relationship="CREATE">
+      <point x="-76.25" y="-295.5" />
+      <point x="5471.75" y="3258.0" />
+      <point x="5248.0" y="3258.0" />
+      <point x="5248.0" y="2578.0" />
+      <point x="4768.0" y="2578.0" />
+      <point x="4768.0" y="2178.0" />
+      <point x="4888.0" y="2178.0" />
+      <point x="0.0" y="31.5" />
+    </edge>
+    <edge source="Frames.SeccaoFinancas.EditarReceitaFrame" target="Models.Financas.ReceitaService" relationship="TO_ONE">
+      <point x="101.0" y="-163.5" />
+      <point x="2089.0" y="4598.0" />
+      <point x="2088.0" y="4598.0" />
+      <point x="2088.0" y="4258.0" />
+      <point x="1408.0" y="4258.0" />
+      <point x="1408.0" y="3678.0" />
+      <point x="1008.0" y="3678.0" />
+      <point x="1008.0" y="3498.0" />
+      <point x="1075.75" y="3498.0" />
+      <point x="-52.25" y="-67.5" />
+    </edge>
+    <edge source="Frames.SeccaoBilheteria.BilheteriaFrame" target="Models.Jogos.Jogo" relationship="TO_MANY">
+      <point x="0.0" y="-223.5" />
+      <point x="3868.0" y="4518.0" />
+      <point x="4048.0" y="4518.0" />
+      <point x="4048.0" y="4438.0" />
+      <point x="4168.0" y="4438.0" />
+      <point x="4168.0" y="2498.0" />
+      <point x="3768.0" y="2498.0" />
+      <point x="3768.0" y="338.0" />
+      <point x="2708.0" y="338.0" />
+      <point x="2708.0" y="318.0" />
+      <point x="2513.5" y="318.0" />
+      <point x="45.5" y="151.5" />
+    </edge>
+    <edge source="Frames.SeccaoCampeonatos.GruposFrame" target="Frames.SeccaoCampeonatos.GruposFrame.EstatisticaEquipa" relationship="CREATE">
+      <point x="-93.66666666666666" y="-139.5" />
+      <point x="4474.333333333333" y="5318.0" />
+      <point x="4468.0" y="5318.0" />
+      <point x="4468.0" y="4938.0" />
+      <point x="4561.75" y="4938.0" />
+      <point x="-46.25" y="115.5" />
+    </edge>
+    <edge source="Models.Campeonatos.CampeonatoRepositorio" target="Models.Campeonatos.Campeonato" relationship="TO_MANY">
+      <point x="-76.25" y="-139.5" />
+      <point x="6071.75" y="3438.0" />
+      <point x="6068.0" y="3438.0" />
+      <point x="6068.0" y="2558.0" />
+      <point x="7068.0" y="2558.0" />
+      <point x="7068.0" y="1838.0" />
+      <point x="7228.0" y="1838.0" />
+      <point x="0.0" y="-259.5" />
+    </edge>
+    <edge source="Frames.SeccaoDashboard.DashboardFrame" target="Models.Jogos.Jogo" relationship="TO_MANY">
+      <point x="127.33333333333334" y="-235.5" />
+      <point x="4675.333333333333" y="7578.0" />
+      <point x="5248.0" y="7578.0" />
+      <point x="5248.0" y="7458.0" />
+      <point x="8548.0" y="7458.0" />
+      <point x="8548.0" y="338.0" />
+      <point x="2708.0" y="338.0" />
+      <point x="2708.0" y="318.0" />
+      <point x="2513.5" y="318.0" />
+      <point x="45.5" y="151.5" />
+    </edge>
+    <edge source="Frames.SeccaoCampeonatos.PaginaEliminatorias.BracketCanvas" target="Frames.SeccaoCampeonatos.PaginaEliminatorias.MatchCard" relationship="CREATE">
+      <point x="92.0" y="-55.5" />
+      <point x="4260.0" y="2038.0" />
+      <point x="4268.0" y="2038.0" />
+      <point x="4268.0" y="1218.0" />
+      <point x="4162.25" y="1218.0" />
+      <point x="34.25" y="31.5" />
+    </edge>
+    <edge source="Frames.SeccaoEstadios.EstadiosFrame" target="Frames.SeccaoEstadios.EditarEstadioFrame" relationship="CREATE">
+      <point x="0.0" y="127.5" />
+      <point x="4528.0" y="7018.0" />
+      <point x="4328.0" y="7018.0" />
+      <point x="4328.0" y="6838.0" />
+      <point x="4088.0" y="6838.0" />
+      <point x="4088.0" y="6558.0" />
+      <point x="3428.0" y="6558.0" />
+      <point x="3428.0" y="4758.0" />
+      <point x="3388.0" y="4758.0" />
+      <point x="0.0" y="175.5" />
+    </edge>
+    <edge source="Frames.SeccaoCampeonatos.PaginaEliminatorias.BracketCanvas" target="Frames.SeccaoCampeonatos.PaginaEliminatorias" relationship="INNER_CLASS">
+      <point x="0.0" y="55.5" />
+      <point x="4168.0" y="3418.0" />
+      <point x="4469.333333333333" y="3418.0" />
+      <point x="-78.66666666666666" y="-139.5" />
+    </edge>
+    <edge source="Frames.SeccaoCampeonatos.NovoCampeonatoFrame" target="Frames.SeccaoCampeonatos.GruposFrame" relationship="CREATE">
+      <point x="0.0" y="175.5" />
+      <point x="6428.0" y="6258.0" />
+      <point x="5928.0" y="6258.0" />
+      <point x="5928.0" y="5738.0" />
+      <point x="4848.0" y="5738.0" />
+      <point x="4848.0" y="5718.0" />
+      <point x="4728.0" y="5718.0" />
+      <point x="4728.0" y="5278.0" />
+      <point x="4474.333333333333" y="5278.0" />
+      <point x="-93.66666666666666" y="-139.5" />
+    </edge>
+    <edge source="Frames.SeccaoEstadios.EstadiosFrame" target="Models.Estadios.Estadio" relationship="CREATE">
+      <point x="0.0" y="127.5" />
+      <point x="4528.0" y="7018.0" />
+      <point x="4328.0" y="7018.0" />
+      <point x="4328.0" y="6838.0" />
+      <point x="4088.0" y="6838.0" />
+      <point x="4088.0" y="6558.0" />
+      <point x="2988.0" y="6558.0" />
+      <point x="2988.0" y="4778.0" />
+      <point x="3088.0" y="4778.0" />
+      <point x="3088.0" y="2618.0" />
+      <point x="3008.0" y="2618.0" />
+      <point x="3008.0" y="1738.0" />
+      <point x="3208.0" y="1738.0" />
+      <point x="3208.0" y="1278.0" />
+      <point x="3922.5" y="1278.0" />
+      <point x="-45.5" y="103.5" />
+    </edge>
+    <edge source="Frames.SeccaoFinancas.EditarReceitaFrame" target="Models.Bilheteria.BilheteriaService" relationship="TO_ONE">
+      <point x="101.0" y="-163.5" />
+      <point x="2089.0" y="4598.0" />
+      <point x="2088.0" y="4598.0" />
+      <point x="2088.0" y="4358.0" />
+      <point x="2448.0" y="4358.0" />
+      <point x="2448.0" y="3398.0" />
+      <point x="2200.0" y="3398.0" />
+      <point x="-88.0" y="-151.5" />
+    </edge>
+    <edge source="Frames.SeccaoEquipas.EquipasFrame" target="Models.Equipas.EquipaService" relationship="TO_ONE">
+      <point x="0.0" y="-115.5" />
+      <point x="6088.0" y="5858.0" />
+      <point x="6128.0" y="5858.0" />
+      <point x="6128.0" y="4518.0" />
+      <point x="6868.0" y="4518.0" />
+      <point x="6868.0" y="3498.0" />
+      <point x="7122.0" y="3498.0" />
+      <point x="74.0" y="-79.5" />
+    </edge>
+    <edge source="Frames.SeccaoFinancas.FinancasFrame" target="Frames.SeccaoFinancas.FinancasFrame.ResumoBilheteira" relationship="CREATE">
+      <point x="0.0" y="307.5" />
+      <point x="1388.0" y="5818.0" />
+      <point x="2168.0" y="5818.0" />
+      <point x="2168.0" y="4978.0" />
+      <point x="1734.25" y="4978.0" />
+      <point x="46.25" y="43.5" />
+    </edge>
+    <edge source="Frames.SeccaoCampeonatos.GruposFrame" target="Design.RoundedPanel" relationship="CREATE">
+      <point x="-93.66666666666666" y="-139.5" />
+      <point x="4474.333333333333" y="5318.0" />
+      <point x="4468.0" y="5318.0" />
+      <point x="4468.0" y="4938.0" />
+      <point x="4448.0" y="4938.0" />
+      <point x="4448.0" y="3758.0" />
+      <point x="4688.0" y="3758.0" />
+      <point x="4688.0" y="2618.0" />
+      <point x="4768.0" y="2618.0" />
+      <point x="4768.0" y="738.0" />
+      <point x="4848.0" y="738.0" />
+      <point x="0.0" y="43.5" />
+    </edge>
+    <edge source="Frames.SeccaoJogadores.JogadoresFrame" target="Frames.SeccaoJogadores.PerfilJogadorFrame" relationship="CREATE">
+      <point x="0.0" y="163.5" />
+      <point x="5008.0" y="5678.0" />
+      <point x="5288.0" y="5678.0" />
+      <point x="5288.0" y="5458.0" />
+      <point x="5208.0" y="5458.0" />
+      <point x="5208.0" y="4578.0" />
+      <point x="5116.0" y="4578.0" />
+      <point x="68.0" y="-187.5" />
+    </edge>
+    <edge source="Frames.SeccaoJogos.NovoJogoFrame.PainelArredondado" target="Frames.SeccaoJogos.NovoJogoFrame" relationship="INNER_CLASS">
+      <point x="-49.75" y="43.5" />
+      <point x="598.25" y="4578.0" />
+      <point x="528.0" y="4578.0" />
+      <point x="0.0" y="-187.5" />
+    </edge>
+    <edge source="Models.Jogadores.JogadorService" target="Models.Jogadores.Jogador" relationship="TO_MANY">
+      <point x="-56.0" y="-55.5" />
+      <point x="4532.0" y="1758.0" />
+      <point x="5088.0" y="1758.0" />
+      <point x="5088.0" y="1458.0" />
+      <point x="5094.5" y="1458.0" />
+      <point x="-53.5" y="283.5" />
+    </edge>
+    <edge source="Frames.SeccaoDashboard.DashboardFrame" target="Models.Bilheteria.BilheteriaService" relationship="TO_ONE">
+      <point x="127.33333333333334" y="-235.5" />
+      <point x="4675.333333333333" y="7578.0" />
+      <point x="5248.0" y="7578.0" />
+      <point x="5248.0" y="7458.0" />
+      <point x="2448.0" y="7458.0" />
+      <point x="2448.0" y="3398.0" />
+      <point x="2200.0" y="3398.0" />
+      <point x="-88.0" y="-151.5" />
+    </edge>
+    <edge source="Frames.SeccaoBilheteria.BilheteriaFrame" target="Design.RoundedButton" relationship="CREATE">
+      <point x="0.0" y="223.5" />
+      <point x="3868.0" y="5058.0" />
+      <point x="3688.0" y="5058.0" />
+      <point x="3688.0" y="4498.0" />
+      <point x="4008.0" y="4498.0" />
+      <point x="4008.0" y="4478.0" />
+      <point x="4128.0" y="4478.0" />
+      <point x="4128.0" y="2638.0" />
+      <point x="4768.0" y="2638.0" />
+      <point x="4768.0" y="2178.0" />
+      <point x="4888.0" y="2178.0" />
+      <point x="0.0" y="31.5" />
+    </edge>
+    <edge source="Models.Bilheteria.BilheteriaService" target="Models.Bilheteria.BilheteriaService.Precos" relationship="CREATE">
+      <point x="88.0" y="-151.5" />
+      <point x="2376.0" y="3418.0" />
+      <point x="2428.0" y="3418.0" />
+      <point x="2428.0" y="2258.0" />
+      <point x="2365.25" y="2258.0" />
+      <point x="37.25" y="55.5" />
+    </edge>
+    <edge source="Frames.SeccaoEstadios.EditarEstadioFrame" target="Design.RoundedPanel" relationship="CREATE">
+      <point x="0.0" y="175.5" />
+      <point x="3388.0" y="3798.0" />
+      <point x="3248.0" y="3798.0" />
+      <point x="3248.0" y="2598.0" />
+      <point x="3168.0" y="2598.0" />
+      <point x="3168.0" y="738.0" />
+      <point x="4848.0" y="738.0" />
+      <point x="0.0" y="43.5" />
+    </edge>
+    <edge source="Frames.SeccaoCampeonatos.EliminatoriasFrame" target="Frames.SeccaoCampeonatos.PaginaEliminatorias" relationship="CREATE">
+      <point x="0.0" y="14.0" />
+      <point x="4328.0" y="4838.0" />
+      <point x="4208.0" y="4838.0" />
+      <point x="4208.0" y="4758.0" />
+      <point x="4408.0" y="4758.0" />
+      <point x="4408.0" y="3438.0" />
+      <point x="4548.0" y="3438.0" />
+      <point x="0.0" y="-139.5" />
+    </edge>
+    <edge source="Frames.SeccaoJogos.JogosFrame" target="Design.RoundedButton" relationship="CREATE">
+      <point x="0.0" y="67.5" />
+      <point x="728.0" y="5578.0" />
+      <point x="568.0" y="5578.0" />
+      <point x="568.0" y="5038.0" />
+      <point x="808.0" y="5038.0" />
+      <point x="808.0" y="2638.0" />
+      <point x="4768.0" y="2638.0" />
+      <point x="4768.0" y="2178.0" />
+      <point x="4888.0" y="2178.0" />
+      <point x="0.0" y="31.5" />
+    </edge>
+    <edge source="Frames.SeccaoEquipas.EquipasFrame" target="Frames.SeccaoEquipas.ConsultaEquipaFrame" relationship="CREATE">
+      <point x="0.0" y="115.5" />
+      <point x="6088.0" y="6278.0" />
+      <point x="5328.0" y="6278.0" />
+      <point x="5328.0" y="5918.0" />
+      <point x="5968.0" y="5918.0" />
+      <point x="5968.0" y="5498.0" />
+      <point x="6168.0" y="5498.0" />
+      <point x="6168.0" y="5378.0" />
+      <point x="7346.25" y="5378.0" />
+      <point x="-61.75" y="-55.5" />
+    </edge>
+    <edge source="Frames.SeccaoCampeonatos.GruposFrame" target="Frames.SeccaoCampeonatos.EliminatoriasFrame" relationship="CREATE">
+      <point x="-93.66666666666666" y="-139.5" />
+      <point x="4474.333333333333" y="5318.0" />
+      <point x="4468.0" y="5318.0" />
+      <point x="4468.0" y="4938.0" />
+      <point x="4328.0" y="4938.0" />
+      <point x="0.0" y="14.0" />
+    </edge>
+    <edge source="Frames.SeccaoCampeonatos.EliminatoriasFrame" target="Frames.SeccaoCampeonatos.GruposFrame" relationship="CREATE">
+      <point x="0.0" y="14.0" />
+      <point x="4328.0" y="5258.0" />
+      <point x="4474.333333333333" y="5258.0" />
+      <point x="-93.66666666666666" y="-139.5" />
+    </edge>
+    <edge source="Frames.SeccaoJogos.NovoJogoFrame" target="Frames.SeccaoJogos.NovoJogoFrame.PainelArredondado" relationship="CREATE">
+      <point x="0.0" y="187.5" />
+      <point x="528.0" y="5018.0" />
+      <point x="728.0" y="5018.0" />
+      <point x="728.0" y="4598.0" />
+      <point x="688.0" y="4598.0" />
+      <point x="688.0" y="3678.0" />
+      <point x="697.75" y="3678.0" />
+      <point x="49.75" y="43.5" />
+    </edge>
+    <edge source="Frames.SeccaoEstadios.EstadiosFrame.AssociacaoEstadio" target="Models.Campeonatos.Campeonato" relationship="TO_ONE">
+      <point x="0.0" y="-43.5" />
+      <point x="4548.0" y="6318.0" />
+      <point x="7748.0" y="6318.0" />
+      <point x="7748.0" y="2738.0" />
+      <point x="7068.0" y="2738.0" />
+      <point x="7068.0" y="1838.0" />
+      <point x="7228.0" y="1838.0" />
+      <point x="0.0" y="-259.5" />
+    </edge>
+    <edge source="Frames.SeccaoJogadores.JogadoresFrame" target="Models.Jogadores.JogadorService" relationship="TO_ONE">
+      <point x="0.0" y="-163.5" />
+      <point x="5008.0" y="5278.0" />
+      <point x="4888.0" y="5278.0" />
+      <point x="4888.0" y="5098.0" />
+      <point x="4848.0" y="5098.0" />
+      <point x="4848.0" y="4098.0" />
+      <point x="4048.0" y="4098.0" />
+      <point x="4048.0" y="2658.0" />
+      <point x="3168.0" y="2658.0" />
+      <point x="3168.0" y="2278.0" />
+      <point x="3968.0" y="2278.0" />
+      <point x="3968.0" y="1978.0" />
+      <point x="4532.0" y="1978.0" />
+      <point x="-56.0" y="-55.5" />
+    </edge>
+    <edge source="Frames.SeccaoEstadios.NovoEstadioFrame" target="Design.RoundedBorder" relationship="CREATE">
+      <point x="0.0" y="163.5" />
+      <point x="3848.0" y="3798.0" />
+      <point x="3648.0" y="3798.0" />
+      <point x="3648.0" y="2418.0" />
+      <point x="5168.0" y="2418.0" />
+      <point x="5168.0" y="2198.0" />
+      <point x="5288.0" y="2198.0" />
+      <point x="0.0" y="43.5" />
+    </edge>
+    <edge source="Frames.SeccaoEstadios.EditarEstadioFrame" target="Models.Estadios.Estadio" relationship="TO_ONE">
+      <point x="0.0" y="-175.5" />
+      <point x="3388.0" y="2618.0" />
+      <point x="3488.0" y="2618.0" />
+      <point x="3488.0" y="1778.0" />
+      <point x="4008.0" y="1778.0" />
+      <point x="4008.0" y="1278.0" />
+      <point x="4013.5" y="1278.0" />
+      <point x="45.5" y="103.5" />
+    </edge>
+    <edge source="Frames.SeccaoJogos.DetalheJogoFrame" target="Models.Jogadores.JogadorService" relationship="TO_ONE">
+      <point x="-65.75" y="-79.5" />
+      <point x="1142.25" y="4698.0" />
+      <point x="1148.0" y="4698.0" />
+      <point x="1148.0" y="3698.0" />
+      <point x="1248.0" y="3698.0" />
+      <point x="1248.0" y="2658.0" />
+      <point x="3168.0" y="2658.0" />
+      <point x="3168.0" y="2278.0" />
+      <point x="3968.0" y="2278.0" />
+      <point x="3968.0" y="1978.0" />
+      <point x="4532.0" y="1978.0" />
+      <point x="-56.0" y="-55.5" />
+    </edge>
+    <edge source="Frames.SeccaoEquipas.EditarEquipaFrame" target="Models.Equipas.EquipaService" relationship="TO_ONE">
+      <point x="-75.25" y="-127.5" />
+      <point x="7132.75" y="4638.0" />
+      <point x="7128.0" y="4638.0" />
+      <point x="7128.0" y="3718.0" />
+      <point x="6868.0" y="3718.0" />
+      <point x="6868.0" y="3498.0" />
+      <point x="7122.0" y="3498.0" />
+      <point x="74.0" y="-79.5" />
+    </edge>
+    <edge source="Frames.SeccaoJogos.JogosFrame" target="Frames.SeccaoJogos.NovoJogoFrame" relationship="CREATE">
+      <point x="0.0" y="67.5" />
+      <point x="728.0" y="5578.0" />
+      <point x="568.0" y="5578.0" />
+      <point x="568.0" y="5038.0" />
+      <point x="528.0" y="5038.0" />
+      <point x="0.0" y="187.5" />
+    </edge>
+    <edge source="Frames.SeccaoDashboard.DashboardFrame" target="Frames.SeccaoEquipas.ConsultaEquipaFrame" relationship="CREATE">
+      <point x="0.0" y="-235.5" />
+      <point x="4548.0" y="7578.0" />
+      <point x="4508.0" y="7578.0" />
+      <point x="4508.0" y="7478.0" />
+      <point x="5288.0" y="7478.0" />
+      <point x="5288.0" y="5758.0" />
+      <point x="5968.0" y="5758.0" />
+      <point x="5968.0" y="5498.0" />
+      <point x="6168.0" y="5498.0" />
+      <point x="6168.0" y="5378.0" />
+      <point x="7346.25" y="5378.0" />
+      <point x="-61.75" y="-55.5" />
+    </edge>
+    <edge source="Frames.SeccaoEstatisticas.EstadisticasFrame" target="Frames.SeccaoJogadores.PerfilJogadorFrame" relationship="CREATE">
+      <point x="0.0" y="127.5" />
+      <point x="3188.0" y="5638.0" />
+      <point x="3348.0" y="5638.0" />
+      <point x="3348.0" y="5078.0" />
+      <point x="5208.0" y="5078.0" />
+      <point x="5208.0" y="4578.0" />
+      <point x="5116.0" y="4578.0" />
+      <point x="68.0" y="-187.5" />
+    </edge>
+    <edge source="Models.Equipas.EquipaService" target="Models.Equipas.Equipa" relationship="CREATE">
+      <point x="-74.0" y="-79.5" />
+      <point x="6974.0" y="2718.0" />
+      <point x="6228.0" y="2718.0" />
+      <point x="0.0" y="175.5" />
+    </edge>
+    <edge source="Models.Financas.ReceitaService" target="Models.Financas.Receita" relationship="TO_MANY">
+      <point x="-52.25" y="-67.5" />
+      <point x="1075.75" y="2598.0" />
+      <point x="1348.75" y="2598.0" />
+      <point x="-39.25" y="79.5" />
+    </edge>
+    <edge source="Frames.SeccaoJogos.DetalheJogoFrame" target="Models.Jogos.Jogo" relationship="TO_ONE">
+      <point x="-65.75" y="-79.5" />
+      <point x="1142.25" y="4698.0" />
+      <point x="1148.0" y="4698.0" />
+      <point x="1148.0" y="3698.0" />
+      <point x="968.0" y="3698.0" />
+      <point x="968.0" y="2598.0" />
+      <point x="848.0" y="2598.0" />
+      <point x="848.0" y="338.0" />
+      <point x="2708.0" y="338.0" />
+      <point x="2708.0" y="318.0" />
+      <point x="2513.5" y="318.0" />
+      <point x="45.5" y="151.5" />
+    </edge>
+    <edge source="Frames.SeccaoCampeonatos.PaginaEliminatorias.MatchCard" target="Frames.SeccaoCampeonatos.PaginaEliminatorias.NoJogo" relationship="TO_ONE">
+      <point x="-34.25" y="-31.5" />
+      <point x="4093.75" y="718.0" />
+      <point x="4088.0" y="718.0" />
+      <point x="4088.0" y="478.0" />
+      <point x="4688.0" y="478.0" />
+      <point x="0.0" y="-79.5" />
+    </edge>
+    <edge source="Frames.SeccaoDashboard.DashboardFrame.ReceitaJogo" target="Frames.SeccaoDashboard.DashboardFrame" relationship="INNER_CLASS">
+      <point x="-55.33333333333333" y="103.5" />
+      <point x="972.6666666666667" y="7498.0" />
+      <point x="128.0" y="7498.0" />
+      <point x="128.0" y="7538.0" />
+      <point x="4420.666666666667" y="7538.0" />
+      <point x="-127.33333333333337" y="-235.5" />
+    </edge>
+    <edge source="Frames.SeccaoCampeonatos.PaginaEliminatorias" target="Frames.SeccaoCampeonatos.PaginaEliminatorias.BracketCanvas" relationship="TO_ONE">
+      <point x="78.66666666666666" y="-139.5" />
+      <point x="4626.666666666667" y="3438.0" />
+      <point x="4628.0" y="3438.0" />
+      <point x="4628.0" y="2618.0" />
+      <point x="4408.0" y="2618.0" />
+      <point x="4408.0" y="1998.0" />
+      <point x="4076.0" y="1998.0" />
+      <point x="-92.0" y="-55.5" />
+    </edge>
+    <edge source="Frames.SeccaoCampeonatos.GruposFrame" target="Design.MenuLateral" relationship="CREATE">
+      <point x="-93.66666666666666" y="-139.5" />
+      <point x="4474.333333333333" y="5298.0" />
+      <point x="4248.0" y="5298.0" />
+      <point x="4248.0" y="7078.0" />
+      <point x="4528.0" y="7078.0" />
+      <point x="4528.0" y="7258.0" />
+      <point x="4572.0" y="7258.0" />
+      <point x="-36.0" y="-14.0" />
+    </edge>
+    <edge source="Frames.SeccaoDashboard.DashboardFrame" target="Design.MenuLateral" relationship="CREATE">
+      <point x="0.0" y="-235.5" />
+      <point x="4548.0" y="7578.0" />
+      <point x="4508.0" y="7578.0" />
+      <point x="4508.0" y="7238.0" />
+      <point x="4572.0" y="7238.0" />
+      <point x="-36.0" y="-14.0" />
+    </edge>
+    <edge source="Frames.SeccaoEquipas.EquipasFrame" target="Models.Equipas.Equipa" relationship="TO_MANY">
+      <point x="0.0" y="-115.5" />
+      <point x="6088.0" y="5858.0" />
+      <point x="7588.0" y="5858.0" />
+      <point x="7588.0" y="2758.0" />
+      <point x="7428.0" y="2758.0" />
+      <point x="7428.0" y="2138.0" />
+      <point x="7388.0" y="2138.0" />
+      <point x="7388.0" y="1818.0" />
+      <point x="6228.0" y="1818.0" />
+      <point x="0.0" y="-175.5" />
+    </edge>
+    <edge source="Design.MenuLateral" target="Frames.SeccaoDashboard.DashboardFrame" relationship="CREATE">
+      <point x="-36.0" y="-14.0" />
+      <point x="4572.0" y="7218.0" />
+      <point x="4708.0" y="7218.0" />
+      <point x="4708.0" y="7498.0" />
+      <point x="4548.0" y="7498.0" />
+      <point x="0.0" y="-235.5" />
+    </edge>
+    <edge source="Frames.SeccaoDashboard.DashboardFrame" target="Models.Financas.ReceitaService" relationship="TO_ONE">
+      <point x="127.33333333333334" y="-235.5" />
+      <point x="4675.333333333333" y="7578.0" />
+      <point x="5248.0" y="7578.0" />
+      <point x="5248.0" y="7458.0" />
+      <point x="648.0" y="7458.0" />
+      <point x="648.0" y="7238.0" />
+      <point x="888.0" y="7238.0" />
+      <point x="888.0" y="4278.0" />
+      <point x="1408.0" y="4278.0" />
+      <point x="1408.0" y="3678.0" />
+      <point x="1008.0" y="3678.0" />
+      <point x="1008.0" y="3498.0" />
+      <point x="1075.75" y="3498.0" />
+      <point x="-52.25" y="-67.5" />
+    </edge>
+    <edge source="Frames.SeccaoJogadores.PerfilJogadorFrame" target="Design.RoundedPanel" relationship="CREATE">
+      <point x="68.0" y="-187.5" />
+      <point x="5116.0" y="4558.0" />
+      <point x="5108.0" y="4558.0" />
+      <point x="5108.0" y="3618.0" />
+      <point x="5008.0" y="3618.0" />
+      <point x="5008.0" y="2558.0" />
+      <point x="5128.0" y="2558.0" />
+      <point x="5128.0" y="1478.0" />
+      <point x="5008.0" y="1478.0" />
+      <point x="5008.0" y="738.0" />
+      <point x="4848.0" y="738.0" />
+      <point x="0.0" y="43.5" />
+    </edge>
+    <edge source="Frames.SeccaoEquipas.EquipasFrame" target="Design.RoundedButton" relationship="CREATE">
+      <point x="0.0" y="115.5" />
+      <point x="6088.0" y="6278.0" />
+      <point x="5328.0" y="6278.0" />
+      <point x="5328.0" y="5698.0" />
+      <point x="4768.0" y="5698.0" />
+      <point x="4768.0" y="2178.0" />
+      <point x="4888.0" y="2178.0" />
+      <point x="0.0" y="31.5" />
+    </edge>
+    <edge source="Frames.SeccaoEstadios.NovoEstadioFrame" target="Design.RoundedPanel" relationship="CREATE">
+      <point x="0.0" y="163.5" />
+      <point x="3848.0" y="3798.0" />
+      <point x="3648.0" y="3798.0" />
+      <point x="3648.0" y="738.0" />
+      <point x="4848.0" y="738.0" />
+      <point x="0.0" y="43.5" />
+    </edge>
+    <edge source="Frames.SeccaoDashboard.DashboardFrame" target="Frames.SeccaoDashboard.DashboardFrame.ReceitaJogo" relationship="CREATE">
+      <point x="0.0" y="-235.5" />
+      <point x="4548.0" y="7578.0" />
+      <point x="4508.0" y="7578.0" />
+      <point x="4508.0" y="7478.0" />
+      <point x="1028.0" y="7478.0" />
+      <point x="0.0" y="103.5" />
+    </edge>
+    <edge source="Frames.SeccaoEquipas.EditarJogadoresFrame" target="Frames.SeccaoEquipas.EditarJogadoresFrame.BotaoRemoverRenderer" relationship="CREATE">
+      <point x="113.66666666666666" y="-211.5" />
+      <point x="6481.666666666667" y="4558.0" />
+      <point x="7168.0" y="4558.0" />
+      <point x="7168.0" y="3698.0" />
+      <point x="6566.0" y="3698.0" />
+      <point x="58.0" y="14.0" />
+    </edge>
+    <edge source="Frames.SeccaoEquipas.EditarJogadoresFrame" target="Design.RoundedButton" relationship="CREATE">
+      <point x="113.66666666666666" y="-211.5" />
+      <point x="6481.666666666667" y="4558.0" />
+      <point x="7168.0" y="4558.0" />
+      <point x="7168.0" y="3698.0" />
+      <point x="6828.0" y="3698.0" />
+      <point x="6828.0" y="2638.0" />
+      <point x="4768.0" y="2638.0" />
+      <point x="4768.0" y="2178.0" />
+      <point x="4888.0" y="2178.0" />
+      <point x="0.0" y="31.5" />
+    </edge>
+    <edge source="Models.Campeonatos.CalendarioJogosService" target="Models.Jogos.Jogo" relationship="CREATE">
+      <point x="0.0" y="-14.0" />
+      <point x="5048.0" y="358.0" />
+      <point x="2428.0" y="358.0" />
+      <point x="2428.0" y="318.0" />
+      <point x="2422.5" y="318.0" />
+      <point x="-45.5" y="151.5" />
+    </edge>
+    <edge source="Models.Campeonatos.Campeonato" target="Models.Estadios.Estadio" relationship="TO_MANY">
+      <point x="0.0" y="-259.5" />
+      <point x="7228.0" y="1678.0" />
+      <point x="4008.0" y="1678.0" />
+      <point x="4008.0" y="1278.0" />
+      <point x="4013.5" y="1278.0" />
+      <point x="45.5" y="103.5" />
+    </edge>
+    <edge source="Frames.SeccaoCampeonatos.GruposFrame.EstatisticaEquipa" target="Frames.SeccaoCampeonatos.GruposFrame" relationship="INNER_CLASS">
+      <point x="46.25" y="115.5" />
+      <point x="4654.25" y="5098.0" />
+      <point x="4568.0" y="5098.0" />
+      <point x="0.0" y="-139.5" />
+    </edge>
+    <edge source="Frames.SeccaoEquipas.ConsultaEquipaFrame" target="Frames.SeccaoEquipas.EditarJogadoresFrame" relationship="CREATE">
+      <point x="-61.75" y="-55.5" />
+      <point x="7346.25" y="5398.0" />
+      <point x="7348.0" y="5398.0" />
+      <point x="7348.0" y="5038.0" />
+      <point x="7388.0" y="5038.0" />
+      <point x="7388.0" y="4538.0" />
+      <point x="6481.666666666667" y="4538.0" />
+      <point x="113.66666666666666" y="-211.5" />
+    </edge>
+    <edge source="Frames.SeccaoEstatisticas.EstadisticasFrame" target="Models.Jogadores.JogadorService" relationship="TO_ONE">
+      <point x="0.0" y="-127.5" />
+      <point x="3188.0" y="4818.0" />
+      <point x="3208.0" y="4818.0" />
+      <point x="3208.0" y="2658.0" />
+      <point x="3168.0" y="2658.0" />
+      <point x="3168.0" y="2278.0" />
+      <point x="3968.0" y="2278.0" />
+      <point x="3968.0" y="1978.0" />
+      <point x="4532.0" y="1978.0" />
+      <point x="-56.0" y="-55.5" />
+    </edge>
+    <edge source="Frames.SeccaoEquipas.EditarEquipaFrame" target="Design.PlaceholderTextField" relationship="TO_ONE">
+      <point x="-75.25" y="-127.5" />
+      <point x="7132.75" y="4638.0" />
+      <point x="7128.0" y="4638.0" />
+      <point x="7128.0" y="4358.0" />
+      <point x="5848.0" y="4358.0" />
+      <point x="5848.0" y="2918.0" />
+      <point x="5841.25" y="2918.0" />
+      <point x="53.25" y="31.5" />
+    </edge>
+    <edge source="Frames.SeccaoEstadios.EditarEstadioFrame" target="Design.MenuLateral" relationship="CREATE">
+      <point x="0.0" y="175.5" />
+      <point x="3388.0" y="7078.0" />
+      <point x="4528.0" y="7078.0" />
+      <point x="4528.0" y="7258.0" />
+      <point x="4572.0" y="7258.0" />
+      <point x="-36.0" y="-14.0" />
+    </edge>
+    <edge source="Frames.SeccaoFinancas.NovaReceitaFrame.ResumoBilheteira" target="Frames.SeccaoFinancas.NovaReceitaFrame" relationship="INNER_CLASS">
+      <point x="46.25" y="43.5" />
+      <point x="2974.25" y="3678.0" />
+      <point x="2888.0" y="3678.0" />
+      <point x="2888.0" y="4598.0" />
+      <point x="2889.0" y="4598.0" />
+      <point x="101.0" y="-163.5" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Compact" zoom="0.08765432098765434" showDependencies="true" x="7524.746144901404" y="3806.9040464225204" />
+  <SelectedNodes />
+  <Categories>
+    <Category>Constructors</Category>
+    <Category>Fields</Category>
+    <Category>Inner Classes</Category>
+    <Category>Methods</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+
