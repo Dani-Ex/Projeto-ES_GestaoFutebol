@@ -1,8 +1,9 @@
-package GrupoEeleminatoria;
+package Frames.SeccaoGrupoEeleminatoria;
 
 import Design.MenuLateral;
 import Frames.CampeonatosFrame;
 import Models.Campeonato;
+import Models.CampeonatoRepositorio;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;

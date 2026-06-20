@@ -1,4 +1,4 @@
-package GrupoEeleminatoria;
+package Frames.SeccaoGrupoEeleminatoria;
 
 import Design.MenuLateral;
 import Models.Campeonato;

@@ -5,7 +5,7 @@ import Design.RoundedPanel;
 import Design.TableStyle;
 import Design.Tema;
 import Frames.SeccaoEquipas.ConsultaEquipaFrame;
-import GrupoEeleminatoria.CampeonatoRepositorio;
+import Models.CampeonatoRepositorio;
 import Models.Equipa;
 import Models.EquipaService;
 import Models.DashboardLogic;

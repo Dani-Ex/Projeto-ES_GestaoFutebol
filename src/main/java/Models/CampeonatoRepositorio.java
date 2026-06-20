@@ -1,8 +1,4 @@
-package GrupoEeleminatoria;
-
-import Models.Campeonato;
-import Models.Estadio;
-import Models.Jogo;
+package Models;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

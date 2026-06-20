@@ -1,10 +1,10 @@
 package Frames;
 
 import Design.MenuLateral;
-import GrupoEeleminatoria.CampeonatoRepositorio;
-import GrupoEeleminatoria.EditarCampeonatoFrame;
-import GrupoEeleminatoria.GruposFrame;
-import GrupoEeleminatoria.NovoCampeonatoFrame;
+import Models.CampeonatoRepositorio;
+import Frames.SeccaoGrupoEeleminatoria.EditarCampeonatoFrame;
+import Frames.SeccaoGrupoEeleminatoria.GruposFrame;
+import Frames.SeccaoGrupoEeleminatoria.NovoCampeonatoFrame;
 import Models.Campeonato;
 
 import javax.swing.*;

@@ -7,7 +7,7 @@ import Design.RoundedButton;
 import Design.RoundedPanel;
 import Design.TableStyle;
 import Design.Tema;
-import GrupoEeleminatoria.CampeonatoRepositorio;
+import Models.CampeonatoRepositorio;
 import Models.Campeonato;
 import Models.Equipa;
 import Models.EquipaService;
