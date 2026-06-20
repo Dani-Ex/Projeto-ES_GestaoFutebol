@@ -1,4 +1,4 @@
-# Projeto AINET
+# Projeto Engenharia de Software
 
 Sistema desktop em Java para gestao de campeonatos, equipas, jogadores, jogos, financas, estadios, bilheteira, estatisticas e regras.
 
@@ -15,8 +15,8 @@ Sistema desktop em Java para gestao de campeonatos, equipas, jogadores, jogos, f
 | Contribuidor | Partes desenvolvidas                                                                      |
 | --- |-------------------------------------------------------------------------------------------|
 | Daniel Santos | Dashboard, Equipas, Financas e Criação <br/>Package Design e Classes para Visual do Software   |
-| Luis Rodrigues | Jogadores, Estatisticas, Regras e Jogos                                                   |
-| Daniel Raimundo | Campeonatos, Estadios e Bilheteria                                                        |
+| Luis Rodrigues | Jogadores, Estatisticas, Regras e Bilheteria                                                   |
+| Daniel Raimundo | Campeonatos, Estadios e Jogos                                                         |
 
 ## Estrutura Geral
 

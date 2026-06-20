@@ -1,0 +1,724 @@
+Relatorio do Projeto de Engenharia de Software
+
+Sistema de Gestao de Campeonatos
+
+Autores:
+- Daniel Santos - 2024135450 - GitHub: Dani-Ex
+- Luis Rodrigues - 2022113499 - GitHub: CalvinEcuaPortu
+- Daniel Raimundo - 2024137447 - GitHub: Dh4rku
+
+Unidade Curricular: Engenharia de Software
+
+GitHub Repositorio: https://github.com/Dani-Ex/Projeto-ES_GestaoFutebol
+
+Indice
+
+1. Introducao
+2. Descricao Geral do Software
+3. Equipa e Divisao de Trabalho
+4. Estrutura do Projeto
+5. Persistencia de Dados
+6. Alteracoes Necessarias
+7. Casos de Uso
+
+
+1. Introducao
+
+O relatorio descreve como o projeto foi desenvolvido e o que cada membro da equipa ficou responsavel por implementar.
+Tambem descreve como o projeto foi estruturado, indica as alteracoes feitas em relacao ao prototipo inicial e apresenta a lista de casos de uso implementados.
+
+Este relatorio tambem serve para indicar os colaboradores no GitHub e o repositorio do projeto.
+No repositorio existe acesso ao codigo do projeto, ao texto separado com os casos de uso e ao ficheiro do diagrama de classes .uml.
+
+Por fim, o relatorio serve para indicar que são enviados em anexo o ficheiro .drawio e o ficheiro .png com o diagrama de classes, tal como foi indicado pelo responsavel do turno.
+
+
+2. Descricao Geral do Software
+
+O software permite gerir as principais areas de um campeonato, incluindo campeonatos, equipas, jogadores, jogos, estatisticas, estadios, bilheteria, financas e regras.
+A aplicacao foi desenvolvida com uma interface grafica em Java Swing e usa ficheiros TSV para guardar e carregar os dados da aplicacao.
+
+
+3. Equipa e Divisao de Trabalho
+
+O nosso grupo foi divido em tres areas principais, com cada membro a assumir responsabilidades especificas:
+
+- Daniel Santos:
+  Criou o Design do software, criando o package Design e componentes visuais reutilizaveis para garantir a consistencia visual nas interfaces.
+  Tambem ficou responsavel por todos os frames e modelos referentes ao Dashboard, Equipas, Financas e toda a logica referente a eles.
+
+  Desenvolveu tambem a logica de ligacao para o Dashboard, Equipas e Financas, garantindo que os dados apresentados estao sempre atualizados e consistentes com os ficheiros TSV e os outros componentes.
+  Fez a logica de registo de receitas financeiras, incluindo a associacao de receitas a jogos e campeonatos especificos, o calculo automatico de bilheteira a partir dos dados da bilheteria e
+  a logica de apresentacao do grafico de lucro no dashboard.
+
+  Por fim foi responsavel por criar testes unitarios relacionados com a logica do Dashboard, Equipas e Financas, validando o funcionamento correto das funcionalidades implementadas nessas areas.
+
+- Luis Rodrigues:
+  Criou os frames e modelos referentes a Jogadores, Estatisticas, Regras e Bilheteria e a todos os outros componentes das respetivas seccoes, e a toda a logica referente a eles.
+
+  Desenvolveu a logica de ligacao para Jogadores, Estatisticas e Bilheteria, garantindo que os dados apresentados estao sempre atualizados e consistentes com os ficheiros TSV e os outros componentes.
+  Trabalhou na logica de registo de eventos de jogo, incluindo golos e cartoes, na associacao desses eventos a jogadores e jogos especificos e na logica do precario na bilheteria e compra de bilhetes.
+
+  Por fim foi responsavel por criar testes unitarios relacionados com a logica de Jogadores, Estatisticas e Bilheteria, validando o funcionamento correto das funcionalidades implementadas nessas areas.
+
+- Daniel Raimundo:
+  Criou os frames e modelos referentes a Campeonatos, Estadios e Jogos e a todos os outros componentes das respetivas seccoes, e a toda a logica referente a eles.
+
+  Desenvolveu a logica de ligacao para Campeonatos, Estadios e Jogos, garantindo que os dados apresentados estao sempre atualizados e consistentes com os ficheiros TSV e os outros componentes.
+  Tambem desenvolveu a logica da progressao do campeonato, incluindo a geracao de grupos, a transicao para a fase eliminatoria e a associacao de jogos a fases especificas do campeonato.
+
+  Por fim foi responsavel por criar testes unitarios relacionados com a logica de Campeonatos, Estadios e Jogos, validando o funcionamento correto das funcionalidades implementadas nessas areas.
+
+
+4. Estrutura do Projeto
+
+A estrutura principal do projeto encontra-se organizada em:
+
+- src/main/java/Frames:
+  Contem as janelas e ecras da aplicacao.
+
+- src/main/java/Models:
+  Contem modelos, servicos e repositorios responsaveis pela logica da aplicacao e pela comunicacao com ficheiros TSV.
+
+- src/main/java/Design:
+  Contem componentes visuais e estilos reutilizaveis.
+
+- src/test/java:
+  Contem testes unitarios relacionados com a logica do sistema.
+
+- data:
+  Contem os ficheiros TSV usados para guardar a informacao da aplicacao.
+
+Depois da organizacao atual, os packages encontram-se separados por dominio.
+
+No package Frames existem secoes como:
+
+- SeccaoDashboard
+- SeccaoCampeonatos
+- SeccaoEquipas
+- SeccaoJogadores
+- SeccaoJogos
+- SeccaoEstatisticas
+- SeccaoFinancas
+- SeccaoEstadios
+- SeccaoBilheteria
+- SeccaoRegras
+
+No package Models existem dominios como:
+
+- Dashboard
+- Campeonatos
+- Equipas
+- Jogadores
+- Jogos
+- Estadios
+- Bilheteria
+- Financas
+- Utils
+
+
+5. Persistencia de Dados
+
+O sistema utiliza ficheiros TSV para guardar e ler os dados.
+
+Os principais ficheiros usados sao:
+
+- data/campeonatos.tsv
+  Guarda os dados principais dos campeonatos.
+
+- data/equipas.tsv
+  Guarda as equipas e a sua associacao a campeonatos.
+
+- data/jogadores.tsv
+  Guarda os jogadores e estatisticas individuais.
+
+- data/jogos.tsv
+  Guarda jogos, datas, equipas, resultados, estadios e estado.
+
+- data/estadios.tsv
+  Guarda os estadios existentes e as respetivas capacidades.
+
+- data/campeonato_estadios.tsv
+  Guarda associacoes entre campeonatos e estadios.
+
+- data/eventos_jogo.tsv
+  Guarda eventos registados nos jogos, como golos e cartoes.
+
+- data/precos_bilhetes.tsv
+  Guarda os precos dos bilhetes por jogo e tipo de bilhete.
+
+- data/bilhetes.tsv
+  Guarda as compras de bilhetes realizadas.
+
+- data/receitas.tsv
+  Guarda as receitas financeiras associadas aos jogos.
+
+Sempre que uma janela e aberta ou atualizada, o sistema volta a ler os dados necessarios dos ficheiros TSV.
+Quando o utilizador executa uma operacao de criacao, edicao ou eliminacao, o sistema atualiza os ficheiros correspondentes.
+
+
+6. Alteracoes Necessarias
+
+Durante a implementacao do projeto foram feitas algumas alteracoes em relacao ao mockup inicial feito no Figma:
+
+1. Foi adicionada uma seccao propria de Bilheteria, que nao existia como pagina completa no mockup inicial, para permitir configurar precos, vender bilhetes e consultar compras.
+2. A pagina de Financas foi alterada para receber automaticamente os valores da Bilheteria, deixando os bilhetes vendidos e o valor da bilheteira de ser preenchidos manualmente.
+3. O Dashboard passou a usar dados reais guardados nos ficheiros TSV, apresentando valores atualizados de bilhetes, lucros, jogos, classificacao e grafico financeiro.
+4. A area de Campeonatos foi expandida, passando a ter paginas e acoes para grupos, fase eliminatoria, jogos do campeonato e edicao/consulta de campeonatos.
+5. A pagina de Jogos foi alterada para abrir o detalhe de cada jogo, permitindo consultar informacao, registar resultado e adicionar eventos.
+6. Foram criadas janelas que nao estavam totalmente definidas no prototipo inicial, como Detalhe do Jogo, Nova Receita, Editar Receita, Editar Jogador e associacao de estadios a campeonatos.
+7. Algumas funcionalidades do prototipo foram simplificadas ou removidas, como os dados do comprador dos bilhetes, a gestao detalhada de bancadas, descontos de bilhetes e atribuicao de arbitros.
+8. Tambem foram ajustados varios elementos da interface, adicionando botoes e navegacao que faltavam, como voltar, editar, eliminar, guardar e abertura de detalhes por duplo clique.
+
+
+7. Casos de Uso
+
+
+7.1. Botao menu lateral
+Caminho Principal
+1- O utilizador seleciona o botao "=" no topo da janela atual.
+2- O sistema mostra ou esconde o menu lateral.
+3- O utilizador seleciona uma das opcoes: "Dashboard", "Campeonatos", "Equipas", "Jogadores", "Jogos", "Estatisticas", "Financas", "Estadios", "Bilheteria" ou "Regras".
+4- O sistema fecha a pagina atual e mostra a pagina selecionada.
+
+
+7.2. Consultar Dashboard
+Caminho Principal
+1- O utilizador seleciona a opcao "Dashboard" no menu lateral.
+2- O sistema mostra a janela "Dashboard do Campeonato".
+3- O sistema apresenta os cards de resumo com valores lidos dos ficheiros TSV: lucro, patrocinios, bilhetes vendidos, bilheteira e lucro medio.
+4- O sistema mostra o grafico de lucro, a tabela de classificacao, os proximos jogos e os ultimos jogos.
+
+7.3. Alterar tipo de grafico no Dashboard
+Caminho Principal
+1- O utilizador seleciona a lista de opcoes do grafico de lucro.
+2- O utilizador escolhe uma das opcoes disponiveis, como lucro por jogos recentes, lucro por campeonato ou lucro por mes.
+3- O sistema atualiza o grafico com os dados guardados nos TSV.
+
+7.4. Consultar classificacao no Dashboard
+Caminho Principal
+1- O utilizador seleciona um campeonato na combo da classificacao.
+2- O utilizador seleciona a fase "Fase de Grupos" ou "Fase Eliminatoria".
+3- Se estiver em fase de grupos, o utilizador pode usar os botoes "<" e ">" para navegar entre grupos.
+4- O sistema mostra apenas as equipas do campeonato e fase selecionados.
+
+7.5. Consultar equipa pela classificacao do Dashboard
+Caminho Principal
+1- O utilizador faz duplo clique numa equipa da tabela de classificacao.
+2- O sistema abre a janela "Consulta de Equipa" numa nova janela.
+3- A janela Dashboard continua aberta.
+
+7.6. Consultar jogo pelo Dashboard
+Caminho Principal
+1- O utilizador faz duplo clique num jogo em "Proximos Jogos" ou "Ultimos Jogos".
+2- O sistema abre a janela "Detalhe do Jogo" numa nova janela.
+3- A janela Dashboard continua aberta.
+
+
+7.7. Consultar campeonatos
+Caminho Principal
+1- O utilizador seleciona a opcao "Campeonatos" no menu lateral.
+2- O sistema mostra a janela "Campeonatos".
+3- O sistema apresenta a tabela de campeonatos guardados em "data/campeonatos.tsv".
+
+7.8. Criar campeonato
+Caminho Principal
+1- O utilizador seleciona a opcao "+ Novo Campeonato".
+2- O sistema abre a janela "Novo Campeonato".
+3- O utilizador preenche nome, datas, numero de equipas e numero de estadios.
+4- O utilizador seleciona a opcao "Criar Campeonato".
+5- O sistema valida os dados, guarda o campeonato e atualiza a lista de campeonatos.
+
+Caminho Alternativo
+4.1- O utilizador tenta criar campeonato com campos vazios ou invalidos.
+4.1.1- O sistema mostra uma mensagem de erro e nao guarda o campeonato.
+
+Caminho Alternativo
+4.2- O intervalo de datas ou o numero de estadios nao permite calendarizar os jogos necessarios.
+4.2.1- O sistema mostra uma mensagem de erro e indica a regra que nao foi cumprida.
+
+7.9. Editar campeonato
+Caminho Principal
+1- O utilizador seleciona um campeonato na tabela.
+2- O utilizador seleciona a opcao "Editar Campeonato".
+3- O sistema abre a janela "Editar Campeonato".
+4- O utilizador altera os dados permitidos.
+5- O utilizador seleciona "Guardar Alteracoes".
+6- O sistema valida os dados, guarda as alteracoes e atualiza os TSV ligados ao campeonato.
+
+Caminho Alternativo
+5.1- O campeonato ja nao permite alteracoes por estar iniciado ou finalizado.
+5.1.1- O sistema mostra uma mensagem de erro e nao aplica a alteracao.
+
+7.10. Eliminar campeonato
+Caminho Principal
+1- O utilizador seleciona um campeonato na tabela.
+2- O utilizador seleciona a opcao "Eliminar Campeonato".
+3- O sistema pede confirmacao.
+4- O utilizador confirma.
+5- O sistema elimina o campeonato e atualiza a tabela.
+
+Caminho Alternativo
+4.1- O campeonato tem dependencias ou estado que bloqueia a eliminacao.
+4.1.1- O sistema mostra uma mensagem de erro e nao elimina o campeonato.
+
+7.11. Abrir detalhes de campeonato
+Caminho Principal
+1- O utilizador faz duplo clique num campeonato da tabela.
+2- O sistema abre a janela "Campeonato - nome do campeonato".
+3- A janela anterior nao e fechada.
+
+7.12. Gerar grupos
+Caminho Principal
+1- O utilizador abre um campeonato.
+2- O utilizador seleciona "Gerar Grupos".
+3- O sistema valida se o campeonato tem equipas suficientes, numero valido de equipas e condicoes para gerar os grupos.
+4- O sistema distribui as equipas pelos grupos e guarda os dados.
+
+Caminho Alternativo
+3.1- O campeonato nao tem equipas suficientes ou nao cumpre as regras de grupos.
+3.1.1- O sistema mostra uma mensagem de erro.
+
+7.13. Terminar fase de grupos
+Caminho Principal
+1- O utilizador abre a janela de grupos de um campeonato.
+2- O utilizador seleciona "Terminar Fase de Grupos".
+3- O sistema valida se os jogos da fase de grupos foram realizados.
+4- O sistema prepara a fase eliminatoria com base na classificacao.
+
+Caminho Alternativo
+3.1- Ainda existem jogos de grupos por realizar.
+3.1.1- O sistema mostra uma mensagem de erro e nao termina a fase.
+
+7.14. Consultar eliminatorias
+Caminho Principal
+1- O utilizador abre a janela do campeonato.
+2- O utilizador seleciona "Eliminatorias".
+3- O sistema mostra a arvore da fase eliminatoria.
+4- O utilizador pode selecionar "Atualizar" para refrescar os dados.
+5- O utilizador pode selecionar "Voltar" para regressar aos grupos.
+
+
+7.15. Consultar equipas
+Caminho Principal
+1- O utilizador seleciona "Equipas" no menu lateral.
+2- O sistema mostra a janela "Equipas".
+3- O sistema apresenta a tabela com as equipas guardadas em "data/equipas.tsv".
+
+7.16. Pesquisar equipa
+Caminho Principal
+1- O utilizador escreve na caixa "Pesquisar equipa".
+2- O sistema filtra a tabela de equipas de acordo com o texto introduzido.
+
+7.17. Criar equipa
+Caminho Principal
+1- O utilizador seleciona "+ Nova Equipa".
+2- O sistema abre a janela "Nova Equipa".
+3- O utilizador preenche nome, cidade, pais, campeonato, treinador e capitao.
+4- O utilizador seleciona "Guardar Equipa".
+5- O sistema valida os dados e guarda a equipa.
+
+Caminho Alternativo
+3.1- Nao existem campeonatos em preparacao com vagas.
+3.1.1- O sistema nao apresenta campeonatos disponiveis para escolha.
+
+Caminho Alternativo
+4.1- O utilizador deixa campos vazios.
+4.1.1- O sistema mostra uma mensagem de erro.
+
+Caminho Alternativo
+4.2- Ja existe uma equipa com o mesmo nome no mesmo campeonato.
+4.2.1- O sistema mostra uma mensagem de erro e nao guarda a equipa.
+
+Caminho Alternativo
+4.3- O campeonato selecionado ja iniciou ou ja atingiu o limite de equipas.
+4.3.1- O sistema mostra uma mensagem de erro e nao guarda a equipa.
+
+7.18. Consultar equipa
+Caminho Principal
+1- O utilizador faz duplo clique numa equipa da tabela.
+2- O sistema abre a janela "Consulta de Equipa".
+3- A janela "Equipas" continua aberta.
+
+7.19. Editar equipa
+Caminho Principal
+1- O utilizador abre a janela "Consulta de Equipa".
+2- O utilizador seleciona "Editar Equipa".
+3- O sistema abre a janela "Editar Equipa".
+4- O utilizador altera os campos permitidos.
+5- O utilizador seleciona "Guardar Alteracoes".
+6- O sistema valida os dados e guarda as alteracoes.
+
+Caminho Alternativo
+5.1- O utilizador deixa campos vazios ou tenta usar um nome repetido no mesmo campeonato.
+5.1.1- O sistema mostra uma mensagem de erro.
+
+7.20. Eliminar equipa
+Caminho Principal
+1- O utilizador abre a janela "Editar Equipa".
+2- O utilizador seleciona "Delete".
+3- O sistema valida se o campeonato ainda nao comecou.
+4- O sistema elimina a equipa e os jogadores associados.
+
+Caminho Alternativo
+3.1- O campeonato ja iniciou.
+3.1.1- O sistema mostra uma mensagem de erro e nao elimina a equipa.
+
+7.21. Editar jogadores da equipa
+Caminho Principal
+1- O utilizador abre a janela "Consulta de Equipa".
+2- O utilizador seleciona "Editar Jogadores".
+3- O sistema abre a janela "Editar Jogadores".
+4- O utilizador pode adicionar jogadores, remover jogadores e guardar alteracoes.
+5- O sistema atualiza "data/jogadores.tsv" e a informacao da equipa.
+
+7.22. Adicionar jogador a equipa
+Caminho Principal
+1- O utilizador preenche nome, numero, peso, altura, data de nascimento, pais, cidade, posicao e pe dominante.
+2- O utilizador seleciona "+ Adicionar".
+3- O sistema valida os dados e acrescenta o jogador a tabela.
+4- O utilizador seleciona "Guardar Alteracoes".
+5- O sistema guarda os jogadores.
+
+Caminho Alternativo
+2.1- O utilizador deixa campos vazios, usa numero repetido ou valores invalidos.
+2.1.1- O sistema mostra uma mensagem de erro e nao adiciona o jogador.
+
+Caminho Alternativo
+2.2- O campeonato ja iniciou e a regra impede adicionar ou remover jogadores.
+2.2.1- O sistema mostra uma mensagem de erro.
+
+7.23. Remover jogador da equipa
+Caminho Principal
+1- O utilizador seleciona "Remover" na linha do jogador.
+2- O sistema remove o jogador da lista da equipa.
+3- O utilizador seleciona "Guardar Alteracoes".
+4- O sistema guarda os dados.
+
+
+7.24. Consultar jogadores
+Caminho Principal
+1- O utilizador seleciona "Jogadores" no menu lateral.
+2- O sistema mostra a janela "Jogadores".
+3- O sistema apresenta os jogadores guardados em "data/jogadores.tsv".
+
+7.25. Filtrar jogadores
+Caminho Principal
+1- O utilizador seleciona os filtros de equipa, posicao e estado.
+2- O sistema atualiza a tabela de jogadores.
+
+7.26. Consultar perfil de jogador
+Caminho Principal
+1- O utilizador faz duplo clique num jogador da tabela.
+2- O sistema abre a janela "Perfil do Jogador".
+3- A janela "Jogadores" continua aberta.
+
+7.27. Editar jogador
+Caminho Principal
+1- O utilizador abre o perfil de um jogador.
+2- O utilizador seleciona "Editar Jogador".
+3- O sistema abre a janela "Editar Jogador".
+4- O utilizador altera os dados permitidos.
+5- O utilizador seleciona "Guardar Alteracoes".
+6- O sistema valida e guarda os dados.
+
+Caminho Alternativo
+5.1- O utilizador introduz campos vazios, numeros negativos ou data de nascimento invalida.
+5.1.1- O sistema mostra uma mensagem de erro.
+
+7.28. Alterar estado de jogador
+Caminho Principal
+1- O utilizador abre o perfil de um jogador.
+2- O utilizador seleciona o botao de estado do jogador.
+3- O sistema altera o jogador entre ativo e inativo, quando a regra permitir.
+4- O sistema guarda a alteracao em "data/jogadores.tsv".
+
+
+7.29. Consultar jogos
+Caminho Principal
+1- O utilizador seleciona "Jogos" no menu lateral.
+2- O sistema mostra a janela "Jogos".
+3- O sistema apresenta "Proximos Jogos" e "Jogos Recentes" com dados de "data/jogos.tsv".
+
+7.30. Criar jogo
+Caminho Principal
+1- O utilizador seleciona "+ Novo Jogo".
+2- O sistema abre a janela "Criar Jogo".
+3- O utilizador seleciona campeonato, equipa A, equipa B, estadio, data e hora.
+4- O utilizador seleciona "Criar Jogo".
+5- O sistema valida os dados e guarda o jogo.
+
+Caminho Alternativo
+4.1- O jogo tem equipas repetidas, estadio indisponivel, data invalida ou campeonato invalido.
+4.1.1- O sistema mostra uma mensagem de erro e nao cria o jogo.
+
+7.31. Abrir detalhe do jogo
+Caminho Principal
+1- O utilizador faz duplo clique num jogo em "Proximos Jogos" ou "Jogos Recentes".
+2- O sistema abre a janela "Detalhe do Jogo".
+3- A janela "Jogos" continua aberta.
+
+7.32. Registar resultado
+Caminho Principal
+1- O utilizador seleciona um jogo na tabela.
+2- O utilizador seleciona "Registar Resultado".
+3- O sistema abre o detalhe ou o dialogo de atualizacao do jogo.
+4- O utilizador altera o estado e resultado.
+5- O sistema guarda os dados no TSV e atualiza estatisticas associadas.
+
+Caminho Alternativo
+4.1- O resultado nao cumpre as regras do jogo ou do campeonato.
+4.1.1- O sistema mostra uma mensagem de erro.
+
+7.33. Eliminar jogo
+Caminho Principal
+1- O utilizador seleciona um jogo na tabela.
+2- O utilizador seleciona "Eliminar Jogo".
+3- O sistema valida se o jogo pode ser eliminado.
+4- O sistema remove o jogo do TSV.
+
+Caminho Alternativo
+3.1- O jogo ja foi realizado ou esta bloqueado por regras do campeonato.
+3.1.1- O sistema mostra uma mensagem de erro.
+
+7.34. Atualizar jogo pelo Detalhe do Jogo
+Caminho Principal
+1- O utilizador abre "Detalhe do Jogo".
+2- O utilizador seleciona "Atualizar Jogo".
+3- O sistema mostra os campos de estado, resultado e eventos.
+4- O utilizador pode guardar estado, adicionar golo, adicionar cartao ou eliminar evento.
+5- O sistema guarda eventos em "data/eventos_jogo.tsv", resultado em "data/jogos.tsv" e estatisticas em "data/jogadores.tsv".
+
+7.35. Adicionar evento de golo
+Caminho Principal
+1- O utilizador seleciona "+ Golo".
+2- O utilizador seleciona equipa, jogador, minuto e segundo.
+3- O utilizador guarda o evento.
+4- O sistema atualiza eventos, resultado e estatisticas do jogador.
+
+7.36. Adicionar evento de cartao
+Caminho Principal
+1- O utilizador seleciona "+ Cartao".
+2- O utilizador seleciona equipa, jogador, minuto, segundo e tipo de cartao.
+3- O utilizador guarda o evento.
+4- O sistema atualiza eventos e estatisticas do jogador.
+
+7.37. Eliminar evento de jogo
+Caminho Principal
+1- O utilizador seleciona um evento registado.
+2- O utilizador seleciona "Eliminar evento".
+3- O sistema remove o evento e recalcula os dados associados.
+
+
+7.38. Consultar estatisticas
+Caminho Principal
+1- O utilizador seleciona "Estatisticas" no menu lateral.
+2- O sistema mostra a janela "Estatisticas".
+3- O sistema apresenta cards de resumo, estatisticas por jogador e estatisticas por jogo.
+
+7.39. Consultar estatisticas de jogador
+Caminho Principal
+1- O utilizador faz duplo clique num jogador na tabela de estatisticas por jogador.
+2- O sistema abre a janela "Perfil do Jogador".
+3- A janela "Estatisticas" continua aberta.
+
+7.40. Consultar estatisticas de jogo
+Caminho Principal
+1- O utilizador faz duplo clique num jogo na tabela de estatisticas por jogo.
+2- O sistema abre a janela "Detalhe do Jogo".
+3- A janela "Estatisticas" continua aberta.
+
+
+7.41. Consultar estadios
+Caminho Principal
+1- O utilizador seleciona "Estadios" no menu lateral.
+2- O sistema mostra a janela "Estadios".
+3- O sistema apresenta a tabela "Estadios e Associacoes" com estadios, capacidades, campeonato e estado.
+
+7.42. Voltar para Campeonatos pela janela Estadios
+Caminho Principal
+1- O utilizador seleciona o botao "Campeonatos" no canto superior direito.
+2- O sistema troca a pagina atual para a janela "Campeonatos".
+
+7.43. Criar estadio
+Caminho Principal
+1- O utilizador seleciona "Novo Estadio".
+2- O sistema abre a janela "Novo Estadio".
+3- O utilizador preenche nome, cidade, proprietario, lugares normal, lugares VIP, lugares premium e campeonato.
+4- O utilizador seleciona "Criar Estadio".
+5- O sistema valida os dados e guarda o estadio.
+
+Caminho Alternativo
+4.1- O utilizador deixa campos vazios, usa capacidades invalidas ou escolhe campeonato onde ja nao e permitido adicionar estadios.
+4.1.1- O sistema mostra uma mensagem de erro.
+
+7.44. Associar estadio existente
+Caminho Principal
+1- O utilizador seleciona um campeonato na janela "Estadios".
+2- O utilizador seleciona "Associar Existente".
+3- O sistema mostra os estadios existentes.
+4- O utilizador escolhe um estadio.
+5- O sistema associa o estadio ao campeonato selecionado e guarda os dados.
+
+Caminho Alternativo
+5.1- O campeonato ja iniciou, os grupos ja foram gerados ou o estadio ja esta associado.
+5.1.1- O sistema mostra uma mensagem de erro.
+
+7.45. Editar estadio
+Caminho Principal
+1- O utilizador seleciona um estadio na tabela.
+2- O utilizador seleciona "Editar Estadio".
+3- O sistema abre a janela "Editar Estadio".
+4- O utilizador altera os dados permitidos.
+5- O utilizador seleciona "Guardar Alteracoes".
+6- O sistema valida e guarda os dados.
+
+Caminho Alternativo
+5.1- O estadio esta bloqueado por jogos, campeonato iniciado ou regras de capacidade.
+5.1.1- O sistema mostra uma mensagem de erro.
+
+7.46. Eliminar estadio
+Caminho Principal
+1- O utilizador seleciona um estadio na tabela.
+2- O utilizador seleciona "Eliminar Estadio".
+3- O sistema valida se o estadio pode ser eliminado.
+4- O sistema elimina o estadio e atualiza os dados.
+
+Caminho Alternativo
+3.1- O estadio esta associado a jogos ou campeonato que nao permite eliminacao.
+3.1.1- O sistema mostra uma mensagem de erro.
+
+
+7.47. Consultar bilheteria
+Caminho Principal
+1- O utilizador seleciona "Bilheteria" no menu lateral.
+2- O sistema mostra a janela "Bilheteria".
+3- O sistema apresenta jogos configurados para venda, resumo de lugares e compras registadas.
+
+7.48. Adicionar jogo a bilheteria
+Caminho Principal
+1- O utilizador seleciona "Adicionar Ã  bilheteria".
+2- O sistema abre o dialogo de configuracao.
+3- O utilizador seleciona jogo, estadio e precos Normal, VIP e Premium.
+4- O utilizador seleciona "Adicionar".
+5- O sistema valida o jogo, estadio, precos e guarda em "data/precos_bilhetes.tsv".
+
+Caminho Alternativo
+4.1- O jogo ja comecou, ja esta configurado ou os precos nao sao positivos.
+4.1.1- O sistema mostra uma mensagem de erro.
+
+7.49. Comprar bilhetes
+Caminho Principal
+1- O utilizador seleciona um jogo configurado para bilheteria.
+2- O utilizador escolhe tipo de bilhete: Normal, VIP ou Premium.
+3- O utilizador escolhe quantidade.
+4- O utilizador escolhe metodo de pagamento.
+5- O utilizador seleciona "Comprar Bilhetes".
+6- O sistema valida disponibilidade e guarda a compra em "data/bilhetes.tsv".
+7- O sistema atualiza os lugares disponiveis.
+
+Caminho Alternativo
+5.1- A quantidade pedida ultrapassa os lugares disponiveis.
+5.1.1- O sistema mostra uma mensagem de erro e nao regista a compra.
+
+7.50. Editar compra de bilhetes
+Caminho Principal
+1- O utilizador seleciona uma compra registada.
+2- O utilizador seleciona "Editar compra".
+3- O sistema abre o dialogo de edicao.
+4- O utilizador altera jogo, tipo, quantidade ou pagamento.
+5- O utilizador seleciona "Guardar compra".
+6- O sistema valida disponibilidade e atualiza "data/bilhetes.tsv".
+
+Caminho Alternativo
+5.1- O jogo ja comecou ou a alteracao ultrapassa a disponibilidade.
+5.1.1- O sistema mostra uma mensagem de erro.
+
+7.51. Eliminar compra de bilhetes
+Caminho Principal
+1- O utilizador seleciona uma compra registada.
+2- O utilizador seleciona "Eliminar".
+3- O sistema pede confirmacao.
+4- O utilizador confirma.
+5- O sistema elimina a compra e atualiza os lugares disponiveis.
+
+7.52. Editar jogo configurado na bilheteria
+Caminho Principal
+1- O utilizador faz duplo clique num jogo configurado na lista de jogos da bilheteria.
+2- O sistema abre o dialogo de edicao do jogo da bilheteria.
+3- O utilizador altera jogo, estadio ou precos.
+4- O utilizador seleciona "Guardar alteracoes".
+5- O sistema valida e guarda a configuracao.
+
+Caminho Alternativo
+4.1- O jogo ja tem compras, ja comecou ou a nova capacidade e inferior aos bilhetes vendidos.
+4.1.1- O sistema mostra uma mensagem de erro.
+
+7.53. Eliminar jogo da bilheteria
+Caminho Principal
+1- O utilizador abre o dialogo de edicao do jogo da bilheteria.
+2- O utilizador seleciona "Eliminar".
+3- O sistema valida se nao existem compras registadas para esse jogo.
+4- O sistema remove a configuracao da bilheteria.
+
+
+7.54. Consultar financas
+Caminho Principal
+1- O utilizador seleciona "Financas" no menu lateral.
+2- O sistema mostra a janela "Financas".
+3- O sistema apresenta cards de total de bilheteira, patrocinios, direitos TV, lucro total e media.
+4- O sistema apresenta a tabela de receitas registadas.
+
+7.55. Filtrar financas por campeonato
+Caminho Principal
+1- O utilizador seleciona a combo de campeonato.
+2- O utilizador escolhe "Todas as Financas" ou um campeonato especifico.
+3- O sistema atualiza cards e tabela.
+
+7.56. Criar receita
+Caminho Principal
+1- O utilizador seleciona "+ Nova Receita".
+2- O sistema abre a janela "Nova Receita".
+3- O utilizador seleciona um jogo.
+4- O sistema mostra automaticamente campeonato, dia, bilhetes vendidos e valor de bilheteira.
+5- O utilizador preenche patrocinio e direitos TV.
+6- O utilizador seleciona "Guardar Receita".
+7- O sistema guarda a receita em "data/receitas.tsv".
+
+Caminho Alternativo
+6.1- O utilizador introduz valores negativos ou jogo ja registado.
+6.1.1- O sistema mostra uma mensagem de erro.
+
+7.57. Editar receita
+Caminho Principal
+1- O utilizador faz duplo clique numa receita da tabela.
+2- O sistema abre a janela "Editar Receita".
+3- O sistema mostra jogo, campeonato, dia, bilhetes vendidos e bilheteira como valores automaticos.
+4- O utilizador altera patrocinio e direitos TV.
+5- O utilizador seleciona "Guardar Alteracoes".
+6- O sistema guarda a receita atualizada.
+
+Caminho Alternativo
+5.1- O utilizador introduz valores invalidos.
+5.1.1- O sistema mostra uma mensagem de erro.
+
+7.58. Eliminar receita
+Caminho Principal
+1- O utilizador abre "Editar Receita".
+2- O utilizador seleciona "Eliminar Receita".
+3- O sistema remove a receita de "data/receitas.tsv".
+
+
+7.59. Consultar regras
+Caminho Principal
+1- O utilizador seleciona "Regras" no menu lateral.
+2- O sistema mostra a janela "Regras do Torneio".
+3- O sistema apresenta as regras funcionais usadas para validar campeonatos, equipas, jogos, estadios, bilheteria e financas.
+
+
+7.60. Guardar e carregar dados
+Caminho Principal
+1- O utilizador executa operacoes nas diferentes janelas do sistema.
+2- O sistema grava e le os dados nos ficheiros TSV da pasta "data".
+3- O sistema usa "campeonatos.tsv", "equipas.tsv", "jogadores.tsv", "jogos.tsv", "estadios.tsv", "campeonato_estadios.tsv", "eventos_jogo.tsv", "precos_bilhetes.tsv", "bilhetes.tsv" e "receitas.tsv".
+4- Quando uma janela e aberta ou atualizada, o sistema volta a ler os dados necessarios para refletir o estado atual.
