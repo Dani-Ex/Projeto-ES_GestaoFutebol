@@ -30,7 +30,7 @@ public class JogosFrame extends JFrame {
 
     public JogosFrame() {
         setTitle("Jogos");
-        setSize(1250, 780);
+        setSize(1920, 1080);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
