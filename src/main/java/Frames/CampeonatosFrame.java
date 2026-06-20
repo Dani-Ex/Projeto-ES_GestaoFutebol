@@ -27,6 +27,7 @@ public class CampeonatosFrame extends JFrame {
     private final Color GREEN = new Color(22, 163, 74);
     private final Color ORANGE = new Color(249, 115, 22);
     private final Color PURPLE = new Color(124, 58, 237);
+    private final Color RED = new Color(220, 38, 38);
 
     public CampeonatosFrame() {
         setTitle("Campeonatos");
@@ -118,6 +119,9 @@ public class CampeonatosFrame extends JFrame {
         JButton btnEditar = criarBotaoCinza("Editar Campeonato");
         btnEditar.addActionListener(e -> editarCampeonatoSelecionado());
 
+        JButton btnEliminar = criarBotaoVermelho("Eliminar Campeonato");
+        btnEliminar.addActionListener(e -> eliminarCampeonatoSelecionado());
+
         JButton btnNovo = criarBotaoAzul("+ Novo Campeonato");
         btnNovo.addActionListener(e -> {
             dispose();
@@ -125,6 +129,7 @@ public class CampeonatosFrame extends JFrame {
         });
 
         botoes.add(btnEditar);
+        botoes.add(btnEliminar);
         botoes.add(btnNovo);
 
         cabecalho.add(textos, BorderLayout.WEST);
@@ -276,6 +281,58 @@ public class CampeonatosFrame extends JFrame {
         new EditarCampeonatoFrame(campeonato);
     }
 
+
+    private void eliminarCampeonatoSelecionado() {
+        Campeonato campeonato = obterCampeonatoSelecionado();
+
+        if (campeonato == null) {
+            mostrarErro("Seleciona um campeonato na tabela.");
+            return;
+        }
+
+        if (!campeonato.isEmConfiguracao() || campeonato.isGruposGerados()) {
+            mostrarErro(
+                    "Só podes eliminar um campeonato antes de ele iniciar "
+                            + "e antes de gerar os grupos."
+            );
+            return;
+        }
+
+        int resposta = JOptionPane.showConfirmDialog(
+                this,
+                "Queres mesmo eliminar o campeonato \""
+                        + campeonato.getNome()
+                        + "\"?\n\n"
+                        + "As equipas e jogadores deixam de estar associados "
+                        + "a este campeonato. Os jogos agendados também serão removidos.",
+                "Eliminar Campeonato",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE
+        );
+
+        if (resposta != JOptionPane.YES_OPTION) {
+            return;
+        }
+
+        if (!CampeonatoRepositorio.eliminarCampeonatoNaoIniciado(campeonato)) {
+            mostrarErro(
+                    "Não foi possível eliminar o campeonato. "
+                            + "Confirma que ele ainda não foi iniciado."
+            );
+            return;
+        }
+
+        JOptionPane.showMessageDialog(
+                this,
+                "Campeonato eliminado com sucesso.",
+                "Sucesso",
+                JOptionPane.INFORMATION_MESSAGE
+        );
+
+        dispose();
+        new CampeonatosFrame();
+    }
+
     private Campeonato obterCampeonatoSelecionado() {
         int linha = tabelaCampeonatos.getSelectedRow();
 
@@ -346,6 +403,10 @@ public class CampeonatosFrame extends JFrame {
 
     private JButton criarBotaoCinza(String texto) {
         return criarBotao(texto, new Color(241, 245, 249), TEXT);
+    }
+
+    private JButton criarBotaoVermelho(String texto) {
+        return criarBotao(texto, RED, Color.WHITE);
     }
 
     private JButton criarBotao(String texto, Color fundo, Color corTexto) {
