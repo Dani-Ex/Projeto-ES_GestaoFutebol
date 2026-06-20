@@ -1,6 +1,9 @@
 package Frames.SeccaoGrupoEeleminatoria;
 
 import Design.MenuLateral;
+import Design.RoundedButton;
+import Design.RoundedPanel;
+import Design.TableStyle;
 import Frames.CampeonatosFrame;
 import Models.Campeonato;
 import Models.CalendarioJogosService;
@@ -38,9 +41,9 @@ public class GruposFrame extends JFrame {
         this.campeonato = campeonato;
 
         setTitle("Campeonato - " + campeonato.getNome());
-        setSize(1250, 780);
+        setSize(1680, 1050);
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
 
         MenuLateral menuLateral = new MenuLateral(this);
@@ -139,10 +142,7 @@ public class GruposFrame extends JFrame {
         textos.add(subtitulo);
 
         JButton btnVoltar = criarBotaoCinza("Voltar aos Campeonatos");
-        btnVoltar.addActionListener(e -> {
-            dispose();
-            new CampeonatosFrame();
-        });
+        btnVoltar.addActionListener(e -> dispose());
 
         cabecalho.add(textos, BorderLayout.WEST);
         cabecalho.add(btnVoltar, BorderLayout.EAST);
@@ -200,7 +200,7 @@ public class GruposFrame extends JFrame {
     }
 
     private JPanel criarCartaoResumo(String titulo, String valor, Color corTexto, Color corFundo) {
-        JPanel card = new PainelArredondado(18, corFundo);
+        JPanel card = new RoundedPanel(18, corFundo);
         card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
         card.setBorder(new EmptyBorder(18, 20, 14, 20));
 
@@ -242,7 +242,7 @@ public class GruposFrame extends JFrame {
     }
 
     private JPanel criarCardGrupos() {
-        JPanel card = new PainelArredondado(18, Color.WHITE);
+        JPanel card = new RoundedPanel(18, Color.WHITE);
         card.setLayout(new BorderLayout());
         card.setBorder(new EmptyBorder(20, 20, 20, 20));
         card.setPreferredSize(new Dimension(760, 430));
@@ -286,8 +286,7 @@ public class GruposFrame extends JFrame {
         }
 
         JScrollPane scroll = new JScrollPane(painelGrupos);
-        scroll.setBorder(null);
-        scroll.getViewport().setBackground(Color.WHITE);
+        TableStyle.configurarScrollLimpo(scroll, Color.WHITE);
 
         card.add(scroll, BorderLayout.CENTER);
 
@@ -295,7 +294,7 @@ public class GruposFrame extends JFrame {
     }
 
     private JPanel criarTabelaGrupo(String nomeGrupo, List<String> equipas) {
-        JPanel painel = new PainelArredondado(16, new Color(248, 250, 252));
+        JPanel painel = new RoundedPanel(16, new Color(248, 250, 252));
         painel.setLayout(new BorderLayout());
         painel.setBorder(new EmptyBorder(12, 12, 12, 12));
 
@@ -336,17 +335,7 @@ public class GruposFrame extends JFrame {
         }
 
         JTable tabela = new JTable(modelo);
-        tabela.setRowHeight(30);
-        tabela.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        tabela.setGridColor(new Color(226, 232, 240));
-        tabela.setShowVerticalLines(false);
-        tabela.setSelectionBackground(new Color(226, 232, 240));
-        tabela.setSelectionForeground(TEXT);
-
-        tabela.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 11));
-        tabela.getTableHeader().setForeground(MUTED);
-        tabela.getTableHeader().setBackground(new Color(248, 250, 252));
-        tabela.getTableHeader().setReorderingAllowed(false);
+        TableStyle.aplicarTabelaLimpa(tabela, 0);
 
         tabela.getColumnModel().getColumn(0).setPreferredWidth(170);
         tabela.getColumnModel().getColumn(1).setPreferredWidth(35);
@@ -357,8 +346,7 @@ public class GruposFrame extends JFrame {
         tabela.getColumnModel().getColumn(6).setPreferredWidth(45);
 
         JScrollPane scroll = new JScrollPane(tabela);
-        scroll.setBorder(null);
-        scroll.getViewport().setBackground(new Color(248, 250, 252));
+        TableStyle.configurarScrollLimpo(scroll, new Color(248, 250, 252));
 
         painel.add(titulo, BorderLayout.NORTH);
         painel.add(scroll, BorderLayout.CENTER);
@@ -367,7 +355,7 @@ public class GruposFrame extends JFrame {
     }
 
     private JPanel criarCardEstado() {
-        JPanel card = new PainelArredondado(18, new Color(231, 240, 253));
+        JPanel card = new RoundedPanel(18, new Color(231, 240, 253));
         card.setPreferredSize(new Dimension(270, 430));
         card.setLayout(new BorderLayout());
         card.setBorder(new EmptyBorder(24, 20, 20, 20));
@@ -529,8 +517,7 @@ public class GruposFrame extends JFrame {
                 JOptionPane.INFORMATION_MESSAGE
         );
 
-        dispose();
-        new GruposFrame(campeonato);
+        atualizarJanela();
     }
 
     private void terminarFaseGrupos() {
@@ -685,8 +672,7 @@ public class GruposFrame extends JFrame {
                 JOptionPane.INFORMATION_MESSAGE
         );
 
-        dispose();
-        new GruposFrame(campeonato);
+        atualizarJanela();
     }
 
     private void gerarEquipasClassificadasParaEliminatorias() {
@@ -849,8 +835,20 @@ public class GruposFrame extends JFrame {
             return;
         }
 
-        dispose();
         new EliminatoriasFrame(campeonato);
+    }
+
+    private void atualizarJanela() {
+        getContentPane().removeAll();
+
+        MenuLateral menuLateral = new MenuLateral(this);
+        menuLateral.setVisible(false);
+
+        add(menuLateral, BorderLayout.WEST);
+        add(criarPagina(menuLateral), BorderLayout.CENTER);
+
+        revalidate();
+        repaint();
     }
 
     private void mostrarErro(String mensagem) {
@@ -875,14 +873,8 @@ public class GruposFrame extends JFrame {
     }
 
     private JButton criarBotao(String texto, Color fundo, Color corTexto) {
-        JButton botao = new JButton(texto);
-
-        botao.setFocusPainted(false);
-        botao.setBorderPainted(false);
-        botao.setBackground(fundo);
-        botao.setForeground(corTexto);
+        JButton botao = new RoundedButton(texto, fundo, corTexto, 14);
         botao.setFont(new Font("Segoe UI", Font.BOLD, 13));
-        botao.setCursor(new Cursor(Cursor.HAND_CURSOR));
         botao.setBorder(new EmptyBorder(10, 18, 10, 18));
 
         return botao;
@@ -909,35 +901,4 @@ public class GruposFrame extends JFrame {
         }
     }
 
-    static class PainelArredondado extends JPanel {
-
-        private final int raio;
-        private final Color corFundo;
-
-        public PainelArredondado(int raio, Color corFundo) {
-            this.raio = raio;
-            this.corFundo = corFundo;
-            setOpaque(false);
-        }
-
-        @Override
-        protected void paintComponent(Graphics g) {
-            Graphics2D desenho = (Graphics2D) g.create();
-
-            desenho.setRenderingHint(
-                    RenderingHints.KEY_ANTIALIASING,
-                    RenderingHints.VALUE_ANTIALIAS_ON
-            );
-
-            desenho.setColor(new Color(0, 0, 0, 18));
-            desenho.fillRoundRect(4, 6, getWidth() - 8, getHeight() - 8, raio, raio);
-
-            desenho.setColor(corFundo);
-            desenho.fillRoundRect(0, 0, getWidth() - 8, getHeight() - 8, raio, raio);
-
-            desenho.dispose();
-
-            super.paintComponent(g);
-        }
-    }
 }

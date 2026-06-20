@@ -1,6 +1,9 @@
 package Frames.seccaoEstadios;
 
 import Design.MenuLateral;
+import Design.RoundedButton;
+import Design.RoundedPanel;
+import Design.TableStyle;
 import Frames.CampeonatosFrame;
 import Models.CampeonatoRepositorio;
 import Models.Campeonato;
@@ -145,7 +148,7 @@ public class EstadiosFrame extends JFrame {
     }
 
     private JPanel criarCardTabela() {
-        JPanel card = new PainelArredondado(18, Color.WHITE);
+        JPanel card = new RoundedPanel(18, Color.WHITE);
         card.setLayout(new BorderLayout());
         card.setBorder(new EmptyBorder(20, 20, 20, 20));
         card.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -158,8 +161,7 @@ public class EstadiosFrame extends JFrame {
 
         tabelaEstadios = criarTabela();
         JScrollPane scroll = new JScrollPane(tabelaEstadios);
-        scroll.setBorder(null);
-        scroll.getViewport().setBackground(Color.WHITE);
+        TableStyle.configurarScrollLimpo(scroll, Color.WHITE);
 
         card.add(titulo, BorderLayout.NORTH);
         card.add(scroll, BorderLayout.CENTER);
@@ -180,18 +182,7 @@ public class EstadiosFrame extends JFrame {
         };
 
         JTable tabela = new JTable(modelo);
-        tabela.setRowHeight(34);
-        tabela.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-        tabela.setForeground(TEXT);
-        tabela.setGridColor(new Color(226, 232, 240));
-        tabela.setShowVerticalLines(false);
-        tabela.setSelectionBackground(new Color(226, 232, 240));
-        tabela.setSelectionForeground(TEXT);
-
-        tabela.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 12));
-        tabela.getTableHeader().setForeground(MUTED);
-        tabela.getTableHeader().setBackground(Color.WHITE);
-        tabela.getTableHeader().setReorderingAllowed(false);
+        TableStyle.aplicarTabelaLimpa(tabela, 0);
 
         tabela.getColumnModel().getColumn(0).setPreferredWidth(160);
         tabela.getColumnModel().getColumn(1).setPreferredWidth(110);
@@ -240,8 +231,7 @@ public class EstadiosFrame extends JFrame {
             return;
         }
 
-        dispose();
-        new NovoEstadioFrame();
+        new NovoEstadioFrame(this::carregarTabela);
     }
 
     private void associarEstadioExistente() {
@@ -365,8 +355,7 @@ public class EstadiosFrame extends JFrame {
             return;
         }
 
-        dispose();
-        new EditarEstadioFrame(associacao.estadio.getNome());
+        new EditarEstadioFrame(associacao.estadio.getNome(), this::carregarTabela);
     }
 
     private AssociacaoEstadio obterAssociacaoSelecionada() {
@@ -476,13 +465,8 @@ public class EstadiosFrame extends JFrame {
     }
 
     private JButton criarBotao(String texto, Color fundo, Color corTexto) {
-        JButton botao = new JButton(texto);
-        botao.setFocusPainted(false);
-        botao.setBorderPainted(false);
-        botao.setBackground(fundo);
-        botao.setForeground(corTexto);
+        JButton botao = new RoundedButton(texto, fundo, corTexto, 14);
         botao.setFont(new Font("Segoe UI", Font.BOLD, 13));
-        botao.setCursor(new Cursor(Cursor.HAND_CURSOR));
         botao.setBorder(new EmptyBorder(10, 16, 10, 16));
         return botao;
     }
@@ -497,26 +481,4 @@ public class EstadiosFrame extends JFrame {
         }
     }
 
-    static class PainelArredondado extends JPanel {
-        private final int raio;
-        private final Color corFundo;
-
-        public PainelArredondado(int raio, Color corFundo) {
-            this.raio = raio;
-            this.corFundo = corFundo;
-            setOpaque(false);
-        }
-
-        @Override
-        protected void paintComponent(Graphics g) {
-            Graphics2D desenho = (Graphics2D) g.create();
-            desenho.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            desenho.setColor(new Color(0, 0, 0, 14));
-            desenho.fillRoundRect(4, 6, getWidth() - 8, getHeight() - 8, raio, raio);
-            desenho.setColor(corFundo);
-            desenho.fillRoundRect(0, 0, getWidth() - 8, getHeight() - 8, raio, raio);
-            desenho.dispose();
-            super.paintComponent(g);
-        }
-    }
 }

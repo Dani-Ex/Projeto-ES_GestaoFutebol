@@ -1,6 +1,9 @@
 package Frames.SeccaoGrupoEeleminatoria;
 
 import Design.MenuLateral;
+import Design.RoundedBorder;
+import Design.RoundedButton;
+import Design.RoundedPanel;
 import Models.Campeonato;
 import Models.CampeonatoRepositorio;
 
@@ -14,6 +17,8 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
 public class NovoCampeonatoFrame extends JFrame {
+
+    private final Runnable onCampeonatoCriado;
 
     private final Color BG = new Color(245, 247, 251);
     private final Color TEXT = new Color(30, 41, 59);
@@ -31,6 +36,12 @@ public class NovoCampeonatoFrame extends JFrame {
     private JTextField campoNumeroEstadios;
 
     public NovoCampeonatoFrame() {
+        this(null);
+    }
+
+    public NovoCampeonatoFrame(Runnable onCampeonatoCriado) {
+        this.onCampeonatoCriado = onCampeonatoCriado;
+
         setTitle("Novo Campeonato");
         setSize(1260, 760);
         setMinimumSize(new Dimension(1080, 660));
@@ -109,7 +120,7 @@ public class NovoCampeonatoFrame extends JFrame {
     }
 
     private JPanel criarFormulario() {
-        JPanel card = new PainelArredondado(18, Color.WHITE);
+        JPanel card = new RoundedPanel(18, Color.WHITE);
         card.setLayout(new BorderLayout());
         card.setBorder(new EmptyBorder(28, 28, 20, 28));
         card.setPreferredSize(new Dimension(700, 520));
@@ -186,7 +197,7 @@ public class NovoCampeonatoFrame extends JFrame {
     }
 
     private JPanel criarCardValidacoes() {
-        JPanel card = new PainelArredondado(18, new Color(231, 240, 253));
+        JPanel card = new RoundedPanel(18, new Color(231, 240, 253));
         card.setPreferredSize(new Dimension(230, 520));
         card.setLayout(new BorderLayout());
         card.setBorder(new EmptyBorder(24, 20, 20, 20));
@@ -245,7 +256,7 @@ public class NovoCampeonatoFrame extends JFrame {
         campo.setToolTipText(placeholder);
 
         campo.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(new Color(203, 213, 225)),
+                new RoundedBorder(new Color(203, 213, 225), 8),
                 new EmptyBorder(10, 12, 10, 12)
         ));
 
@@ -368,8 +379,12 @@ public class NovoCampeonatoFrame extends JFrame {
                 JOptionPane.INFORMATION_MESSAGE
         );
 
-        dispose();
+        if (onCampeonatoCriado != null) {
+            onCampeonatoCriado.run();
+        }
+
         new GruposFrame(campeonato);
+        dispose();
     }
 
     private boolean validarCapacidadeJogosPorEstadios(
@@ -426,62 +441,17 @@ public class NovoCampeonatoFrame extends JFrame {
     }
 
     private JButton criarBotaoAzul(String texto) {
-        JButton botao = new JButton(texto);
-
-        botao.setFocusPainted(false);
-        botao.setBorderPainted(false);
-        botao.setBackground(BLUE);
-        botao.setForeground(Color.WHITE);
-        botao.setFont(new Font("Segoe UI", Font.BOLD, 13));
-        botao.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        botao.setBorder(new EmptyBorder(12, 20, 12, 20));
-
-        return botao;
+        return criarBotao(texto, BLUE, Color.WHITE);
     }
 
     private JButton criarBotaoCinza(String texto) {
-        JButton botao = new JButton(texto);
-
-        botao.setFocusPainted(false);
-        botao.setBorderPainted(false);
-        botao.setBackground(new Color(241, 245, 249));
-        botao.setForeground(TEXT);
-        botao.setFont(new Font("Segoe UI", Font.BOLD, 13));
-        botao.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        botao.setBorder(new EmptyBorder(12, 20, 12, 20));
-
-        return botao;
+        return criarBotao(texto, new Color(241, 245, 249), TEXT);
     }
 
-    static class PainelArredondado extends JPanel {
-
-        private final int raio;
-        private final Color corFundo;
-
-        public PainelArredondado(int raio, Color corFundo) {
-            this.raio = raio;
-            this.corFundo = corFundo;
-            setOpaque(false);
-        }
-
-        @Override
-        protected void paintComponent(Graphics g) {
-            Graphics2D desenho = (Graphics2D) g.create();
-
-            desenho.setRenderingHint(
-                    RenderingHints.KEY_ANTIALIASING,
-                    RenderingHints.VALUE_ANTIALIAS_ON
-            );
-
-            desenho.setColor(new Color(0, 0, 0, 18));
-            desenho.fillRoundRect(4, 6, getWidth() - 8, getHeight() - 8, raio, raio);
-
-            desenho.setColor(corFundo);
-            desenho.fillRoundRect(0, 0, getWidth() - 8, getHeight() - 8, raio, raio);
-
-            desenho.dispose();
-
-            super.paintComponent(g);
-        }
+    private JButton criarBotao(String texto, Color fundo, Color corTexto) {
+        JButton botao = new RoundedButton(texto, fundo, corTexto, 14);
+        botao.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        botao.setBorder(new EmptyBorder(12, 20, 12, 20));
+        return botao;
     }
 }

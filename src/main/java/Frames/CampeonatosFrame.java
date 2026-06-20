@@ -1,6 +1,9 @@
 package Frames;
 
 import Design.MenuLateral;
+import Design.RoundedButton;
+import Design.RoundedPanel;
+import Design.TableStyle;
 import Models.CampeonatoRepositorio;
 import Frames.SeccaoGrupoEeleminatoria.EditarCampeonatoFrame;
 import Frames.SeccaoGrupoEeleminatoria.GruposFrame;
@@ -86,7 +89,12 @@ public class CampeonatosFrame extends JFrame {
         conteudo.add(criarCardRegras(), BorderLayout.EAST);
 
         centro.add(conteudo);
-        pagina.add(centro, BorderLayout.CENTER);
+
+        JScrollPane scrollPagina = new JScrollPane(centro);
+        TableStyle.configurarScrollLimpo(scrollPagina, BG);
+        scrollPagina.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+
+        pagina.add(scrollPagina, BorderLayout.CENTER);
 
         return pagina;
     }
@@ -123,10 +131,7 @@ public class CampeonatosFrame extends JFrame {
         btnEliminar.addActionListener(e -> eliminarCampeonatoSelecionado());
 
         JButton btnNovo = criarBotaoAzul("+ Novo Campeonato");
-        btnNovo.addActionListener(e -> {
-            dispose();
-            new NovoCampeonatoFrame();
-        });
+        btnNovo.addActionListener(e -> new NovoCampeonatoFrame(this::atualizarJanela));
 
         botoes.add(btnEditar);
         botoes.add(btnEliminar);
@@ -172,7 +177,7 @@ public class CampeonatosFrame extends JFrame {
     }
 
     private JPanel criarCardListaCampeonatos() {
-        JPanel card = new PainelArredondado(18, Color.WHITE);
+        JPanel card = new RoundedPanel(18, Color.WHITE);
         card.setLayout(new BorderLayout());
         card.setBorder(new EmptyBorder(18, 18, 18, 18));
         card.setPreferredSize(new Dimension(720, 430));
@@ -209,17 +214,7 @@ public class CampeonatosFrame extends JFrame {
         }
 
         tabelaCampeonatos = new JTable(modelo);
-        tabelaCampeonatos.setRowHeight(34);
-        tabelaCampeonatos.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-        tabelaCampeonatos.setForeground(new Color(51, 65, 85));
-        tabelaCampeonatos.setGridColor(new Color(226, 232, 240));
-        tabelaCampeonatos.setShowVerticalLines(false);
-        tabelaCampeonatos.setSelectionBackground(new Color(226, 232, 240));
-        tabelaCampeonatos.setSelectionForeground(TEXT);
-        tabelaCampeonatos.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 12));
-        tabelaCampeonatos.getTableHeader().setForeground(new Color(100, 116, 139));
-        tabelaCampeonatos.getTableHeader().setBackground(Color.WHITE);
-        tabelaCampeonatos.getTableHeader().setReorderingAllowed(false);
+        TableStyle.aplicarTabelaLimpa(tabelaCampeonatos, 0);
 
         tabelaCampeonatos.addMouseListener(new MouseAdapter() {
             @Override
@@ -233,8 +228,7 @@ public class CampeonatosFrame extends JFrame {
         });
 
         JScrollPane scroll = new JScrollPane(tabelaCampeonatos);
-        scroll.setBorder(null);
-        scroll.getViewport().setBackground(Color.WHITE);
+        TableStyle.configurarScrollLimpo(scroll, Color.WHITE);
 
         card.add(titulo, BorderLayout.NORTH);
         card.add(scroll, BorderLayout.CENTER);
@@ -260,7 +254,6 @@ public class CampeonatosFrame extends JFrame {
             return;
         }
 
-        dispose();
         new GruposFrame(campeonato);
     }
 
@@ -277,8 +270,7 @@ public class CampeonatosFrame extends JFrame {
             return;
         }
 
-        dispose();
-        new EditarCampeonatoFrame(campeonato);
+        new EditarCampeonatoFrame(campeonato, this::atualizarJanela);
     }
 
 
@@ -329,8 +321,20 @@ public class CampeonatosFrame extends JFrame {
                 JOptionPane.INFORMATION_MESSAGE
         );
 
-        dispose();
-        new CampeonatosFrame();
+        atualizarJanela();
+    }
+
+    private void atualizarJanela() {
+        getContentPane().removeAll();
+
+        MenuLateral menuLateral = new MenuLateral(this);
+        menuLateral.setVisible(false);
+
+        add(menuLateral, BorderLayout.WEST);
+        add(criarPagina(menuLateral), BorderLayout.CENTER);
+
+        revalidate();
+        repaint();
     }
 
     private Campeonato obterCampeonatoSelecionado() {
@@ -345,7 +349,7 @@ public class CampeonatosFrame extends JFrame {
     }
 
     private JPanel criarCardRegras() {
-        JPanel card = new PainelArredondado(18, new Color(231, 240, 253));
+        JPanel card = new RoundedPanel(18, new Color(231, 240, 253));
         card.setPreferredSize(new Dimension(220, 430));
         card.setLayout(new BorderLayout());
         card.setBorder(new EmptyBorder(24, 20, 20, 20));
@@ -375,7 +379,7 @@ public class CampeonatosFrame extends JFrame {
     }
 
     private JPanel criarCartaoEstatistica(String titulo, String valor, Color corTexto, Color corFundo) {
-        JPanel card = new PainelArredondado(18, corFundo);
+        JPanel card = new RoundedPanel(18, corFundo);
         card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
         card.setBorder(new EmptyBorder(18, 20, 14, 20));
 
@@ -410,37 +414,9 @@ public class CampeonatosFrame extends JFrame {
     }
 
     private JButton criarBotao(String texto, Color fundo, Color corTexto) {
-        JButton botao = new JButton(texto);
-        botao.setFocusPainted(false);
-        botao.setBorderPainted(false);
-        botao.setBackground(fundo);
-        botao.setForeground(corTexto);
+        JButton botao = new RoundedButton(texto, fundo, corTexto, 14);
         botao.setFont(new Font("Segoe UI", Font.BOLD, 13));
-        botao.setCursor(new Cursor(Cursor.HAND_CURSOR));
         botao.setBorder(new EmptyBorder(11, 18, 11, 18));
         return botao;
-    }
-
-    static class PainelArredondado extends JPanel {
-        private final int raio;
-        private final Color corFundo;
-
-        public PainelArredondado(int raio, Color corFundo) {
-            this.raio = raio;
-            this.corFundo = corFundo;
-            setOpaque(false);
-        }
-
-        @Override
-        protected void paintComponent(Graphics g) {
-            Graphics2D desenho = (Graphics2D) g.create();
-            desenho.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            desenho.setColor(new Color(0, 0, 0, 18));
-            desenho.fillRoundRect(4, 6, getWidth() - 8, getHeight() - 8, raio, raio);
-            desenho.setColor(corFundo);
-            desenho.fillRoundRect(0, 0, getWidth() - 8, getHeight() - 8, raio, raio);
-            desenho.dispose();
-            super.paintComponent(g);
-        }
     }
 }
