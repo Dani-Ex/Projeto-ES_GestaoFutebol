@@ -86,7 +86,7 @@ public class EditarEstadioFrame extends JFrame {
         JPanel topo = new JPanel(new BorderLayout());
         topo.setOpaque(false);
 
-        JButton btnMenu = new JButton("☰");
+        JButton btnMenu = new JButton("=");
         btnMenu.setFocusPainted(false);
         btnMenu.setBorderPainted(false);
         btnMenu.setContentAreaFilled(false);

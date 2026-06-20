@@ -40,7 +40,7 @@ public class PaginaEliminatorias extends JPanel {
         topo.setOpaque(false);
         topo.setBorder(new EmptyBorder(0, 0, 18, 0));
 
-        JButton btnMenu = new JButton("☰");
+        JButton btnMenu = new JButton("=");
         btnMenu.setFocusPainted(false);
         btnMenu.setBorderPainted(false);
         btnMenu.setContentAreaFilled(false);

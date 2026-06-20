@@ -49,8 +49,14 @@ public class JogosFrame extends JFrame {
         pagina.setBackground(BG);
         pagina.setBorder(new EmptyBorder(22, 24, 22, 24));
 
+        JPanel barraSuperior = new JPanel(new BorderLayout());
+        barraSuperior.setOpaque(false);
+
         JButton botaoMenu = criarBotaoMenu(menuLateral);
-        pagina.add(botaoMenu, BorderLayout.NORTH);
+
+        barraSuperior.add(botaoMenu, BorderLayout.WEST);
+
+        pagina.add(barraSuperior, BorderLayout.NORTH);
 
         JPanel centro = new JPanel();
         centro.setOpaque(false);
@@ -329,7 +335,7 @@ public class JogosFrame extends JFrame {
     }
 
     private JButton criarBotaoMenu(JPanel menuLateral) {
-        JButton botaoMenu = new JButton("☰");
+        JButton botaoMenu = new JButton("=");
         botaoMenu.setFocusPainted(false);
         botaoMenu.setBorderPainted(false);
         botaoMenu.setContentAreaFilled(false);

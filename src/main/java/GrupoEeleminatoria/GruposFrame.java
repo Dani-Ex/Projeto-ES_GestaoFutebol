@@ -90,7 +90,7 @@ public class GruposFrame extends JFrame {
     }
 
     private JButton criarBotaoMenu(JPanel menuLateral) {
-        JButton botaoMenu = new JButton("☰");
+        JButton botaoMenu = new JButton("=");
 
         botaoMenu.setFocusPainted(false);
         botaoMenu.setBorderPainted(false);
