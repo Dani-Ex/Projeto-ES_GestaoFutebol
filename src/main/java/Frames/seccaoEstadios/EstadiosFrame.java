@@ -37,7 +37,7 @@ public class EstadiosFrame extends JFrame {
 
     private void inicializar() {
         setTitle("Estádios");
-        setSize(1250, 780);
+        setSize(1920, 1080);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());

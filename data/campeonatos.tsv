@@ -1,4 +1,4 @@
 nome	numeroEquipas	numeroEstadios	dataInicio	dataFimGrupos	dataInicioEliminatoria	dataFimCampeonato	estado	gruposGerados	faseGruposTerminada	eliminatoriasGeradas	equipasEliminatorias
-Liga Configuracao 2026	4	2	2026-09-01	2026-09-16	2026-09-19	2026-09-30	Em configuração	false	false	false	
+Liga Configuracao 2026	4	2	2026-09-01	2026-09-16	2026-09-19	2026-09-30	Iniciado	true	false	false	
 Liga Atlantica 2026	4	2	2026-06-01	2026-07-03	2026-07-07	2026-07-18	Iniciado	true	false	false	
 Taca Finalizada 2026	4	2	2026-03-01	2026-03-20	2026-03-24	2026-04-05	Finalizado	true	true	true	Norte Real;Sul Clube

@@ -31,7 +31,7 @@ public class CampeonatosFrame extends JFrame {
 
     public CampeonatosFrame() {
         setTitle("Campeonatos");
-        setSize(1250, 780);
+        setSize(1920, 1080);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
