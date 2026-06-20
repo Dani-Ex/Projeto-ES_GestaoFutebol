@@ -1,5 +1,7 @@
 package Frames.SeccaoGrupoEeleminatoria;
 
+import Design.RoundedButton;
+import Design.TableStyle;
 import Models.Campeonato;
 
 import javax.swing.*;
@@ -53,13 +55,8 @@ public class PaginaEliminatorias extends JPanel {
         titulo.setFont(new Font("Segoe UI", Font.BOLD, 26));
         titulo.setForeground(TEXTO_CLARO);
 
-        JButton btnVoltar = new JButton("Voltar aos Grupos");
-        btnVoltar.setFocusPainted(false);
-        btnVoltar.setBorderPainted(false);
-        btnVoltar.setBackground(new Color(60, 170, 180));
-        btnVoltar.setForeground(Color.WHITE);
+        JButton btnVoltar = new RoundedButton("Voltar aos Grupos", new Color(60, 170, 180), Color.WHITE, 14);
         btnVoltar.setFont(new Font("Segoe UI", Font.BOLD, 13));
-        btnVoltar.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btnVoltar.setBorder(new EmptyBorder(10, 18, 10, 18));
         btnVoltar.addActionListener(e -> navegar.accept("grupos"));
 
@@ -97,10 +94,7 @@ public class PaginaEliminatorias extends JPanel {
         wrapper.add(bracketPanel);
 
         JScrollPane scroll = new JScrollPane(wrapper);
-        scroll.setBorder(null);
-        scroll.setViewportBorder(null);
-        scroll.getViewport().setBackground(FUNDO);
-        scroll.setBackground(FUNDO);
+        TableStyle.configurarScrollLimpo(scroll, FUNDO);
         scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 

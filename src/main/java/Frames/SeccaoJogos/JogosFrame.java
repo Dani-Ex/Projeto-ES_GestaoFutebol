@@ -1,6 +1,9 @@
 package Frames.SeccaoJogos;
 
 import Design.MenuLateral;
+import Design.RoundedButton;
+import Design.RoundedPanel;
+import Design.TableStyle;
 import Models.CampeonatoRepositorio;
 import Models.Campeonato;
 import Models.Jogo;
@@ -72,8 +75,7 @@ public class JogosFrame extends JFrame {
         centro.add(criarCardJogosRecentes());
 
         JScrollPane scroll = new JScrollPane(centro);
-        scroll.setBorder(null);
-        scroll.getViewport().setBackground(BG);
+        TableStyle.configurarScrollLimpo(scroll, BG);
         scroll.getVerticalScrollBar().setUnitIncrement(16);
 
         pagina.add(scroll, BorderLayout.CENTER);
@@ -123,8 +125,7 @@ public class JogosFrame extends JFrame {
             return;
         }
 
-        dispose();
-        new NovoJogoFrame();
+        new NovoJogoFrame(this::carregarTabelas);
     }
 
     private JPanel criarCardsResumo() {
@@ -147,7 +148,7 @@ public class JogosFrame extends JFrame {
     }
 
     private JPanel criarCartaoResumo(String titulo, String valor, Color corTexto, Color corFundo) {
-        JPanel card = new PainelArredondado(18, corFundo);
+        JPanel card = new RoundedPanel(18, corFundo);
         card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
         card.setBorder(new EmptyBorder(18, 20, 14, 20));
 
@@ -170,8 +171,7 @@ public class JogosFrame extends JFrame {
         tabelaProximos = criarTabela();
 
         JScrollPane scroll = new JScrollPane(tabelaProximos);
-        scroll.setBorder(null);
-        scroll.getViewport().setBackground(Color.WHITE);
+        TableStyle.configurarScrollLimpo(scroll, Color.WHITE);
         card.add(scroll, BorderLayout.CENTER);
         return card;
     }
@@ -181,14 +181,13 @@ public class JogosFrame extends JFrame {
         tabelaRecentes = criarTabela();
 
         JScrollPane scroll = new JScrollPane(tabelaRecentes);
-        scroll.setBorder(null);
-        scroll.getViewport().setBackground(Color.WHITE);
+        TableStyle.configurarScrollLimpo(scroll, Color.WHITE);
         card.add(scroll, BorderLayout.CENTER);
         return card;
     }
 
     private JPanel criarCardTabela(String tituloTexto) {
-        JPanel card = new PainelArredondado(18, Color.WHITE);
+        JPanel card = new RoundedPanel(18, Color.WHITE);
         card.setLayout(new BorderLayout());
         card.setBorder(new EmptyBorder(20, 20, 20, 20));
         card.setPreferredSize(new Dimension(1000, 290));
@@ -218,18 +217,7 @@ public class JogosFrame extends JFrame {
         };
 
         JTable tabela = new JTable(modelo);
-        tabela.setRowHeight(32);
-        tabela.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-        tabela.setForeground(TEXT);
-        tabela.setGridColor(new Color(226, 232, 240));
-        tabela.setShowVerticalLines(false);
-        tabela.setSelectionBackground(new Color(226, 232, 240));
-        tabela.setSelectionForeground(TEXT);
-
-        tabela.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 12));
-        tabela.getTableHeader().setForeground(MUTED);
-        tabela.getTableHeader().setBackground(Color.WHITE);
-        tabela.getTableHeader().setReorderingAllowed(false);
+        TableStyle.aplicarTabelaLimpa(tabela, 2);
 
         return tabela;
     }
@@ -353,37 +341,9 @@ public class JogosFrame extends JFrame {
     }
 
     private JButton criarBotaoAzul(String texto) {
-        JButton botao = new JButton(texto);
-        botao.setFocusPainted(false);
-        botao.setBorderPainted(false);
-        botao.setBackground(BLUE);
-        botao.setForeground(Color.WHITE);
+        JButton botao = new RoundedButton(texto, BLUE, Color.WHITE, 14);
         botao.setFont(new Font("Segoe UI", Font.BOLD, 13));
-        botao.setCursor(new Cursor(Cursor.HAND_CURSOR));
         botao.setBorder(new EmptyBorder(11, 18, 11, 18));
         return botao;
-    }
-
-    static class PainelArredondado extends JPanel {
-        private final int raio;
-        private final Color corFundo;
-
-        public PainelArredondado(int raio, Color corFundo) {
-            this.raio = raio;
-            this.corFundo = corFundo;
-            setOpaque(false);
-        }
-
-        @Override
-        protected void paintComponent(Graphics g) {
-            Graphics2D desenho = (Graphics2D) g.create();
-            desenho.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            desenho.setColor(new Color(0, 0, 0, 14));
-            desenho.fillRoundRect(4, 6, getWidth() - 8, getHeight() - 8, raio, raio);
-            desenho.setColor(corFundo);
-            desenho.fillRoundRect(0, 0, getWidth() - 8, getHeight() - 8, raio, raio);
-            desenho.dispose();
-            super.paintComponent(g);
-        }
     }
 }

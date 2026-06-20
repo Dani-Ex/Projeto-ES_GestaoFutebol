@@ -1,6 +1,9 @@
 package Frames.SeccaoGrupoEeleminatoria;
 
 import Design.MenuLateral;
+import Design.RoundedBorder;
+import Design.RoundedButton;
+import Design.RoundedPanel;
 import Frames.CampeonatosFrame;
 import Models.Campeonato;
 import Models.CampeonatoRepositorio;
@@ -16,6 +19,7 @@ import java.time.temporal.ChronoUnit;
 
 public class EditarCampeonatoFrame extends JFrame {
 
+    private final Runnable onCampeonatoEditado;
     private final Campeonato campeonato;
 
     private final Color BG = new Color(245, 247, 251);
@@ -36,6 +40,11 @@ public class EditarCampeonatoFrame extends JFrame {
     private JTextField campoNumeroEstadios;
 
     public EditarCampeonatoFrame(Campeonato campeonato) {
+        this(campeonato, null);
+    }
+
+    public EditarCampeonatoFrame(Campeonato campeonato, Runnable onCampeonatoEditado) {
+        this.onCampeonatoEditado = onCampeonatoEditado;
         this.campeonato = campeonato;
 
         if (campeonato == null || !campeonato.isEmConfiguracao()
@@ -46,14 +55,14 @@ public class EditarCampeonatoFrame extends JFrame {
                     "Edição indisponível",
                     JOptionPane.ERROR_MESSAGE
             );
-            new CampeonatosFrame();
+            dispose();
             return;
         }
 
         setTitle("Editar Campeonato - " + campeonato.getNome());
         setSize(1120, 740);
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
 
         MenuLateral menuLateral = new MenuLateral(this);
@@ -115,7 +124,7 @@ public class EditarCampeonatoFrame extends JFrame {
     }
 
     private JPanel criarFormulario() {
-        JPanel card = new PainelArredondado(18, Color.WHITE);
+        JPanel card = new RoundedPanel(18, Color.WHITE);
         card.setLayout(new BorderLayout());
         card.setBorder(new EmptyBorder(28, 28, 20, 28));
         card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 530));
@@ -179,7 +188,6 @@ public class EditarCampeonatoFrame extends JFrame {
 
         btnCancelar.addActionListener(e -> {
             dispose();
-            new CampeonatosFrame();
         });
 
         btnGuardar.addActionListener(e -> guardarAlteracoes());
@@ -199,7 +207,7 @@ public class EditarCampeonatoFrame extends JFrame {
         campo.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         campo.setForeground(TEXT);
         campo.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(new Color(203, 213, 225)),
+                new RoundedBorder(new Color(203, 213, 225), 8),
                 new EmptyBorder(10, 12, 10, 12)
         ));
         return campo;
@@ -306,8 +314,11 @@ public class EditarCampeonatoFrame extends JFrame {
                 JOptionPane.INFORMATION_MESSAGE
         );
 
+        if (onCampeonatoEditado != null) {
+            onCampeonatoEditado.run();
+        }
+
         dispose();
-        new CampeonatosFrame();
     }
 
     private boolean validarCapacidade(
@@ -345,37 +356,9 @@ public class EditarCampeonatoFrame extends JFrame {
     }
 
     private JButton criarBotao(String texto, Color fundo, Color corTexto) {
-        JButton botao = new JButton(texto);
-        botao.setFocusPainted(false);
-        botao.setBorderPainted(false);
-        botao.setBackground(fundo);
-        botao.setForeground(corTexto);
+        JButton botao = new RoundedButton(texto, fundo, corTexto, 14);
         botao.setFont(new Font("Segoe UI", Font.BOLD, 13));
-        botao.setCursor(new Cursor(Cursor.HAND_CURSOR));
         botao.setBorder(new EmptyBorder(11, 18, 11, 18));
         return botao;
-    }
-
-    static class PainelArredondado extends JPanel {
-        private final int raio;
-        private final Color corFundo;
-
-        public PainelArredondado(int raio, Color corFundo) {
-            this.raio = raio;
-            this.corFundo = corFundo;
-            setOpaque(false);
-        }
-
-        @Override
-        protected void paintComponent(Graphics g) {
-            Graphics2D desenho = (Graphics2D) g.create();
-            desenho.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            desenho.setColor(new Color(0, 0, 0, 18));
-            desenho.fillRoundRect(4, 6, getWidth() - 8, getHeight() - 8, raio, raio);
-            desenho.setColor(corFundo);
-            desenho.fillRoundRect(0, 0, getWidth() - 8, getHeight() - 8, raio, raio);
-            desenho.dispose();
-            super.paintComponent(g);
-        }
     }
 }
