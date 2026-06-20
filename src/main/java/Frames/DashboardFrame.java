@@ -643,7 +643,7 @@ public class DashboardFrame extends JFrame {
         receitas.clear();
 
         for (Receita receita : receitaService.listarReceitas()) {
-            Jogo jogo = jogoService.procurarPorId(receita.getIdJogo());
+            Jogo jogo = procurarJogoDaReceita(receita.getIdJogo());
             String nomeJogo = jogo == null ? receita.getIdJogo() : jogo.getNomeJogo();
 
             receitas.add(new ReceitaJogo(
@@ -656,6 +656,25 @@ public class DashboardFrame extends JFrame {
                     receita.getDireitosTv()
             ));
         }
+    }
+
+    private Jogo procurarJogoDaReceita(String idJogo) {
+        if (idJogo == null) {
+            return null;
+        }
+
+        String[] partes = idJogo.split("::", 2);
+        if (partes.length == 2) {
+            for (Jogo jogo : jogoService.listarJogos()) {
+                if (jogo.getId().equalsIgnoreCase(partes[0])
+                        && jogo.getCampeonato() != null
+                        && jogo.getCampeonato().equalsIgnoreCase(partes[1])) {
+                    return jogo;
+                }
+            }
+        }
+
+        return jogoService.procurarPorId(idJogo);
     }
 
     private List<PontoGrafico> criarDadosGrafico(TipoGraficoLucro tipo) {

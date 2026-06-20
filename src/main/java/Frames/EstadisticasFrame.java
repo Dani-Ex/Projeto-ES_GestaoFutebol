@@ -451,8 +451,6 @@ public class EstadisticasFrame extends JFrame {
 
         Jogador jogador = jogadoresVisiveis.get(linhaModelo);
 
-        setVisible(false);
-
         PerfilJogadorFrame perfil = new PerfilJogadorFrame(
                 jogador,
                 this::atualizarTabelas
@@ -463,7 +461,6 @@ public class EstadisticasFrame extends JFrame {
             public void windowClosed(WindowEvent e) {
                 SwingUtilities.invokeLater(() -> {
                     atualizarTabelas();
-                    setVisible(true);
                     toFront();
                 });
             }
@@ -485,11 +482,8 @@ public class EstadisticasFrame extends JFrame {
 
         Jogo jogo = jogosVisiveis.get(linhaModelo);
 
-        setVisible(false);
-
         new DetalheJogoFrame(jogo, () -> SwingUtilities.invokeLater(() -> {
             atualizarTabelas();
-            setVisible(true);
             toFront();
         }));
     }

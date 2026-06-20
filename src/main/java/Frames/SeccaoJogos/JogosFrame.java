@@ -6,6 +6,7 @@ import Design.RoundedButton;
 import Design.RoundedPanel;
 import Design.TableStyle;
 import Design.Tema;
+import Frames.DetalheJogoFrame;
 import Models.CampeonatoRepositorio;
 import Models.Campeonato;
 import Models.Jogo;
@@ -14,6 +15,8 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -32,7 +35,7 @@ public class JogosFrame extends JFrame {
 
     public JogosFrame() {
         setTitle("Jogos");
-        setSize(1250, 780);
+        setSize(1920, 1080);
         setMinimumSize(new Dimension(1080, 680));
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -158,8 +161,7 @@ public class JogosFrame extends JFrame {
             return;
         }
 
-        dispose();
-        new NovoJogoFrame();
+        new NovoJogoFrame(this::atualizarPagina);
     }
 
     private JPanel criarCardsResumo() {
@@ -256,6 +258,27 @@ public class JogosFrame extends JFrame {
         } else {
             tabelaRecentes = tabela;
         }
+
+        tabela.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int linha = tabela.rowAtPoint(e.getPoint());
+
+                if (linha < 0) {
+                    return;
+                }
+
+                tabela.setRowSelectionInterval(linha, linha);
+
+                if (proximos && tabelaRecentes != null) {
+                    tabelaRecentes.clearSelection();
+                } else if (!proximos && tabelaProximos != null) {
+                    tabelaProximos.clearSelection();
+                }
+
+                abrirDetalheJogo(tabela, proximos);
+            }
+        });
 
         JScrollPane scroll = new JScrollPane(tabela);
         TableStyle.configurarScrollLimpo(scroll, Tema.COR_CARD);
@@ -581,16 +604,16 @@ public class JogosFrame extends JFrame {
     }
 
     private Jogo obterJogoSelecionado() {
-        if (tabelaProximos != null) {
-            int linha = tabelaProximos.getSelectedRow();
+        if (tabelaProximos != null && tabelaProximos.getSelectedRow() >= 0) {
+            int linha = tabelaProximos.convertRowIndexToModel(tabelaProximos.getSelectedRow());
 
             if (linha >= 0 && linha < jogosProximosVisiveis.size()) {
                 return jogosProximosVisiveis.get(linha);
             }
         }
 
-        if (tabelaRecentes != null) {
-            int linha = tabelaRecentes.getSelectedRow();
+        if (tabelaRecentes != null && tabelaRecentes.getSelectedRow() >= 0) {
+            int linha = tabelaRecentes.convertRowIndexToModel(tabelaRecentes.getSelectedRow());
 
             if (linha >= 0 && linha < jogosRecentesVisiveis.size()) {
                 return jogosRecentesVisiveis.get(linha);
@@ -631,8 +654,37 @@ public class JogosFrame extends JFrame {
     }
 
     private void reabrirJogosFrame() {
-        dispose();
-        new JogosFrame();
+        atualizarPagina();
+    }
+
+    private void abrirDetalheJogo(JTable tabela, boolean proximos) {
+        int linhaSelecionada = tabela.getSelectedRow();
+
+        if (linhaSelecionada < 0) {
+            return;
+        }
+
+        int linhaModelo = tabela.convertRowIndexToModel(linhaSelecionada);
+        List<Jogo> jogos = proximos ? jogosProximosVisiveis : jogosRecentesVisiveis;
+
+        if (linhaModelo < 0 || linhaModelo >= jogos.size()) {
+            return;
+        }
+
+        new DetalheJogoFrame(jogos.get(linhaModelo), () -> SwingUtilities.invokeLater(this::atualizarPagina));
+    }
+
+    private void atualizarPagina() {
+        getContentPane().removeAll();
+
+        MenuLateral menuLateral = new MenuLateral(this);
+        menuLateral.setVisible(false);
+
+        add(menuLateral, BorderLayout.WEST);
+        add(criarPagina(menuLateral), BorderLayout.CENTER);
+
+        revalidate();
+        repaint();
     }
 
     private LocalDate converterData(String dataTexto) {

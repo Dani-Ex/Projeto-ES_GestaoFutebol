@@ -39,7 +39,6 @@ public class BilheteriaFrame extends JFrame {
     private DefaultTableModel modeloJogos;
     private DefaultTableModel modeloCompras;
 
-    private JComboBox<String> comboComprador;
     private JComboBox<String> comboTipo;
     private JSpinner spinnerQuantidade;
     private JComboBox<String> comboPagamento;
@@ -54,7 +53,7 @@ public class BilheteriaFrame extends JFrame {
         bilheteriaService = new BilheteriaService();
 
         setTitle("Bilheteria");
-        setSize(1280, 820);
+        setSize(1920, 1080);
         setMinimumSize(new Dimension(1180, 700));
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -270,8 +269,6 @@ public class BilheteriaFrame extends JFrame {
         lblDisponiveis = criarLabelResumo("Disponíveis: -");
         lblTotal = criarLabelTotal("Total: 0,00 €");
 
-        comboComprador = criarComboCompradores(null);
-
         comboTipo = new JComboBox<>(new String[]{
                 BilheteriaService.TIPO_NORMAL,
                 BilheteriaService.TIPO_VIP,
@@ -314,8 +311,6 @@ public class BilheteriaFrame extends JFrame {
         content.add(Box.createVerticalStrut(8));
         content.add(lblDisponiveis);
         content.add(Box.createVerticalStrut(18));
-        content.add(criarCampoComLabel("Comprador", comboComprador));
-        content.add(Box.createVerticalStrut(14));
         content.add(criarCampoComLabel("Tipo de bilhete", comboTipo));
         content.add(Box.createVerticalStrut(14));
         content.add(criarCampoComLabel("Quantidade", spinnerQuantidade));
@@ -384,7 +379,7 @@ public class BilheteriaFrame extends JFrame {
         cabecalho.add(acoes, BorderLayout.EAST);
 
         String[] colunas = {
-                "Transação", "Comprador", "Tipo", "Qtd.", "Preço", "Total", "Pagamento", "Data"
+                "Transação", "Tipo", "Qtd.", "Preço", "Total", "Pagamento", "Data"
         };
         modeloCompras = new DefaultTableModel(colunas, 0) {
             @Override
@@ -511,14 +506,15 @@ public class BilheteriaFrame extends JFrame {
 
         JComboBox<Jogo> comboJogos = criarComboJogos(jogos, jogoOriginal);
         JComboBox<String> comboEstadios = criarComboEstadios(jogoOriginal.getEstadio());
+        String chaveJogoOriginal = bilheteriaService.getChaveJogo(jogoOriginal);
         JSpinner precoNormal = criarSpinnerPreco(
-                bilheteriaService.getPreco(jogoOriginal.getId(), BilheteriaService.TIPO_NORMAL)
+                bilheteriaService.getPreco(chaveJogoOriginal, BilheteriaService.TIPO_NORMAL)
         );
         JSpinner precoVip = criarSpinnerPreco(
-                bilheteriaService.getPreco(jogoOriginal.getId(), BilheteriaService.TIPO_VIP)
+                bilheteriaService.getPreco(chaveJogoOriginal, BilheteriaService.TIPO_VIP)
         );
         JSpinner precoPremium = criarSpinnerPreco(
-                bilheteriaService.getPreco(jogoOriginal.getId(), BilheteriaService.TIPO_PREMIUM)
+                bilheteriaService.getPreco(chaveJogoOriginal, BilheteriaService.TIPO_PREMIUM)
         );
 
         comboJogos.addActionListener(e -> {
@@ -607,8 +603,6 @@ public class BilheteriaFrame extends JFrame {
         JDialog dialog = criarDialogo("Editar compra de bilhetes", 660, 510);
 
         JComboBox<Jogo> comboJogos = criarComboJogos(jogos, jogoAtual);
-        JComboBox<String> comboCompradorEdicao = criarComboCompradores(compra.getNomeComprador());
-
         JComboBox<String> comboTipoEdicao = new JComboBox<>(new String[]{
                 BilheteriaService.TIPO_NORMAL,
                 BilheteriaService.TIPO_VIP,
@@ -642,8 +636,9 @@ public class BilheteriaFrame extends JFrame {
                 return;
             }
 
+            String chaveJogoEscolhido = bilheteriaService.getChaveJogo(jogoEscolhido);
             int maximo = bilheteriaService.getDisponiveisParaEdicao(
-                    jogoEscolhido.getId(),
+                    chaveJogoEscolhido,
                     tipo,
                     compra.getIdTransacao()
             );
@@ -651,7 +646,7 @@ public class BilheteriaFrame extends JFrame {
             int atual = Math.min(Math.max(1, valorSpinner(quantidade)), Math.max(1, maximo));
             quantidade.setModel(new SpinnerNumberModel(atual, 1, Math.max(1, maximo), 1));
             lblLimite.setText("Disponíveis após correção: " + maximo);
-            lblNovoTotal.setText("Novo total: " + formatarEuros(bilheteriaService.getPreco(jogoEscolhido.getId(), tipo) * atual));
+            lblNovoTotal.setText("Novo total: " + formatarEuros(bilheteriaService.getPreco(chaveJogoEscolhido, tipo) * atual));
         };
 
         comboJogos.addActionListener(e -> atualizarLimite.run());
@@ -662,7 +657,7 @@ public class BilheteriaFrame extends JFrame {
             if (jogoEscolhido != null) {
                 lblNovoTotal.setText(
                         "Novo total: " + formatarEuros(
-                                bilheteriaService.getPreco(jogoEscolhido.getId(), tipo)
+                                bilheteriaService.getPreco(bilheteriaService.getChaveJogo(jogoEscolhido), tipo)
                                         * valorSpinner(quantidade)
                         )
                 );
@@ -675,8 +670,6 @@ public class BilheteriaFrame extends JFrame {
         formulario.setLayout(new BoxLayout(formulario, BoxLayout.Y_AXIS));
         formulario.setBorder(new EmptyBorder(24, 24, 8, 24));
 
-        formulario.add(criarCampoComLabel("Comprador", comboCompradorEdicao));
-        formulario.add(Box.createVerticalStrut(12));
         formulario.add(criarCampoComLabel("Jogo da compra", comboJogos));
         formulario.add(Box.createVerticalStrut(12));
         formulario.add(criarCampoComLabel("Tipo", comboTipoEdicao));
@@ -722,7 +715,6 @@ public class BilheteriaFrame extends JFrame {
             try {
                 bilheteriaService.editarCompra(
                         compra.getIdTransacao(),
-                        valorComboEditavel(comboCompradorEdicao),
                         (Jogo) comboJogos.getSelectedItem(),
                         String.valueOf(comboTipoEdicao.getSelectedItem()),
                         valorSpinner(quantidade),
@@ -887,7 +879,7 @@ public class BilheteriaFrame extends JFrame {
         if (selecionado != null) {
             for (int i = 0; i < combo.getItemCount(); i++) {
                 Jogo jogo = combo.getItemAt(i);
-                if (jogo.getId().equalsIgnoreCase(selecionado.getId())) {
+                if (bilheteriaService.getChaveJogo(jogo).equalsIgnoreCase(bilheteriaService.getChaveJogo(selecionado))) {
                     combo.setSelectedIndex(i);
                     break;
                 }
@@ -895,53 +887,6 @@ public class BilheteriaFrame extends JFrame {
         }
 
         return combo;
-    }
-
-    private JComboBox<String> criarComboCompradores(String selecionado) {
-        JComboBox<String> combo = new JComboBox<>();
-
-        for (String comprador : bilheteriaService.listarCompradores()) {
-            combo.addItem(comprador);
-        }
-
-        configurarCombo(combo);
-        combo.setEditable(true);
-        combo.setFocusable(true);
-
-        Component editor = combo.getEditor().getEditorComponent();
-        if (editor instanceof JTextField campo) {
-            configurarCampoTexto(campo);
-        }
-
-        if (selecionado != null) {
-            combo.setSelectedItem(selecionado);
-        }
-
-        return combo;
-    }
-
-    private String valorComboEditavel(JComboBox<String> combo) {
-        Object valor = combo.isEditable()
-                ? combo.getEditor().getItem()
-                : combo.getSelectedItem();
-
-        return valor == null ? "" : valor.toString().trim();
-    }
-
-    private void atualizarComboCompradores() {
-        if (comboComprador == null) {
-            return;
-        }
-
-        String nomeAtual = valorComboEditavel(comboComprador);
-
-        comboComprador.removeAllItems();
-        for (String comprador : bilheteriaService.listarCompradores()) {
-            comboComprador.addItem(comprador);
-        }
-
-        comboComprador.setSelectedItem(nomeAtual);
-        comboComprador.getEditor().setItem(nomeAtual);
     }
 
     private JComboBox<String> criarComboEstadios(String selecionado) {
@@ -979,11 +924,10 @@ public class BilheteriaFrame extends JFrame {
     }
 
     private void atualizarTudo(Jogo jogoASelecionar) {
-        String idSelecionado = jogoASelecionar == null ? null : jogoASelecionar.getId();
+        String idSelecionado = jogoASelecionar == null ? null : bilheteriaService.getChaveJogo(jogoASelecionar);
 
         atualizarTabelaJogos();
         selecionarJogoPorId(idSelecionado);
-        atualizarComboCompradores();
         atualizarResumoCompra();
         atualizarTabelaCompras();
     }
@@ -1003,9 +947,9 @@ public class BilheteriaFrame extends JFrame {
                     jogo.getHora(),
                     jogo.getNomeJogo(),
                     jogo.getEstadio(),
-                    bilheteriaService.getDisponiveis(jogo.getId(), BilheteriaService.TIPO_NORMAL),
-                    bilheteriaService.getDisponiveis(jogo.getId(), BilheteriaService.TIPO_VIP),
-                    bilheteriaService.getDisponiveis(jogo.getId(), BilheteriaService.TIPO_PREMIUM),
+                    bilheteriaService.getDisponiveis(bilheteriaService.getChaveJogo(jogo), BilheteriaService.TIPO_NORMAL),
+                    bilheteriaService.getDisponiveis(bilheteriaService.getChaveJogo(jogo), BilheteriaService.TIPO_VIP),
+                    bilheteriaService.getDisponiveis(bilheteriaService.getChaveJogo(jogo), BilheteriaService.TIPO_PREMIUM),
                     jogo.getEstado()
             });
         }
@@ -1024,11 +968,10 @@ public class BilheteriaFrame extends JFrame {
             return;
         }
 
-        for (Bilhete compra : bilheteriaService.listarBilhetesDoJogo(jogo.getId())) {
+        for (Bilhete compra : bilheteriaService.listarBilhetesDoJogo(bilheteriaService.getChaveJogo(jogo))) {
             comprasVisiveis.add(compra);
             modeloCompras.addRow(new Object[]{
                     compra.getIdTransacao(),
-                    compra.getNomeComprador(),
                     compra.getTipo(),
                     compra.getQuantidade(),
                     formatarEuros(compra.getPrecoUnitario()),
@@ -1045,7 +988,7 @@ public class BilheteriaFrame extends JFrame {
         }
 
         for (int i = 0; i < jogosVisiveis.size(); i++) {
-            if (jogosVisiveis.get(i).getId().equalsIgnoreCase(idJogo)) {
+            if (bilheteriaService.getChaveJogo(jogosVisiveis.get(i)).equalsIgnoreCase(idJogo)) {
                 int linhaView = tabelaJogos.convertRowIndexToView(i);
                 if (linhaView >= 0) {
                     tabelaJogos.setRowSelectionInterval(linhaView, linhaView);
@@ -1093,7 +1036,8 @@ public class BilheteriaFrame extends JFrame {
 
     private Jogo encontrarJogo(String idJogo) {
         for (Jogo jogo : bilheteriaService.listarJogosBilheteira()) {
-            if (jogo.getId().equalsIgnoreCase(idJogo)) {
+            if (bilheteriaService.getChaveJogo(jogo).equalsIgnoreCase(idJogo)
+                    || jogo.getId().equalsIgnoreCase(idJogo)) {
                 return jogo;
             }
         }
@@ -1115,8 +1059,9 @@ public class BilheteriaFrame extends JFrame {
         }
 
         String tipo = String.valueOf(comboTipo.getSelectedItem());
-        int disponiveis = bilheteriaService.getDisponiveis(jogo.getId(), tipo);
-        double preco = bilheteriaService.getPreco(jogo.getId(), tipo);
+        String chaveJogo = bilheteriaService.getChaveJogo(jogo);
+        int disponiveis = bilheteriaService.getDisponiveis(chaveJogo, tipo);
+        double preco = bilheteriaService.getPreco(chaveJogo, tipo);
 
         lblJogo.setText(jogo.getNomeJogo());
         lblPreco.setText("Preço unitário: " + formatarEuros(preco));
@@ -1145,7 +1090,7 @@ public class BilheteriaFrame extends JFrame {
             return;
         }
 
-        double total = bilheteriaService.getPreco(jogo.getId(), String.valueOf(comboTipo.getSelectedItem()))
+        double total = bilheteriaService.getPreco(bilheteriaService.getChaveJogo(jogo), String.valueOf(comboTipo.getSelectedItem()))
                 * valorSpinner(spinnerQuantidade);
         lblTotal.setText("Total: " + formatarEuros(total));
     }
@@ -1157,11 +1102,8 @@ public class BilheteriaFrame extends JFrame {
                 throw new IllegalArgumentException("Seleciona primeiro um jogo na tabela.");
             }
 
-            String nomeComprador = valorComboEditavel(comboComprador);
-
             Bilhete compra = bilheteriaService.comprarBilhetes(
                     jogo,
-                    nomeComprador,
                     String.valueOf(comboTipo.getSelectedItem()),
                     valorSpinner(spinnerQuantidade),
                     String.valueOf(comboPagamento.getSelectedItem())
@@ -1171,7 +1113,6 @@ public class BilheteriaFrame extends JFrame {
                     this,
                     "Compra realizada com sucesso.\n\n"
                             + "Transação: " + compra.getIdTransacao() + "\n"
-                            + "Comprador: " + compra.getNomeComprador() + "\n"
                             + "Jogo: " + jogo.getNomeJogo() + "\n"
                             + "Bilhetes: " + compra.getQuantidade() + " " + compra.getTipo() + "\n"
                             + "Total: " + formatarEuros(compra.getTotal()),
@@ -1179,7 +1120,6 @@ public class BilheteriaFrame extends JFrame {
                     JOptionPane.INFORMATION_MESSAGE
             );
 
-            comboComprador.getEditor().setItem("");
             atualizarTudo(jogo);
         } catch (IllegalArgumentException | IllegalStateException e) {
             mostrarErro(e.getMessage());

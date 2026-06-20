@@ -10,10 +10,8 @@ import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
-import java.util.Set;
 import java.util.Map;
 import java.util.UUID;
 
@@ -48,13 +46,17 @@ public class BilheteriaService {
         jogoService = JogoService.getInstance();
     }
 
+    public String getChaveJogo(Jogo jogo) {
+        return chaveJogo(jogo);
+    }
+
     /** Jogos que já têm preços configurados para venda. */
     public List<Jogo> listarJogosBilheteira() {
         Map<String, Precos> precos = carregarPrecos();
         List<Jogo> resultado = new ArrayList<>();
 
         for (Jogo jogo : jogoService.listarJogos()) {
-            if (precos.containsKey(jogo.getId())) {
+            if (precos.containsKey(chaveJogo(jogo))) {
                 resultado.add(jogo);
             }
         }
@@ -78,7 +80,7 @@ public class BilheteriaService {
         List<Jogo> resultado = new ArrayList<>();
 
         for (Jogo jogo : jogoService.listarJogos()) {
-            if (!configurados.containsKey(jogo.getId()) && !jogoJaComecou(jogo)) {
+            if (!configurados.containsKey(chaveJogo(jogo)) && !jogoJaComecou(jogo)) {
                 resultado.add(jogo);
             }
         }
@@ -112,40 +114,34 @@ public class BilheteriaService {
 
                 String[] campos = linha.split("\\t", -1);
 
-                // Formato atual:
-                // id | jogo | comprador | tipo | preço | quantidade | total | pagamento | data
-                if (campos.length == 9) {
-                    bilhetes.add(new Bilhete(
-                            campos[0], campos[1], campos[2], campos[3],
-                            parseDouble(campos[4]), parseInt(campos[5]), parseDouble(campos[6]),
-                            campos[7], parseDataHora(campos[8])
-                    ));
-                    continue;
-                }
-
-                // Compatibilidade com compras antigas sem o nome do comprador.
-                // id | jogo | tipo | preço | quantidade | total | pagamento | data
                 if (campos.length == 8) {
                     bilhetes.add(new Bilhete(
-                            campos[0], campos[1], "Comprador não indicado", campos[2],
+                            campos[0], campos[1], campos[2],
                             parseDouble(campos[3]), parseInt(campos[4]), parseDouble(campos[5]),
                             campos[6], parseDataHora(campos[7])
                     ));
                     continue;
                 }
 
-                // Compatibilidade com o formato antigo:
-                // id | jogo | nome | email | tipo | preço | quantidade | total | pagamento | data
+                if (campos.length == 9) {
+                    bilhetes.add(new Bilhete(
+                            campos[0], campos[1], campos[3],
+                            parseDouble(campos[4]), parseInt(campos[5]), parseDouble(campos[6]),
+                            campos[7], parseDataHora(campos[8])
+                    ));
+                    continue;
+                }
+
                 if (campos.length >= 10) {
                     bilhetes.add(new Bilhete(
-                            campos[0], campos[1], campos[2], campos[4],
+                            campos[0], campos[1], campos[4],
                             parseDouble(campos[5]), parseInt(campos[6]), parseDouble(campos[7]),
                             campos[8], parseDataHora(campos[9])
                     ));
                 }
             }
         } catch (IOException e) {
-            throw new IllegalStateException("Não foi possível ler os bilhetes guardados.", e);
+            throw new IllegalStateException("Nao foi possivel ler os bilhetes guardados.", e);
         }
 
         return bilhetes;
@@ -159,24 +155,6 @@ public class BilheteriaService {
             }
         }
         return resultado;
-    }
-
-    /**
-     * Devolve os compradores já existentes no TSV para os poder escolher
-     * num JComboBox editável. Um novo nome também pode ser escrito.
-     */
-    public List<String> listarCompradores() {
-        Set<String> nomes = new LinkedHashSet<>();
-
-        for (Bilhete bilhete : listarBilhetes()) {
-            String nome = bilhete.getNomeComprador();
-
-            if (!vazio(nome) && !"Comprador não indicado".equalsIgnoreCase(nome.trim())) {
-                nomes.add(nome.trim());
-            }
-        }
-
-        return new ArrayList<>(nomes);
     }
 
     /** Preço configurado para uma zona num jogo específico. */
@@ -195,7 +173,7 @@ public class BilheteriaService {
 
     /** A capacidade vem do estádio associado ao jogo, não da bilheteira. */
     public int getCapacidadeTotal(String idJogo, String tipo) {
-        Jogo jogo = jogoService.procurarPorId(idJogo);
+        Jogo jogo = procurarJogoPorChave(idJogo);
         if (jogo == null) {
             return 0;
         }
@@ -249,7 +227,8 @@ public class BilheteriaService {
         if (jogo == null) {
             throw new IllegalArgumentException("Seleciona um jogo existente.");
         }
-        if (carregarPrecos().containsKey(jogo.getId())) {
+        String chaveJogo = chaveJogo(jogo);
+        if (carregarPrecos().containsKey(chaveJogo)) {
             throw new IllegalArgumentException("Este jogo já está configurado na bilheteira.");
         }
 
@@ -258,7 +237,7 @@ public class BilheteriaService {
         validarPrecos(precoNormal, precoVip, precoPremium);
 
         atualizarEstadioDoJogo(jogo, estadio);
-        guardarPrecos(jogo.getId(), precoNormal, precoVip, precoPremium);
+        guardarPrecos(chaveJogo, precoNormal, precoVip, precoPremium);
     }
 
     /** Altera jogo, estádio e preços antes do início do jogo. */
@@ -273,7 +252,10 @@ public class BilheteriaService {
         }
 
         Map<String, Precos> precos = carregarPrecos();
-        if (!precos.containsKey(jogoOriginal.getId())) {
+        String chaveOriginal = chaveJogo(jogoOriginal);
+        String chaveNovo = chaveJogo(novoJogo);
+
+        if (!precos.containsKey(chaveOriginal)) {
             throw new IllegalArgumentException("O jogo não está configurado na bilheteira.");
         }
 
@@ -283,21 +265,21 @@ public class BilheteriaService {
         validarPrecos(precoNormal, precoVip, precoPremium);
 
         // Nunca permite trocar para um estádio com menos lugares do que os bilhetes já vendidos.
-        validarCapacidadeDoEstadioAcimaDasVendas(jogoOriginal.getId(), estadioEscolhido);
+        validarCapacidadeDoEstadioAcimaDasVendas(chaveOriginal, estadioEscolhido);
 
-        boolean mudouJogo = !jogoOriginal.getId().equalsIgnoreCase(novoJogo.getId());
-        if (mudouJogo && precos.containsKey(novoJogo.getId())) {
+        boolean mudouJogo = !chaveOriginal.equalsIgnoreCase(chaveNovo);
+        if (mudouJogo && precos.containsKey(chaveNovo)) {
             throw new IllegalArgumentException("O jogo escolhido já está configurado na bilheteira.");
         }
 
         atualizarEstadioDoJogo(novoJogo, estadio);
 
         if (mudouJogo) {
-            transferirComprasParaNovoJogo(jogoOriginal.getId(), novoJogo.getId());
-            precos.remove(jogoOriginal.getId());
-            precos.put(novoJogo.getId(), new Precos(precoNormal, precoVip, precoPremium));
+            transferirComprasParaNovoJogo(chaveOriginal, chaveNovo);
+            precos.remove(chaveOriginal);
+            precos.put(chaveNovo, new Precos(precoNormal, precoVip, precoPremium));
         } else {
-            precos.put(jogoOriginal.getId(), new Precos(precoNormal, precoVip, precoPremium));
+            precos.put(chaveOriginal, new Precos(precoNormal, precoVip, precoPremium));
         }
 
         guardarTodosPrecos(precos);
@@ -309,21 +291,21 @@ public class BilheteriaService {
             throw new IllegalArgumentException("Seleciona um jogo.");
         }
         validarJogoAindaNaoComecou(jogo);
+        String chaveJogo = chaveJogo(jogo);
 
-        if (temCompras(jogo.getId())) {
+        if (temCompras(chaveJogo)) {
             throw new IllegalArgumentException(
                     "Não é possível eliminar este jogo da bilheteira porque já tem compras registadas."
             );
         }
 
         Map<String, Precos> precos = carregarPrecos();
-        precos.remove(jogo.getId());
+        precos.remove(chaveJogo);
         guardarTodosPrecos(precos);
     }
 
     public Bilhete comprarBilhetes(
             Jogo jogo,
-            String nomeComprador,
             String tipo,
             int quantidade,
             String metodoPagamento
@@ -331,11 +313,9 @@ public class BilheteriaService {
         if (jogo == null) {
             throw new IllegalArgumentException("Seleciona primeiro um jogo.");
         }
-        if (!carregarPrecos().containsKey(jogo.getId())) {
-            throw new IllegalArgumentException("Este jogo ainda não foi configurado na bilheteira.");
-        }
-        if (vazio(nomeComprador)) {
-            throw new IllegalArgumentException("Indica ou seleciona o nome do comprador.");
+        String chaveJogo = chaveJogo(jogo);
+        if (!carregarPrecos().containsKey(chaveJogo)) {
+            throw new IllegalArgumentException("Este jogo ainda nao foi configurado na bilheteira.");
         }
 
         validarJogoAindaNaoComecou(jogo);
@@ -345,23 +325,22 @@ public class BilheteriaService {
             throw new IllegalArgumentException("A quantidade deve ser superior a zero.");
         }
         if (vazio(metodoPagamento)) {
-            throw new IllegalArgumentException("Seleciona um método de pagamento.");
+            throw new IllegalArgumentException("Seleciona um metodo de pagamento.");
         }
 
-        int disponiveis = getDisponiveis(jogo.getId(), tipo);
+        int disponiveis = getDisponiveis(chaveJogo, tipo);
         if (quantidade > disponiveis) {
             throw new IllegalArgumentException(
-                    "Só existem " + disponiveis + " bilhetes " + tipo + " disponíveis para este jogo."
+                    "So existem " + disponiveis + " bilhetes " + tipo + " disponiveis para este jogo."
             );
         }
 
-        double precoUnitario = getPreco(jogo.getId(), tipo);
+        double precoUnitario = getPreco(chaveJogo, tipo);
         double total = precoUnitario * quantidade;
 
         Bilhete compra = new Bilhete(
                 gerarIdTransacao(),
-                jogo.getId(),
-                nomeComprador.trim(),
+                chaveJogo,
                 tipo,
                 precoUnitario,
                 quantidade,
@@ -373,43 +352,20 @@ public class BilheteriaService {
         List<Bilhete> bilhetes = new ArrayList<>(listarBilhetes());
         bilhetes.add(compra);
         guardarBilhetes(bilhetes);
-        ajustarReceitaDoJogo(jogo.getId(), quantidade, total);
+        ajustarReceitaDoJogo(chaveJogo, quantidade, total);
 
         return compra;
     }
-
-    /*
-     * Compatibilidade com chamadas antigas do projeto.
-     */
-    public Bilhete comprarBilhetes(
-            Jogo jogo,
-            String tipo,
-            int quantidade,
-            String metodoPagamento
-    ) {
-        return comprarBilhetes(
-                jogo,
-                "Comprador não indicado",
-                tipo,
-                quantidade,
-                metodoPagamento
-        );
-    }
-
-    /** Corrige uma compra antes de o jogo original e o novo jogo começarem. */
+    /** Corrige uma compra antes de o jogo original e o novo jogo comecarem. */
     public void editarCompra(
             String idTransacao,
-            String novoNomeComprador,
             Jogo novoJogo,
             String novoTipo,
             int novaQuantidade,
             String novoMetodoPagamento
     ) {
         if (vazio(idTransacao)) {
-            throw new IllegalArgumentException("Compra inválida.");
-        }
-        if (vazio(novoNomeComprador)) {
-            throw new IllegalArgumentException("Indica ou seleciona o nome do comprador.");
+            throw new IllegalArgumentException("Compra invalida.");
         }
         if (novoJogo == null) {
             throw new IllegalArgumentException("Seleciona o jogo da compra.");
@@ -420,44 +376,45 @@ public class BilheteriaService {
             throw new IllegalArgumentException("A quantidade deve ser superior a zero.");
         }
         if (vazio(novoMetodoPagamento)) {
-            throw new IllegalArgumentException("Seleciona um método de pagamento.");
+            throw new IllegalArgumentException("Seleciona um metodo de pagamento.");
         }
 
         List<Bilhete> bilhetes = new ArrayList<>(listarBilhetes());
         int indice = indiceCompra(bilhetes, idTransacao);
         if (indice < 0) {
-            throw new IllegalArgumentException("A compra selecionada já não existe.");
+            throw new IllegalArgumentException("A compra selecionada ja nao existe.");
         }
 
         Bilhete compraOriginal = bilhetes.get(indice);
-        Jogo jogoOriginal = jogoService.procurarPorId(compraOriginal.getIdJogo());
+        Jogo jogoOriginal = procurarJogoPorChave(compraOriginal.getIdJogo());
         if (jogoOriginal == null) {
-            throw new IllegalArgumentException("O jogo original da compra não existe.");
+            throw new IllegalArgumentException("O jogo original da compra nao existe.");
         }
+        String chaveOriginal = compraOriginal.getIdJogo();
+        String chaveNovo = chaveJogo(novoJogo);
 
         validarJogoAindaNaoComecou(jogoOriginal);
         validarJogoAindaNaoComecou(novoJogo);
 
-        if (!carregarPrecos().containsKey(novoJogo.getId())) {
-            throw new IllegalArgumentException("O novo jogo não está configurado na bilheteira.");
+        if (!carregarPrecos().containsKey(chaveNovo)) {
+            throw new IllegalArgumentException("O novo jogo nao esta configurado na bilheteira.");
         }
 
         int disponiveis = getDisponiveisParaEdicao(
-                novoJogo.getId(), novoTipo, compraOriginal.getIdTransacao()
+                chaveNovo, novoTipo, compraOriginal.getIdTransacao()
         );
         if (novaQuantidade > disponiveis) {
             throw new IllegalArgumentException(
-                    "Só existem " + disponiveis + " bilhetes " + novoTipo + " disponíveis após esta alteração."
+                    "So existem " + disponiveis + " bilhetes " + novoTipo + " disponiveis apos esta alteracao."
             );
         }
 
-        double novoPreco = getPreco(novoJogo.getId(), novoTipo);
+        double novoPreco = getPreco(chaveNovo, novoTipo);
         double novoTotal = novoPreco * novaQuantidade;
 
         Bilhete compraAtualizada = new Bilhete(
                 compraOriginal.getIdTransacao(),
-                novoJogo.getId(),
-                novoNomeComprador.trim(),
+                chaveNovo,
                 novoTipo,
                 novoPreco,
                 novaQuantidade,
@@ -469,39 +426,9 @@ public class BilheteriaService {
         bilhetes.set(indice, compraAtualizada);
         guardarBilhetes(bilhetes);
 
-        ajustarReceitaDoJogo(jogoOriginal.getId(), -compraOriginal.getQuantidade(), -compraOriginal.getTotal());
-        ajustarReceitaDoJogo(novoJogo.getId(), novaQuantidade, novoTotal);
+        ajustarReceitaDoJogo(chaveOriginal, -compraOriginal.getQuantidade(), -compraOriginal.getTotal());
+        ajustarReceitaDoJogo(chaveNovo, novaQuantidade, novoTotal);
     }
-
-    /*
-     * Compatibilidade com o formulário anterior, que ainda não tinha comprador.
-     */
-    public void editarCompra(
-            String idTransacao,
-            Jogo novoJogo,
-            String novoTipo,
-            int novaQuantidade,
-            String novoMetodoPagamento
-    ) {
-        Bilhete compra = null;
-
-        for (Bilhete bilhete : listarBilhetes()) {
-            if (bilhete.getIdTransacao().equalsIgnoreCase(idTransacao)) {
-                compra = bilhete;
-                break;
-            }
-        }
-
-        editarCompra(
-                idTransacao,
-                compra == null ? "Comprador não indicado" : compra.getNomeComprador(),
-                novoJogo,
-                novoTipo,
-                novaQuantidade,
-                novoMetodoPagamento
-        );
-    }
-
     public void eliminarCompra(String idTransacao) {
         List<Bilhete> bilhetes = new ArrayList<>(listarBilhetes());
         int indice = indiceCompra(bilhetes, idTransacao);
@@ -510,7 +437,7 @@ public class BilheteriaService {
         }
 
         Bilhete compra = bilhetes.get(indice);
-        Jogo jogo = jogoService.procurarPorId(compra.getIdJogo());
+        Jogo jogo = procurarJogoPorChave(compra.getIdJogo());
         if (jogo == null) {
             throw new IllegalArgumentException("O jogo da compra não existe.");
         }
@@ -518,7 +445,7 @@ public class BilheteriaService {
         validarJogoAindaNaoComecou(jogo);
         bilhetes.remove(indice);
         guardarBilhetes(bilhetes);
-        ajustarReceitaDoJogo(jogo.getId(), -compra.getQuantidade(), -compra.getTotal());
+        ajustarReceitaDoJogo(compra.getIdJogo(), -compra.getQuantidade(), -compra.getTotal());
     }
 
     private void transferirComprasParaNovoJogo(String idOriginal, String idNovo) {
@@ -536,7 +463,6 @@ public class BilheteriaService {
                 bilhetes.set(i, new Bilhete(
                         bilhete.getIdTransacao(),
                         idNovo,
-                        bilhete.getNomeComprador(),
                         bilhete.getTipo(),
                         bilhete.getPrecoUnitario(),
                         bilhete.getQuantidade(),
@@ -553,6 +479,28 @@ public class BilheteriaService {
             ajustarReceitaDoJogo(idOriginal, -quantidadeTransferida, -totalTransferido);
             ajustarReceitaDoJogo(idNovo, quantidadeTransferida, totalTransferido);
         }
+    }
+
+    private String chaveJogo(Jogo jogo) {
+        if (jogo == null) {
+            return "";
+        }
+        return limpar(jogo.getId()) + "::" + limpar(jogo.getCampeonato());
+    }
+
+    private Jogo procurarJogoPorChave(String chave) {
+        if (vazio(chave)) {
+            return null;
+        }
+
+        for (Jogo jogo : jogoService.listarJogos()) {
+            if (chaveJogo(jogo).equalsIgnoreCase(chave)) {
+                return jogo;
+            }
+        }
+
+        // Compatibilidade com compras antigas guardadas apenas com o id do jogo.
+        return jogoService.procurarPorId(chave);
     }
 
     private void atualizarEstadioDoJogo(Jogo jogo, String estadio) {
@@ -813,7 +761,6 @@ public class BilheteriaService {
                 linhas.add(String.join("\t",
                         limpar(bilhete.getIdTransacao()),
                         limpar(bilhete.getIdJogo()),
-                        limpar(bilhete.getNomeComprador()),
                         limpar(bilhete.getTipo()),
                         String.valueOf(bilhete.getPrecoUnitario()),
                         String.valueOf(bilhete.getQuantidade()),

@@ -17,6 +17,8 @@ import java.time.format.ResolverStyle;
 
 public class NovoJogoFrame extends JFrame {
 
+    private final Runnable onJogoCriado;
+
     private final Color BG = new Color(245, 247, 251);
     private final Color TEXT = new Color(30, 41, 59);
     private final Color MUTED = new Color(100, 116, 139);
@@ -37,10 +39,16 @@ public class NovoJogoFrame extends JFrame {
     private JTextField campoFase;
 
     public NovoJogoFrame() {
+        this(null);
+    }
+
+    public NovoJogoFrame(Runnable onJogoCriado) {
+        this.onJogoCriado = onJogoCriado;
+
         setTitle("Criar Jogo");
         setSize(1100, 720);
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
 
         MenuLateral menuLateral = new MenuLateral(this);
@@ -60,7 +68,7 @@ public class NovoJogoFrame extends JFrame {
         JPanel topo = new JPanel(new BorderLayout());
         topo.setOpaque(false);
 
-        JButton btnMenu = new JButton("☰");
+        JButton btnMenu = new JButton("=");
         btnMenu.setFocusPainted(false);
         btnMenu.setBorderPainted(false);
         btnMenu.setContentAreaFilled(false);
@@ -167,10 +175,7 @@ public class NovoJogoFrame extends JFrame {
         JButton btnCancelar = criarBotaoCinza("Cancelar");
         JButton btnCriar = criarBotaoAzul("Criar Jogo");
 
-        btnCancelar.addActionListener(e -> {
-            dispose();
-            new JogosFrame();
-        });
+        btnCancelar.addActionListener(e -> dispose());
         btnCriar.addActionListener(e -> criarJogo());
 
         botoes.add(btnCancelar);
@@ -366,8 +371,11 @@ public class NovoJogoFrame extends JFrame {
                 JOptionPane.INFORMATION_MESSAGE
         );
 
+        if (onJogoCriado != null) {
+            onJogoCriado.run();
+        }
+
         dispose();
-        new JogosFrame();
     }
 
     private String validarConflitos(
