@@ -185,7 +185,7 @@ SetubalMar Jogador 23	23	Avancado	81	1.75	Direito	1997-11-23	Portugal	Setubal	Se
 NorteReal Jogador 1	1	Guarda-redes	78	1.71	Direito	1994-01-01	Portugal	Viana do Castelo	Norte Real	Taca Finalizada 2026	A	Titular	8	1	0	0	528	58	60	64	true
 NorteReal Jogador 2	2	Defesa	79	1.72	Direito	1995-02-02	Portugal	Viana do Castelo	Norte Real	Taca Finalizada 2026	A	Titular	8	1	1	0	536	61	65	68	true
 NorteReal Jogador 3	3	Defesa	80	1.73	Esquerdo	1996-03-03	Portugal	Viana do Castelo	Norte Real	Taca Finalizada 2026	A	Titular	8	1	0	0	544	64	70	72	true
-NorteReal Jogador 4	4	Defesa	81	1.74	Direito	1997-04-04	Portugal	Viana do Castelo	Norte Real	Taca Finalizada 2026	A	Titular	8	1	1	0	552	67	75	76	true
+NorteReal Jogador 4	4	Defesa	81	1.74	Direito	1997-04-04	Portugal	Viana do Castelo	Norte Real	Taca Finalizada 2026	A	Titular	8	2	1	0	552	67	75	76	true
 NorteReal Jogador 5	5	Defesa	82	1.75	Direito	1998-05-05	Portugal	Viana do Castelo	Norte Real	Taca Finalizada 2026	A	Titular	8	1	0	0	560	70	80	80	true
 NorteReal Jogador 6	6	Medio	83	1.76	Esquerdo	1999-06-06	Portugal	Viana do Castelo	Norte Real	Taca Finalizada 2026	A	Titular	8	1	1	0	568	73	85	84	true
 NorteReal Jogador 7	7	Medio	84	1.77	Direito	2000-07-07	Portugal	Viana do Castelo	Norte Real	Taca Finalizada 2026	A	Titular	8	1	0	1	576	76	55	88	true
@@ -252,7 +252,7 @@ IlhasFC Jogador 21	21	Defesa	82	1.73	Esquerdo	1998-09-21	Portugal	Funchal	Ilhas 
 IlhasFC Jogador 22	22	Medio	83	1.74	Direito	1999-10-22	Portugal	Funchal	Ilhas FC	Taca Finalizada 2026	A	Suplente	8	0	0	0	696	86	60	88	true
 IlhasFC Jogador 23	23	Avancado	84	1.75	Direito	2000-11-23	Portugal	Funchal	Ilhas FC	Taca Finalizada 2026	A	Suplente	8	0	0	0	704	89	65	62	true
 InteriorSC Jogador 1	1	Guarda-redes	81	1.71	Direito	1997-01-01	Portugal	Guarda	Interior SC	Taca Finalizada 2026	A	Titular	8	1	0	0	528	58	60	64	true
-InteriorSC Jogador 2	2	Defesa	82	1.72	Direito	1998-02-02	Portugal	Guarda	Interior SC	Taca Finalizada 2026	A	Titular	8	1	1	0	536	61	65	68	true
+InteriorSC Jogador 2	2	Defesa	82	1.72	Direito	1998-02-02	Portugal	Guarda	Interior SC	Taca Finalizada 2026	A	Titular	8	2	1	0	536	61	65	68	true
 InteriorSC Jogador 3	3	Defesa	83	1.73	Esquerdo	1999-03-03	Portugal	Guarda	Interior SC	Taca Finalizada 2026	A	Titular	8	1	0	0	544	64	70	72	true
 InteriorSC Jogador 4	4	Defesa	84	1.74	Direito	2000-04-04	Portugal	Guarda	Interior SC	Taca Finalizada 2026	A	Titular	8	1	1	0	552	67	75	76	true
 InteriorSC Jogador 5	5	Defesa	85	1.75	Direito	2001-05-05	Portugal	Guarda	Interior SC	Taca Finalizada 2026	A	Titular	8	0	0	0	560	70	80	80	true
