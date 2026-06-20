@@ -71,6 +71,63 @@ public class CampeonatoRepositorio {
         return nomes;
     }
 
+    public static List<String> listarNomesCampeonatosEmPreparacaoComVagas() {
+        List<String> nomes = new ArrayList<>();
+
+        for (Campeonato campeonato : campeonatos) {
+            if (campeonato == null || !campeonato.isEmConfiguracao()) {
+                continue;
+            }
+
+            sincronizarEquipasDoTsv(campeonato);
+
+            if (campeonato.getEquipas().size() >= campeonato.getNumeroEquipasNecessarias()) {
+                continue;
+            }
+
+            String nome = campeonato.getNome();
+
+            if (nome != null && !nome.trim().isEmpty()) {
+                nomes.add(nome.trim());
+            }
+        }
+
+        return nomes;
+    }
+
+    public static boolean campeonatoPodeReceberEquipa(String nomeCampeonato) {
+        Campeonato campeonato = procurarPorNome(nomeCampeonato);
+
+        if (campeonato == null || !campeonato.isEmConfiguracao()) {
+            return false;
+        }
+
+        sincronizarEquipasDoTsv(campeonato);
+        return campeonato.getEquipas().size() < campeonato.getNumeroEquipasNecessarias();
+    }
+
+    public static boolean removerEquipaDoCampeonato(String nomeEquipa, String nomeCampeonato) {
+        Campeonato campeonato = procurarPorNome(nomeCampeonato);
+
+        if (campeonato == null || !campeonato.isEmConfiguracao()) {
+            return false;
+        }
+
+        sincronizarEquipasDoTsv(campeonato);
+
+        boolean removida = campeonato.getEquipas().removeIf(
+                equipa -> equipa.equalsIgnoreCase(nomeEquipa == null ? "" : nomeEquipa.trim())
+        );
+
+        for (List<String> equipasGrupo : campeonato.getGrupos().values()) {
+            equipasGrupo.removeIf(
+                    equipa -> equipa.equalsIgnoreCase(nomeEquipa == null ? "" : nomeEquipa.trim())
+            );
+        }
+
+        return removida;
+    }
+
     public static List<String> listarNomesCampeonatosIniciados() {
         List<String> nomes = new ArrayList<>();
 

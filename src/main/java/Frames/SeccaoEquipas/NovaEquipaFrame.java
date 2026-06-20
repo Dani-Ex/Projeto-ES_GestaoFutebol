@@ -187,7 +187,7 @@ public class NovaEquipaFrame extends JFrame {
     }
 
     private JComboBox<String> criarComboCampeonato() {
-        List<String> campeonatos = CampeonatoRepositorio.listarNomesCampeonatosGuardados();
+        List<String> campeonatos = CampeonatoRepositorio.listarNomesCampeonatosEmPreparacaoComVagas();
 
         return FormUtils.criarCombo(
                 campeonatos.toArray(new String[0]),
@@ -255,6 +255,8 @@ public class NovaEquipaFrame extends JFrame {
                     "Escolhe um campeonato existente e guardado antes de registar a equipa."
             );
         }
+
+        equipaService.validarCampeonatoPodeReceberEquipa(campeonato);
     }
 
     private void validarCamposObrigatorios() {

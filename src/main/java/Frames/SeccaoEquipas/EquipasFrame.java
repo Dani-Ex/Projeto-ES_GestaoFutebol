@@ -445,6 +445,8 @@ public class EquipasFrame extends JFrame {
             return;
         }
 
+        CampeonatoRepositorio.sincronizarEquipasDoTsv(campeonato);
+
         if (!campeonato.isEmConfiguracao()) {
             JOptionPane.showMessageDialog(
                     this,
@@ -492,7 +494,7 @@ public class EquipasFrame extends JFrame {
             return;
         }
 
-        if (campeonato.getEquipas().size() >= campeonato.getNumeroEquipasNecessarias()) {
+        if (!CampeonatoRepositorio.campeonatoPodeReceberEquipa(campeonato.getNome())) {
             JOptionPane.showMessageDialog(
                     this,
                     "Este campeonato já atingiu o número máximo de equipas permitido.",

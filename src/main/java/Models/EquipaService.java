@@ -94,11 +94,8 @@ public class EquipaService {
             throw new IllegalArgumentException("O nome da equipa é obrigatório.");
         }
 
-        if (validarCampeonatosGuardados
-                && CampeonatoRepositorio.procurarPorNome(equipa.getCampeonato()) == null) {
-            throw new IllegalArgumentException(
-                    "A equipa tem de estar associada a um campeonato existente e guardado."
-            );
+        if (validarCampeonatosGuardados) {
+            validarCampeonatoPodeReceberEquipa(equipa.getCampeonato());
         }
 
         if (equipaExisteNoCampeonato(equipa.getNome(), equipa.getCampeonato())) {
@@ -109,6 +106,46 @@ public class EquipaService {
 
         equipa.setAtiva(equipa.getTotalJogadores() == 23);
         equipas.add(equipa);
+        guardarEquipas();
+    }
+
+    public void removerEquipa(Equipa equipa) {
+        if (equipa == null) {
+            throw new IllegalArgumentException("Seleciona uma equipa para remover.");
+        }
+
+        if (validarCampeonatosGuardados) {
+            Campeonato campeonato = CampeonatoRepositorio.procurarPorNome(equipa.getCampeonato());
+
+            if (campeonato == null) {
+                throw new IllegalArgumentException("O campeonato associado a esta equipa jÃ¡ nÃ£o existe.");
+            }
+
+            if (!campeonato.isEmConfiguracao()) {
+                throw new IllegalArgumentException(
+                        "A equipa sÃ³ pode ser apagada antes de o campeonato comeÃ§ar."
+                );
+            }
+
+            CampeonatoRepositorio.removerEquipaDoCampeonato(equipa.getNome(), equipa.getCampeonato());
+        }
+
+        boolean removida = equipas.remove(equipa);
+
+        if (!removida) {
+            String nomeNormalizado = normalizar(equipa.getNome());
+            String campeonatoNormalizado = normalizar(equipa.getCampeonato());
+
+            removida = equipas.removeIf(existente ->
+                    normalizar(existente.getNome()).equals(nomeNormalizado)
+                            && normalizar(existente.getCampeonato()).equals(campeonatoNormalizado)
+            );
+        }
+
+        if (!removida) {
+            throw new IllegalArgumentException("A equipa selecionada jÃ¡ nÃ£o existe.");
+        }
+
         guardarEquipas();
     }
 
@@ -146,6 +183,20 @@ public class EquipaService {
 
     public void guardarAlteracoes() {
         guardarEquipas();
+    }
+
+    public void validarCampeonatoPodeReceberEquipa(String campeonato) {
+        if (CampeonatoRepositorio.procurarPorNome(campeonato) == null) {
+            throw new IllegalArgumentException(
+                    "A equipa tem de estar associada a um campeonato existente e guardado."
+            );
+        }
+
+        if (!CampeonatoRepositorio.campeonatoPodeReceberEquipa(campeonato)) {
+            throw new IllegalArgumentException(
+                    "Escolhe um campeonato em preparaÃ§Ã£o e com vagas disponÃ­veis."
+            );
+        }
     }
 
     public void atualizarEstatisticasDaEquipa(Equipa equipa) {

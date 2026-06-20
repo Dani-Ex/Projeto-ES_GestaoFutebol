@@ -148,6 +148,20 @@ public class JogadorService {
         guardarJogadores();
     }
 
+    public void removerJogadoresDaEquipa(String equipa, String campeonato) {
+        String equipaNormalizada = normalizar(equipa);
+        String campeonatoNormalizado = normalizar(campeonato);
+
+        boolean removeu = jogadores.removeIf(jogador ->
+                normalizar(jogador.getEquipa()).equals(equipaNormalizada)
+                        && normalizar(jogador.getCampeonato()).equals(campeonatoNormalizado)
+        );
+
+        if (removeu) {
+            guardarJogadores();
+        }
+    }
+
     public void guardarJogadores() {
         try {
             Files.createDirectories(FICHEIRO_JOGADORES.getParent());

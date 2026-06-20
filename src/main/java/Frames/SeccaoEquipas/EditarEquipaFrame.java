@@ -6,6 +6,7 @@ import Design.RoundedButton;
 import Design.RoundedPanel;
 import Design.Tema;
 import GrupoEeleminatoria.CampeonatoRepositorio;
+import Models.Campeonato;
 import Models.Equipa;
 import Models.EquipaService;
 import Models.JogadorService;
@@ -82,7 +83,7 @@ public class EditarEquipaFrame extends JFrame {
         titulo.setFont(Tema.FONTE_TITULO_GRANDE);
         titulo.setForeground(Tema.COR_TEXTO_PRINCIPAL);
 
-        JLabel subtitulo = new JLabel("Atualização dos dados da equipa selecionada.");
+        JLabel subtitulo = new JLabel("Atualizacao dos dados da equipa selecionada.");
         subtitulo.setFont(Tema.FONTE_SUBTITULO);
         subtitulo.setForeground(Tema.COR_TEXTO_SECUNDARIO);
 
@@ -135,21 +136,27 @@ public class EditarEquipaFrame extends JFrame {
         campos.add(criarCampoComLabel("Pais", campoPais));
         campos.add(criarCampoComLabel("Campeonato", campoCampeonato));
         campos.add(criarCampoComLabel("Treinador", campoTreinador));
-        campos.add(criarCampoComLabel("Capitão", campoCapitao));
+        campos.add(criarCampoComLabel("Capitao", campoCapitao));
 
         JPanel centro = new JPanel(new BorderLayout());
         centro.setOpaque(false);
         centro.add(campos, BorderLayout.NORTH);
 
-        JPanel botoes = new JPanel(new FlowLayout(FlowLayout.RIGHT, 18, 0));
-        botoes.setOpaque(false);
-        botoes.setBorder(new EmptyBorder(18, 0, 0, 0));
-        botoes.add(criarBotao("Cancelar", Tema.COR_BOTAO_SECUNDARIO, Tema.COR_TEXTO_PRINCIPAL, this::dispose));
-        botoes.add(criarBotao("Guardar Alterações", Tema.COR_INFO, Tema.COR_TEXTO_CLARO, this::guardarAlteracoes));
+        JPanel rodape = new JPanel(new BorderLayout());
+        rodape.setOpaque(false);
+        rodape.setBorder(new EmptyBorder(18, 0, 0, 0));
+
+        JPanel botoesDireita = new JPanel(new FlowLayout(FlowLayout.RIGHT, 18, 0));
+        botoesDireita.setOpaque(false);
+        botoesDireita.add(criarBotao("Cancelar", Tema.COR_BOTAO_SECUNDARIO, Tema.COR_TEXTO_PRINCIPAL, this::dispose));
+        botoesDireita.add(criarBotao("Guardar Alteracoes", Tema.COR_INFO, Tema.COR_TEXTO_CLARO, this::guardarAlteracoes));
+
+        rodape.add(criarBotao("Delete", new Color(220, 38, 38), Tema.COR_TEXTO_CLARO, this::apagarEquipa), BorderLayout.WEST);
+        rodape.add(botoesDireita, BorderLayout.EAST);
 
         card.add(titulo, BorderLayout.NORTH);
         card.add(centro, BorderLayout.CENTER);
-        card.add(botoes, BorderLayout.SOUTH);
+        card.add(rodape, BorderLayout.SOUTH);
 
         return card;
     }
@@ -165,9 +172,9 @@ public class EditarEquipaFrame extends JFrame {
         titulo.setForeground(Tema.COR_VERDE_FORTE);
 
         JTextArea texto = new JTextArea(
-                "A equipa pode ser editada antes do início do campeonato.\n\n" +
+                "A equipa pode ser editada antes do inicio do campeonato.\n\n" +
                         "Todos os campos devem estar preenchidos.\n\n" +
-                        "Não pode existir outra equipa com o mesmo nome no mesmo campeonato."
+                        "Nao pode existir outra equipa com o mesmo nome no mesmo campeonato."
         );
         texto.setFont(Tema.FONTE_TEXTO);
         texto.setForeground(Tema.COR_TEXTO_PRINCIPAL);
@@ -188,7 +195,7 @@ public class EditarEquipaFrame extends JFrame {
     }
 
     private JComboBox<String> criarComboCampeonato() {
-        List<String> campeonatos = CampeonatoRepositorio.listarNomesCampeonatosGuardados();
+        List<String> campeonatos = CampeonatoRepositorio.listarNomesCampeonatosEmPreparacaoComVagas();
 
         if (equipa.getCampeonato() != null
                 && !equipa.getCampeonato().trim().isEmpty()
@@ -228,7 +235,7 @@ public class EditarEquipaFrame extends JFrame {
 
             if (equipaService.outraEquipaExisteNoCampeonato(equipa, novoNome, novoCampeonato)) {
                 throw new IllegalArgumentException(
-                        "Essa equipa não pode ser registrada outra vez no mesmo campeonato."
+                        "Essa equipa nao pode ser registrada outra vez no mesmo campeonato."
                 );
             }
 
@@ -263,8 +270,67 @@ public class EditarEquipaFrame extends JFrame {
             JOptionPane.showMessageDialog(
                     this,
                     e.getMessage(),
-                    "Erro de validação",
+                    "Erro de validacao",
                     JOptionPane.ERROR_MESSAGE
+            );
+        }
+    }
+
+    private void apagarEquipa() {
+        try {
+            validarPodeApagarEquipa();
+
+            int confirmacao = JOptionPane.showConfirmDialog(
+                    this,
+                    "Tens a certeza que queres apagar esta equipa?\n\nOs jogadores associados tambem serao removidos.",
+                    "Confirmar delete",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.WARNING_MESSAGE
+            );
+
+            if (confirmacao != JOptionPane.YES_OPTION) {
+                return;
+            }
+
+            String nomeEquipa = equipa.getNome();
+            String nomeCampeonato = equipa.getCampeonato();
+
+            equipaService.removerEquipa(equipa);
+            JogadorService.getInstance().removerJogadoresDaEquipa(nomeEquipa, nomeCampeonato);
+            CampeonatoRepositorio.salvar();
+
+            if (onEquipaAtualizada != null) {
+                onEquipaAtualizada.run();
+            }
+
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Equipa apagada com sucesso.",
+                    "Sucesso",
+                    JOptionPane.INFORMATION_MESSAGE
+            );
+
+            dispose();
+        } catch (IllegalArgumentException e) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    e.getMessage(),
+                    "Erro de validacao",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        }
+    }
+
+    private void validarPodeApagarEquipa() {
+        Campeonato campeonato = CampeonatoRepositorio.procurarPorNome(equipa.getCampeonato());
+
+        if (campeonato == null) {
+            throw new IllegalArgumentException("O campeonato associado a esta equipa ja nao existe.");
+        }
+
+        if (!campeonato.isEmConfiguracao()) {
+            throw new IllegalArgumentException(
+                    "A equipa so pode ser apagada antes de o campeonato comecar."
             );
         }
     }
@@ -274,6 +340,10 @@ public class EditarEquipaFrame extends JFrame {
             throw new IllegalArgumentException(
                     "Escolhe um campeonato existente e guardado antes de atualizar a equipa."
             );
+        }
+
+        if (!campeonato.equalsIgnoreCase(equipa.getCampeonato())) {
+            equipaService.validarCampeonatoPodeReceberEquipa(campeonato);
         }
     }
 
